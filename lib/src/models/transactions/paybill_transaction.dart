@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:mapesa/src/common/cards/primary_item_card.dart';
+
 import '../../utils/datetime.dart';
 import '../../utils/money.dart';
 import 'transaction.dart';
@@ -64,5 +67,17 @@ class PaybillTransaction extends Transaction {
   @override
   String toString() {
     return toJson().toString();
+  }
+
+  @override
+  Widget toTransactionListItem() {
+    final amount = transactionAmount?.amount.toString() ?? "0.00";
+    return PrimaryItemCard(
+      icon: const Text("P"),
+      title: "$subjectAccount - $subject",
+      subtitle: prettifyTimeDifference(dateTime ?? DateTime.now()),
+      rightWidget: Text("KES $amount"),
+      onTap: () {},
+    );
   }
 }

@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:mapesa/src/common/cards/primary_item_card.dart';
+
 import '../../utils/datetime.dart';
 import '../../utils/money.dart';
 import 'transaction.dart';
@@ -54,5 +57,18 @@ class AirtimeTransaction extends Transaction {
   @override
   String toString() {
     return toJson().toString();
+  }
+
+  @override
+  Widget toTransactionListItem() {
+    final amount = transactionAmount?.amount.toString() ?? "0.00";
+    return PrimaryItemCard(
+        title: "Airtime",
+        subtitle: prettifyTimeDifference(dateTime ?? DateTime.now()),
+        icon: const Text("A"),
+        rightWidget: Text("KES $amount"),
+        onTap: () {
+          // TODO: open transaction details page
+        });
   }
 }

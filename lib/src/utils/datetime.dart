@@ -11,3 +11,22 @@ DateTime getDateTimeFromMessage(
       ? DateTime(year, month, day, hour == 12 ? 0 : hour, minutes)
       : DateTime(year, month, day, hour == 12 ? 12 : hour + 12, minutes);
 }
+
+String prettifyTimeDifference(DateTime dateTime) {
+  var difference = DateTime.now().difference(dateTime);
+  if (difference.inMinutes < 5) {
+    return "Just now";
+  } else if (difference.inHours < 1) {
+    return "${difference.inMinutes} minutes ago";
+  } else if (difference.inDays < 1) {
+    return "${difference.inHours} hours ago";
+  } else if (difference.inDays < 7) {
+    return "${difference.inDays} days ago";
+  } else if (difference.inDays < 30) {
+    return "This month";
+  } else if (difference.inDays < 365) {
+    return "${difference.inDays ~/ 30} months ago";
+  } else {
+    return "${difference.inDays ~/ 365} years ago";
+  }
+}

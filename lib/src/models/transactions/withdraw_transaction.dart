@@ -1,5 +1,9 @@
-import '../../utils/datetime.dart';
-import '../../utils/money.dart';
+import 'package:flutter/material.dart';
+
+import 'package:mapesa/src/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/utils/datetime.dart';
+import 'package:mapesa/src/utils/money.dart';
+
 import 'transaction.dart';
 
 class WithdrawTransaction extends Transaction {
@@ -64,5 +68,17 @@ class WithdrawTransaction extends Transaction {
   @override
   String toString() {
     return toJson().toString();
+  }
+
+  @override
+  Widget toTransactionListItem() {
+    final amount = transactionAmount?.amount.toString() ?? "0.00";
+    return PrimaryItemCard(
+      icon: const Text("W"),
+      title: "Withdraw",
+      subtitle: prettifyTimeDifference(dateTime ?? DateTime.now()),
+      rightWidget: Text("KES $amount"),
+      onTap: () {},
+    );
   }
 }

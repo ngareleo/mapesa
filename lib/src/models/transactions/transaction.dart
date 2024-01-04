@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:mapesa/src/utils/money.dart';
 
 enum TransactionType {
@@ -31,6 +32,7 @@ abstract class Transaction {
       required this.balance});
 
   Map<String, String?> toJson();
+  Widget toTransactionListItem();
 }
 
 class InvalidTransaction extends Transaction {
@@ -52,5 +54,10 @@ class InvalidTransaction extends Transaction {
   @override
   String toString() {
     return toJson().toString();
+  }
+
+  @override
+  Widget toTransactionListItem() {
+    throw UnimplementedError();
   }
 }
