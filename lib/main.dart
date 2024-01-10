@@ -1,23 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:mapesa/src/features/auth_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:mapesa/src/common/theme.dart';
+import 'package:mapesa/src/pages/auth_page.dart';
 
-import 'src/pages/home.dart';
+import 'src/pages/home_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+      create: (context) => AuthProvider.instance, child: const MapesaApp()));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MapesaApp extends StatefulWidget {
+  const MapesaApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MapesaApp> createState() => _MapesaAppState();
+}
+
+class _MapesaAppState extends State<MapesaApp> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: appTheme,
-      home: const HomePage(),
-    );
+    return Consumer(builder: (context, AuthProvider authProvider, child) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: appTheme,
+        home: authProvider.isLoggedIn() ? const HomePage() : const AuthPage(),
+      );
+    });
   }
 }

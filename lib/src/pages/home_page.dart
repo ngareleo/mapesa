@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mapesa/src/pages/budget.dart';
-import 'package:mapesa/src/pages/dashboard.dart';
-import 'package:mapesa/src/pages/debug.dart';
-import 'package:mapesa/src/pages/search.dart';
+import 'package:mapesa/src/pages/budget_page.dart';
+import 'package:mapesa/src/pages/dashboard_page.dart';
+import 'package:mapesa/src/pages/debug_page.dart';
+import 'package:mapesa/src/pages/search_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
