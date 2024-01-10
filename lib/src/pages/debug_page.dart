@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mapesa/src/common/cards/primary_item_card.dart';
 import 'package:mapesa/src/common/charts/comparison_bar.dart';
+import 'package:mapesa/src/features/auth_provider.dart';
 
 class DebugPage extends StatefulWidget {
-  const DebugPage({Key? key}) : super(key: key);
+  const DebugPage({super.key});
 
   @override
   State<StatefulWidget> createState() => _DebugPageState();
@@ -39,7 +40,12 @@ class _DebugPageState extends State<DebugPage> {
                           fontWeight: FontWeight.bold),
                     ),
                     onTap: () {}),
-                const ComparisonBar(title: "Food", current: 12400, max: 20000)
+                const ComparisonBar(title: "Food", current: 12400, max: 20000),
+                FilledButton(
+                    onPressed: () async {
+                      await AuthProvider.instance.logoutUser();
+                    },
+                    child: const Text("Logout"))
               ],
             ),
           ),

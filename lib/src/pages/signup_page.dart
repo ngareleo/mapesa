@@ -4,7 +4,7 @@ import 'package:mapesa/src/models/users.dart';
 import 'package:mapesa/src/pages/signin_page.dart';
 
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+  const SignUpPage({super.key});
 
   @override
   State<StatefulWidget> createState() => _SignUpPageState();
