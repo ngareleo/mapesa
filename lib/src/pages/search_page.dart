@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mapesa/src/features/message_handler.dart';
+import 'package:telephony/telephony.dart';
+
+import 'package:mapesa/src/features/sms_provider.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -9,19 +11,36 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  final messageHandler = MessageHandler();
+  final _smsProvider = SMSProvider.instance;
+  final messages = <SmsMessage>[];
 
   @override
   void initState() {
-    // TODO: implement initState
+    _smsProvider.updateMessageLimit();
+    setState(() {
+      _smsProvider
+          .fetchAllTransactions()
+          .then((value) => messages.addAll(value));
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Welcome to the Search Page'),
+    return Scaffold(
+      appBar: AppBar(title: const Text("Search Page")),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                children: List.generate(messages.length,
+                    (index) => Text(messages[index].body ?? "No message")),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
