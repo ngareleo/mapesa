@@ -5,7 +5,7 @@ import 'package:mapesa/src/pages/debug_page.dart';
 import 'package:mapesa/src/pages/search_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<StatefulWidget> createState() => _HomePageState();

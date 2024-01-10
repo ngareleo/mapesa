@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mapesa/src/features/auth_provider.dart';
 import 'package:mapesa/src/models/users.dart';
+import 'package:mapesa/src/pages/home_page.dart';
 import 'package:mapesa/src/pages/signup_page.dart';
 
 class SignInPage extends StatefulWidget {
@@ -55,7 +56,7 @@ class _SignInPageState extends State<SignInPage> {
               TextFormField(
                 controller: _controllers[passwordKey],
                 decoration: const InputDecoration(
-                  labelText: usernameKey,
+                  labelText: passwordKey,
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   border: UnderlineInputBorder(),
                 ),
@@ -71,7 +72,7 @@ class _SignInPageState extends State<SignInPage> {
               ),
               const SizedBox(height: 20),
               TextButton(
-                  onPressed: navigateToSignUpPage,
+                  onPressed: navigateToHomePage,
                   child: const Text("I don't have an account"))
             ],
           ),
@@ -111,7 +112,7 @@ class _SignInPageState extends State<SignInPage> {
           );
           return;
         }
-        navigateToSignUpPage();
+        navigateToHomePage();
         break;
       case UserLoginStatus.incorrectPassword:
         ScaffoldMessenger.of(context).showSnackBar(
@@ -138,8 +139,8 @@ class _SignInPageState extends State<SignInPage> {
     }
   }
 
-  void navigateToSignUpPage() {
+  void navigateToHomePage() {
     Navigator.push(
-        context, MaterialPageRoute(builder: (_) => const SignUpPage()));
+        context, MaterialPageRoute(builder: (_) => const HomePage()));
   }
 }

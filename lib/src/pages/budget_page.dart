@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BudgetPage extends StatefulWidget {
-  const BudgetPage({Key? key}) : super(key: key);
+  const BudgetPage({super.key});
 
   @override
   State<StatefulWidget> createState() => _BudgetPageState();

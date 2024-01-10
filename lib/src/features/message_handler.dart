@@ -3,20 +3,20 @@ import 'package:permission_handler/permission_handler.dart';
 
 class MessageHandler {
   final SmsQuery _query = SmsQuery();
-  static const maxMessages = 100000;
+  final maxMessages = 100000;
 
   Future<List<SmsMessage>> fetchMessages({int latestID = 0}) async {
     var permission = await Permission.sms.status;
     if (permission.isGranted) {
       return (latestID == 0)
-          ? await initializeAllTransactions()
-          : await initializeRecentTransactions(from: latestID);
+          ? await fetchAllTransactions()
+          : await fetchRecentTransactions(from: latestID);
     }
     await Permission.sms.request();
     return [];
   }
 
-  Future<List<SmsMessage>> initializeAllTransactions() async {
+  Future<List<SmsMessage>> fetchAllTransactions() async {
     return await _query.querySms(
         kinds: [SmsQueryKind.inbox],
         address: "MPESA",
@@ -25,8 +25,7 @@ class MessageHandler {
         sort: true);
   }
 
-  Future<List<SmsMessage>> initializeRecentTransactions(
-      {required int from}) async {
+  Future<List<SmsMessage>> fetchRecentTransactions({required int from}) async {
     var count = 0;
     List<SmsMessage> messages = [];
     do {

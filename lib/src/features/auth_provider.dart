@@ -24,11 +24,12 @@ class AuthProvider extends ChangeNotifier {
     _getAuthTokenFromPersist();
     _dio = Dio(
       BaseOptions(
-        baseUrl: "https://3be5-20-204-60-48.ngrok-free.app/",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      ),
+          baseUrl: "https://3be5-20-204-60-48.ngrok-free.app/",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          connectTimeout: const Duration(minutes: 4),
+          receiveTimeout: const Duration(minutes: 4)),
     );
     _instance = this;
   }
@@ -77,13 +78,13 @@ class AuthProvider extends ChangeNotifier {
           "password": password,
         },
       );
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       var response = e.response;
       debugPrint("[E: ${response?.statusCode}] : ${response?.data}");
       if (response?.statusCode == 400) {
-        if (response?.data["message"] == "Incorrect password") {
+        if (response?.data["message"] == "incorrect_password") {
           return (UserLoginStatus.incorrectPassword, null);
-        } else if (response?.data["message"] == "User not found") {
+        } else if (response?.data["message"] == "user_not_found") {
           return (UserLoginStatus.userNotFound, null);
         }
       } else if (e.response?.statusCode == 500) {
