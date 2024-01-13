@@ -43,8 +43,7 @@ class FulizaTransaction extends Transaction {
   Map<String, String?> toJson() {
     return {
       "type": type,
-      "messageID": messageId.toString(),
-      "userID": userId,
+      "messageId": messageId.toString(),
       "transactionAmount": transactionAmount?.amount.toString(),
       "transactionCode": transactionCode,
       "interest": interest.amount.toString(),

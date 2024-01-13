@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mapesa/src/features/cache/cache_items.dart';
-import 'package:mapesa/src/features/cache/common_cache.dart';
-import 'package:mapesa/src/features/sms_provider.dart';
+import 'package:mapesa/src/features/upload_provider.dart';
 import 'package:mapesa/src/pages/budget_page.dart';
 import 'package:mapesa/src/pages/dashboard_page.dart';
 import 'package:mapesa/src/pages/debug_page.dart';
 import 'package:mapesa/src/pages/search_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,13 +13,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _smsProvider = SMSProvider.instance;
-
   var _currentPageIndex = 0;
+  final _uploadProvider = TransactionsUploadProvider();
 
   @override
   void setState(VoidCallback fn) {
-    _smsProvider.updateMessageLimit();
+    _uploadProvider.fetchTransactions();
     super.setState(fn);
   }
 

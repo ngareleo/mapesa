@@ -8,20 +8,13 @@ class AirtimeForTransaction extends AirtimeTransaction {
   static const type = "airtime-for";
 
   AirtimeForTransaction(
-      {required int messageId,
-      required String userId,
-      required Money transactionAmount,
-      required String transactionCode,
-      required DateTime dateTime,
-      required Money balance,
-      required this.subject})
-      : super(
-            messageId: messageId,
-            userId: userId,
-            transactionAmount: transactionAmount,
-            transactionCode: transactionCode,
-            dateTime: dateTime,
-            balance: balance);
+      {required super.messageId,
+      required super.userId,
+      required super.transactionAmount,
+      required super.transactionCode,
+      required super.dateTime,
+      required super.balance,
+      required this.subject});
 
   factory AirtimeForTransaction.fromMpesaMessage(
       {required int messageID, required RegExpMatch match}) {
@@ -44,8 +37,7 @@ class AirtimeForTransaction extends AirtimeTransaction {
   Map<String, String?> toJson() {
     return {
       "type": type,
-      "messageID": messageId.toString(),
-      "userID": userId,
+      "messageId": messageId.toString(),
       "transactionAmount": transactionAmount?.amount.toString(),
       "transactionCode": transactionCode,
       "transactionCost": transactionCost?.amount.toString(),

@@ -7,7 +7,7 @@ import 'transaction.dart';
 
 class LipaNaMpesaTransaction extends Transaction {
   final String subject;
-  static const type = "lipa-na-mpesa";
+  static const type = "buygoods";
 
   const LipaNaMpesaTransaction(
       {required int messageId,
@@ -45,8 +45,8 @@ class LipaNaMpesaTransaction extends Transaction {
   Map<String, String?> toJson() {
     return {
       "type": type,
-      "messageID": messageId.toString(),
-      "userID": userId,
+      "messageId": messageId.toString(),
+      "userId": userId,
       "transactionAmount": transactionAmount?.amount.toString(),
       "transactionCode": transactionCode,
       "transactionCost": transactionCost?.amount.toString(),

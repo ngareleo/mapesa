@@ -52,8 +52,8 @@ class PaybillTransaction extends Transaction {
   Map<String, String?> toJson() {
     return {
       "type": type,
-      "messageID": messageId.toString(),
-      "userID": userId,
+      "messageId": messageId.toString(),
+      "userId": userId,
       "transactionAmount": transactionAmount?.amount.toString(),
       "transactionCode": transactionCode,
       "transactionCost": transactionCost?.amount.toString(),

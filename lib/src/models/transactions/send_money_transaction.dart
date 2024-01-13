@@ -8,7 +8,7 @@ import 'transaction.dart';
 class SendMoneyTransaction extends Transaction {
   final String subject;
   final String phoneNumber;
-  static const type = "send-money";
+  static const type = "send";
 
   const SendMoneyTransaction(
       {required int messageId,
@@ -52,15 +52,15 @@ class SendMoneyTransaction extends Transaction {
   Map<String, String?> toJson() {
     return {
       "type": type,
-      "messageID": messageId.toString(),
-      "userID": userId,
+      "messageId": messageId.toString(),
+      "userId": userId,
       "transactionAmount": transactionAmount?.amount.toString(),
       "transactionCode": transactionCode,
       "transactionCost": transactionCost?.amount.toString(),
       "dateTime": dateTime.toString(),
       "balance": balance?.amount.toString(),
       "subject": subject,
-      "phoneNumber": phoneNumber
+      "subjectPhoneNumber": phoneNumber
     };
   }
 

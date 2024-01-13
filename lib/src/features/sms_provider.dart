@@ -1,11 +1,11 @@
+import 'dart:isolate';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telephony/telephony.dart';
 
-import 'package:mapesa/src/features/cache/cache_items.dart';
-import 'package:mapesa/src/features/cache/common_cache.dart';
+// module for reading sms\
 
 class SMSProvider {
+  // Modules will request SmsMessages from this class
   static SMSProvider? _instance;
   static final telephony = Telephony.instance;
   final maxMessages = 100000;
@@ -23,7 +23,7 @@ class SMSProvider {
     }
   }
 
-  Future<List<SmsMessage>> fetchAllTransactions() async {
+  Future<List<SmsMessage>> fetchRecentMessages({int fromId = 0}) async {
     await _checkPermission();
     var messages = await telephony.getInboxSms(
         columns: [SmsColumn.ADDRESS, SmsColumn.BODY],
@@ -31,24 +31,19 @@ class SMSProvider {
     return messages;
   }
 
-  Future<(int, int)> findSmsRange() async {
-    /// Looks for the first and last ids
-    /// Low Perf
+  Future<(int, int)> _findSmsRange() async {
+    /// Looks for the first and last ids from db
+    /// Low Perf executed as little as possible
+    ///
+    // TODO: Persist this value and to reuse during next compute
 
     await _checkPermission();
-    var messages = await telephony.getInboxSms(
+    var messages = await Isolate.run(() => telephony.getInboxSms(
         columns: [SmsColumn.ID, SmsColumn.ADDRESS, SmsColumn.BODY],
         filter: SmsFilter.where(SmsColumn.ADDRESS).equals("MPESA"),
         sortOrder: [
           OrderBy(SmsColumn.ID, sort: Sort.DESC),
-        ]);
+        ]));
     return (messages.first.id ?? 0, messages.first.id ?? 0);
-  }
-
-  Future<void> updateMessageLimit() async {
-    await _checkPermission();
-    var (start, end) = await findSmsRange();
-    var prefs = await SharedPreferences.getInstance();
-    CommonCache.messageLimitCache.write(prefs, MessageLimit(start, end));
   }
 }
