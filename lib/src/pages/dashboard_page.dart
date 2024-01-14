@@ -25,8 +25,8 @@ class _DashboardPageState extends State<DashboardPage> {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Good Afternoon, Leo"),
-                SizedBox(
+                const Text("Good Afternoon, Leo"),
+                const SizedBox(
                   height: 20,
                 ),
                 showBalanceWidget()

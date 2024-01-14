@@ -12,14 +12,12 @@ class FulizaTransaction extends Transaction {
 
   const FulizaTransaction(
       {required int messageId,
-      required String userId,
       required Money transactionAmount,
       required String transactionCode,
       required Money balance,
       required this.interest})
       : super(
             messageId: messageId,
-            userId: userId,
             transactionAmount: transactionAmount,
             transactionCode: transactionCode,
             transactionCost: null,
@@ -30,7 +28,6 @@ class FulizaTransaction extends Transaction {
       {required int messageID, required RegExpMatch match}) {
     return FulizaTransaction(
         messageId: messageID,
-        userId: "",
         transactionAmount:
             Money.fromString(message: match.group(2).toString().trim()),
         transactionCode: match.group(1).toString().trim(),
@@ -43,13 +40,12 @@ class FulizaTransaction extends Transaction {
   Map<String, String?> toJson() {
     return {
       "type": type,
-      "messageID": messageId.toString(),
-      "userID": userId,
+      "messageId": messageId.toString(),
       "transactionAmount": transactionAmount?.amount.toString(),
       "transactionCode": transactionCode,
       "interest": interest.amount.toString(),
       "transactionCost": transactionCost?.amount.toString(),
-      "dateTime": dateTime.toString(),
+      "dateTime": dateTime?.millisecondsSinceEpoch.toString(),
       "balance": balance?.amount.toString()
     };
   }

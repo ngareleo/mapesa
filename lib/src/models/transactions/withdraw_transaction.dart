@@ -13,7 +13,6 @@ class WithdrawTransaction extends Transaction {
 
   const WithdrawTransaction(
       {required int messageId,
-      required String userId,
       required Money transactionAmount,
       required String transactionCode,
       required Money transactionCost,
@@ -23,7 +22,6 @@ class WithdrawTransaction extends Transaction {
       required this.agentNumber})
       : super(
             messageId: messageId,
-            userId: userId,
             transactionAmount: transactionAmount,
             transactionCode: transactionCode,
             transactionCost: transactionCost,
@@ -34,7 +32,6 @@ class WithdrawTransaction extends Transaction {
       {required int messageID, required RegExpMatch match}) {
     return WithdrawTransaction(
         messageId: messageID,
-        userId: "",
         transactionAmount:
             Money.fromString(message: match.group(5).toString().trim()),
         transactionCode: match.group(1).toString().trim(),
@@ -53,12 +50,11 @@ class WithdrawTransaction extends Transaction {
   Map<String, String?> toJson() {
     return {
       "type": type,
-      "messageID": messageId.toString(),
-      "userID": userId,
+      "messageId": messageId.toString(),
       "transactionAmount": transactionAmount?.amount.toString(),
       "transactionCode": transactionCode,
       "transactionCost": transactionCost?.amount.toString(),
-      "dateTime": dateTime.toString(),
+      "dateTime": dateTime?.millisecondsSinceEpoch.toString(),
       "balance": balance?.amount.toString(),
       "location": location,
       "agentNumber": agentNumber

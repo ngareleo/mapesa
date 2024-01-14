@@ -1,12 +1,13 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mapesa/src/features/cache/cache_items.dart';
 
 class CommonCache {
-  // A cache that is loaded with variables that should be read
+  // A cache that is loaded with variables that are used across modules and UI
+
   static CommonCache? _instance;
-  final _messageLimitCache = MessageLimitCacheItem(
-    key: "message_limit",
-    value: MessageLimit(0, 0),
-  );
+
+  final _backendUrlCache = BackendURLCacheItem(
+      key: "backend_url", value: dotenv.env["BACKEND_URL"] ?? "");
 
   factory CommonCache() {
     return CommonCache._();
@@ -17,6 +18,5 @@ class CommonCache {
   }
 
   static CommonCache get instance => _instance ?? CommonCache._();
-  static MessageLimitCacheItem get messageLimitCache =>
-      instance._messageLimitCache;
+  static BackendURLCacheItem get backendURLCache => instance._backendUrlCache;
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mapesa/src/features/auth_provider.dart';
 import 'package:mapesa/src/features/cache/common_cache.dart';
 import 'package:provider/provider.dart';
@@ -7,7 +8,8 @@ import 'package:mapesa/src/pages/auth_page.dart';
 
 import 'src/pages/home_page.dart';
 
-void main() {
+void main() async {
+  await dotenv.load();
   CommonCache();
   runApp(ChangeNotifierProvider(
       create: (context) => AuthProvider.instance, child: const MapesaApp()));

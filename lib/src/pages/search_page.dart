@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:telephony/telephony.dart';
 
-import 'package:mapesa/src/features/sms_provider.dart';
-
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
@@ -11,17 +9,10 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  final _smsProvider = SMSProvider.instance;
   final messages = <SmsMessage>[];
 
   @override
   void initState() {
-    _smsProvider.updateMessageLimit();
-    setState(() {
-      _smsProvider
-          .fetchAllTransactions()
-          .then((value) => messages.addAll(value));
-    });
     super.initState();
   }
 

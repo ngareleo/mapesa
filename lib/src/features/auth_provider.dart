@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:mapesa/src/features/cache/common_cache.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mapesa/src/models/users.dart';
+
+// modules handles authentication
 
 enum UserLoginStatus {
   success,
@@ -24,7 +27,7 @@ class AuthProvider extends ChangeNotifier {
     _getAuthTokenFromPersist();
     _dio = Dio(
       BaseOptions(
-          baseUrl: "https://3be5-20-204-60-48.ngrok-free.app/",
+          baseUrl: CommonCache.backendURLCache.value,
           headers: {
             "Content-Type": "application/json",
           },
