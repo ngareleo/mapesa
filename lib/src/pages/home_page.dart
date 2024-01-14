@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void setState(VoidCallback fn) {
-    _uploadProvider.fetchTransactions();
+    _uploadProvider.uploadTransactions();
     super.setState(fn);
   }
 

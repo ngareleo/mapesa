@@ -11,7 +11,6 @@ class LipaNaMpesaTransaction extends Transaction {
 
   const LipaNaMpesaTransaction(
       {required int messageId,
-      required String userId,
       required Money transactionAmount,
       required String transactionCode,
       required DateTime dateTime,
@@ -19,10 +18,9 @@ class LipaNaMpesaTransaction extends Transaction {
       required this.subject})
       : super(
             messageId: messageId,
-            userId: userId,
             transactionAmount: transactionAmount,
             transactionCode: transactionCode,
-            transactionCost: const Money(amount: 0.0),
+            transactionCost: const Money(amount: 0),
             dateTime: dateTime,
             balance: balance);
 
@@ -30,7 +28,6 @@ class LipaNaMpesaTransaction extends Transaction {
       {required int messageID, required RegExpMatch match}) {
     return LipaNaMpesaTransaction(
         messageId: messageID,
-        userId: "",
         transactionAmount: Money.fromString(message: match.group(2).toString()),
         transactionCode: match.group(1).toString(),
         dateTime: getDateTimeFromMessage(
@@ -46,11 +43,10 @@ class LipaNaMpesaTransaction extends Transaction {
     return {
       "type": type,
       "messageId": messageId.toString(),
-      "userId": userId,
       "transactionAmount": transactionAmount?.amount.toString(),
       "transactionCode": transactionCode,
       "transactionCost": transactionCost?.amount.toString(),
-      "dateTime": dateTime.toString(),
+      "dateTime": dateTime?.millisecondsSinceEpoch.toString(),
       "balance": balance?.amount.toString(),
       "subject": subject
     };

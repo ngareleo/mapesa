@@ -23,4 +23,7 @@ with Telnet("localhost", 5554) as teln_conn:
             print(teln_conn.read_until(b"OK").decode("utf-8"))
             print("Send success!")
 
-        print(auth_msg.decode("utf-8"))
+        teln_conn.write(b"exit\r\n")
+        teln_conn.write(b"q\r\n")
+
+    teln_conn.close()

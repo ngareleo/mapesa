@@ -15,7 +15,6 @@ enum TransactionType {
 
 abstract class Transaction {
   final int? messageId;
-  final String? userId;
   final String? transactionCode;
   final Money? transactionCost;
   final DateTime? dateTime;
@@ -24,7 +23,6 @@ abstract class Transaction {
 
   const Transaction(
       {required this.messageId,
-      required this.userId,
       required this.transactionAmount,
       required this.transactionCode,
       required this.transactionCost,
@@ -39,7 +37,6 @@ class InvalidTransaction extends Transaction {
   InvalidTransaction()
       : super(
             messageId: null,
-            userId: null,
             transactionAmount: null,
             transactionCode: null,
             transactionCost: null,

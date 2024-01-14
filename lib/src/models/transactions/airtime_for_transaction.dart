@@ -9,7 +9,6 @@ class AirtimeForTransaction extends AirtimeTransaction {
 
   AirtimeForTransaction(
       {required super.messageId,
-      required super.userId,
       required super.transactionAmount,
       required super.transactionCode,
       required super.dateTime,
@@ -20,7 +19,6 @@ class AirtimeForTransaction extends AirtimeTransaction {
       {required int messageID, required RegExpMatch match}) {
     return AirtimeForTransaction(
       messageId: messageID,
-      userId: "",
       transactionAmount:
           Money.fromString(message: match.group(2).toString().trim()),
       transactionCode: match.group(1).toString().trim(),
@@ -41,7 +39,7 @@ class AirtimeForTransaction extends AirtimeTransaction {
       "transactionAmount": transactionAmount?.amount.toString(),
       "transactionCode": transactionCode,
       "transactionCost": transactionCost?.amount.toString(),
-      "dateTime": dateTime.toString(),
+      "dateTime": dateTime?.millisecondsSinceEpoch.toString(),
       "subject": subject,
       "balance": balance?.amount.toString()
     };

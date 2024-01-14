@@ -26,7 +26,7 @@ class SMSProvider {
   Future<List<SmsMessage>> fetchRecentMessages({int fromId = 0}) async {
     await _checkPermission();
     var messages = await telephony.getInboxSms(
-        columns: [SmsColumn.ADDRESS, SmsColumn.BODY],
+        columns: [SmsColumn.ADDRESS, SmsColumn.BODY, SmsColumn.ID],
         filter: SmsFilter.where(SmsColumn.ADDRESS).equals("MPESA"));
     return messages;
   }

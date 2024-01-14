@@ -11,7 +11,6 @@ class DepositTransaction extends Transaction {
 
   const DepositTransaction(
       {required int messageId,
-      required String userId,
       required Money transactionAmount,
       required String transactionCode,
       required DateTime dateTime,
@@ -19,7 +18,6 @@ class DepositTransaction extends Transaction {
       required this.location})
       : super(
             messageId: messageId,
-            userId: userId,
             transactionAmount: transactionAmount,
             transactionCode: transactionCode,
             transactionCost: const Money(amount: 0),
@@ -30,7 +28,6 @@ class DepositTransaction extends Transaction {
       {required int messageID, required RegExpMatch match}) {
     return DepositTransaction(
         messageId: messageID,
-        userId: "",
         transactionAmount:
             Money.fromString(message: match.group(5).toString().trim()),
         transactionCode: match.group(1).toString().trim(),
@@ -50,7 +47,7 @@ class DepositTransaction extends Transaction {
       "transactionAmount": transactionAmount?.amount.toString(),
       "transactionCode": transactionCode,
       "transactionCost": transactionCost?.amount.toString(),
-      "dateTime": dateTime.toString(),
+      "dateTime": dateTime?.millisecondsSinceEpoch.toString(),
       "location": location,
       "balance": balance?.amount.toString()
     };

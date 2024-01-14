@@ -12,7 +12,6 @@ class SendMoneyTransaction extends Transaction {
 
   const SendMoneyTransaction(
       {required int messageId,
-      required String userId,
       required Money transactionAmount,
       required String transactionCode,
       required Money transactionCost,
@@ -22,7 +21,6 @@ class SendMoneyTransaction extends Transaction {
       required this.phoneNumber})
       : super(
             messageId: messageId,
-            userId: userId,
             transactionAmount: transactionAmount,
             transactionCode: transactionCode,
             transactionCost: transactionCost,
@@ -33,7 +31,6 @@ class SendMoneyTransaction extends Transaction {
       {required int messageID, required RegExpMatch match}) {
     return SendMoneyTransaction(
         messageId: messageID,
-        userId: "",
         transactionAmount:
             Money.fromString(message: match.group(2).toString().trim()),
         transactionCode: match.group(1).toString().trim(),
@@ -53,11 +50,10 @@ class SendMoneyTransaction extends Transaction {
     return {
       "type": type,
       "messageId": messageId.toString(),
-      "userId": userId,
       "transactionAmount": transactionAmount?.amount.toString(),
       "transactionCode": transactionCode,
       "transactionCost": transactionCost?.amount.toString(),
-      "dateTime": dateTime.toString(),
+      "dateTime": dateTime?.millisecondsSinceEpoch.toString(),
       "balance": balance?.amount.toString(),
       "subject": subject,
       "subjectPhoneNumber": phoneNumber
