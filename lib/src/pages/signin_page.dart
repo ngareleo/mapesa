@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:mapesa/src/features/auth_provider.dart';
 import 'package:mapesa/src/models/users.dart';
 import 'package:mapesa/src/pages/home_page.dart';
+import 'package:mapesa/src/pages/signup_page.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -71,7 +73,7 @@ class _SignInPageState extends State<SignInPage> {
               ),
               const SizedBox(height: 20),
               TextButton(
-                  onPressed: navigateToHomePage,
+                  onPressed: navigateToSignUpPage,
                   child: const Text("I don't have an account"))
             ],
           ),
@@ -141,5 +143,10 @@ class _SignInPageState extends State<SignInPage> {
   void navigateToHomePage() {
     Navigator.push(
         context, MaterialPageRoute(builder: (_) => const HomePage()));
+  }
+
+  void navigateToSignUpPage() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (_) => const SignUpPage()));
   }
 }

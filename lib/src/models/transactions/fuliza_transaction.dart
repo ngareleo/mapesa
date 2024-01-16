@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:mapesa/src/common/cards/primary_item_card.dart';
 import 'package:mapesa/src/utils/datetime.dart';
+import 'package:mapesa/src/utils/money.dart';
 
-import '../../utils/money.dart';
 import 'transaction.dart';
 
 class FulizaTransaction extends Transaction {
@@ -10,23 +11,20 @@ class FulizaTransaction extends Transaction {
 
   final Money interest;
 
-  const FulizaTransaction(
-      {required int messageId,
-      required Money transactionAmount,
-      required String transactionCode,
-      required Money balance,
-      required this.interest})
-      : super(
-            messageId: messageId,
-            transactionAmount: transactionAmount,
-            transactionCode: transactionCode,
-            transactionCost: null,
-            dateTime: null,
-            balance: balance);
+  const FulizaTransaction({
+    required super.messageId,
+    required super.transactionAmount,
+    required super.transactionCode,
+    required super.balance,
+    required super.dateTime,
+    required this.interest,
+  }) : super(transactionCost: const Money(amount: 0), subject: "Fuliza");
 
   factory FulizaTransaction.fromMpesaMessage(
       {required int messageID, required RegExpMatch match}) {
     return FulizaTransaction(
+        dateTime: DateTime
+            .now(), // TODO: Fix this by looking for subsequent message with date
         messageId: messageID,
         transactionAmount:
             Money.fromString(message: match.group(2).toString().trim()),
@@ -39,14 +37,15 @@ class FulizaTransaction extends Transaction {
   @override
   Map<String, String?> toJson() {
     return {
-      "type": type,
-      "messageId": messageId.toString(),
-      "transactionAmount": transactionAmount?.amount.toString(),
-      "transactionCode": transactionCode,
+      "balance": balance.amount.toString(),
+      "dateTime": dateTime.millisecondsSinceEpoch.toString(),
       "interest": interest.amount.toString(),
-      "transactionCost": transactionCost?.amount.toString(),
-      "dateTime": dateTime?.millisecondsSinceEpoch.toString(),
-      "balance": balance?.amount.toString()
+      "messageId": messageId.toString(),
+      "subject": subject,
+      "transactionAmount": transactionAmount.amount.toString(),
+      "transactionCode": transactionCode,
+      "transactionCost": transactionCost.amount.toString(),
+      "type": type,
     };
   }
 
@@ -57,10 +56,10 @@ class FulizaTransaction extends Transaction {
 
   @override
   Widget toTransactionListItem() {
-    final amount = transactionAmount?.amount.toString() ?? "0.00";
+    final amount = transactionAmount.amount.toString();
     return PrimaryItemCard(
       title: "Fuliza",
-      subtitle: prettifyTimeDifference(dateTime ?? DateTime.now()),
+      subtitle: prettifyTimeDifference(dateTime),
       icon: const Text("F"),
       rightWidget: Text(
         "Ksh. $amount",

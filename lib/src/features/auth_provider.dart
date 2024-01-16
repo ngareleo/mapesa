@@ -1,9 +1,10 @@
 import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:mapesa/src/features/cache/common_cache.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:mapesa/src/features/cache/common_cache.dart';
 import 'package:mapesa/src/models/users.dart';
 
 // modules handles authentication
@@ -20,20 +21,16 @@ class AuthProvider extends ChangeNotifier {
   static AuthProvider? _instance;
   static User? _loggedInUser;
   static String? _authToken;
-  late Dio _dio;
+  late Dio _dio; // Cannot use DioProvider here to avoid circular dependency
 
   AuthProvider._() {
     _getUserDetailsFromPersist();
     _getAuthTokenFromPersist();
-    _dio = Dio(
-      BaseOptions(
-          baseUrl: CommonCache.backendURLCache.value,
-          headers: {
-            "Content-Type": "application/json",
-          },
-          connectTimeout: const Duration(minutes: 4),
-          receiveTimeout: const Duration(minutes: 4)),
-    );
+    var dio = Dio();
+    dio.options.baseUrl = CommonCache.backendURLCache.value;
+    dio.options.connectTimeout = const Duration(minutes: 2);
+    dio.options.receiveTimeout = const Duration(minutes: 2);
+    _dio = dio;
     _instance = this;
   }
 

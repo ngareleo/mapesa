@@ -1,19 +1,23 @@
+import 'package:flutter/material.dart';
+
+import 'package:mapesa/src/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/models/transactions/transaction.dart';
 import 'package:mapesa/src/utils/datetime.dart';
 import 'package:mapesa/src/utils/money.dart';
 
-import '../transactions/airtime_transaction.dart';
-
-class AirtimeForTransaction extends AirtimeTransaction {
-  final String subject;
+class AirtimeForTransaction extends Transaction {
   static const type = "airtime-for";
 
-  AirtimeForTransaction(
-      {required super.messageId,
-      required super.transactionAmount,
-      required super.transactionCode,
-      required super.dateTime,
-      required super.balance,
-      required this.subject});
+  AirtimeForTransaction({
+    required super.messageId,
+    required super.transactionAmount,
+    required super.transactionCode,
+    required super.dateTime,
+    required super.balance,
+    required super.subject,
+  }) : super(
+          transactionCost: const Money(amount: 0),
+        );
 
   factory AirtimeForTransaction.fromMpesaMessage(
       {required int messageID, required RegExpMatch match}) {
@@ -34,19 +38,32 @@ class AirtimeForTransaction extends AirtimeTransaction {
   @override
   Map<String, String?> toJson() {
     return {
-      "type": type,
+      "balance": balance.amount.toString(),
+      "dateTime": dateTime.millisecondsSinceEpoch.toString(),
       "messageId": messageId.toString(),
-      "transactionAmount": transactionAmount?.amount.toString(),
-      "transactionCode": transactionCode,
-      "transactionCost": transactionCost?.amount.toString(),
-      "dateTime": dateTime?.millisecondsSinceEpoch.toString(),
       "subject": subject,
-      "balance": balance?.amount.toString()
+      "transactionAmount": transactionAmount.amount.toString(),
+      "transactionCode": transactionCode,
+      "transactionCost": transactionCost.amount.toString(),
+      "type": type,
     };
   }
 
   @override
   String toString() {
     return toJson().toString();
+  }
+
+  @override
+  Widget toTransactionListItem() {
+    final amount = transactionAmount.amount.toString();
+    return PrimaryItemCard(
+        title: "Airtime",
+        subtitle: prettifyTimeDifference(dateTime),
+        icon: const Text("A"),
+        rightWidget: Text("KES $amount"),
+        onTap: () {
+          // TODO: open transaction details page
+        });
   }
 }

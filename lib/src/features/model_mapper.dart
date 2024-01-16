@@ -1,3 +1,5 @@
+import 'package:telephony/telephony.dart';
+
 import 'package:mapesa/src/models/transactions/airtime_for_transaction.dart';
 import 'package:mapesa/src/models/transactions/airtime_transaction.dart';
 import 'package:mapesa/src/models/transactions/deposit_transaction.dart';
@@ -8,7 +10,6 @@ import 'package:mapesa/src/models/transactions/receive_money_transaction.dart';
 import 'package:mapesa/src/models/transactions/send_money_transaction.dart';
 import 'package:mapesa/src/models/transactions/transaction.dart';
 import 'package:mapesa/src/models/transactions/withdraw_transaction.dart';
-import 'package:telephony/telephony.dart';
 
 abstract class DataMapper<A, B> {
   // from [A] to [B]

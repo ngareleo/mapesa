@@ -14,34 +14,40 @@ enum TransactionType {
 }
 
 abstract class Transaction {
-  final int? messageId;
-  final String? transactionCode;
-  final Money? transactionCost;
-  final DateTime? dateTime;
-  final Money? balance;
-  final Money? transactionAmount;
+  // These fields are constranied to be non-null by backend
+
+  final Money balance;
+  final DateTime dateTime;
+  final int messageId;
+  final String subject;
+  final Money transactionAmount;
+  final String transactionCode;
+  final Money transactionCost;
 
   const Transaction(
-      {required this.messageId,
+      {required this.balance,
+      required this.messageId,
       required this.transactionAmount,
       required this.transactionCode,
       required this.transactionCost,
       required this.dateTime,
-      required this.balance});
+      required this.subject});
 
   Map<String, String?> toJson();
   Widget toTransactionListItem();
 }
 
 class InvalidTransaction extends Transaction {
+  // Takes these params not seriously
   InvalidTransaction()
       : super(
-            messageId: null,
-            transactionAmount: null,
-            transactionCode: null,
-            transactionCost: null,
-            dateTime: null,
-            balance: null);
+            subject: "Invalid Transaction",
+            messageId: 0,
+            transactionAmount: const Money(amount: 0),
+            transactionCode: "",
+            transactionCost: const Money(amount: 0),
+            dateTime: DateTime.fromMicrosecondsSinceEpoch(0),
+            balance: const Money(amount: 0));
 
   @override
   Map<String, String?> toJson() {

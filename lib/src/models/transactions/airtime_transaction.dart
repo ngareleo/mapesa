@@ -1,26 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:mapesa/src/common/cards/primary_item_card.dart';
 
-import '../../utils/datetime.dart';
-import '../../utils/money.dart';
+import 'package:mapesa/src/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/utils/datetime.dart';
+import 'package:mapesa/src/utils/money.dart';
+
 import 'transaction.dart';
 
 class AirtimeTransaction extends Transaction {
   static const type = "airtime";
 
   const AirtimeTransaction({
-    required int messageId,
-    required Money transactionAmount,
-    required String transactionCode,
-    required DateTime dateTime,
-    required Money balance,
+    required super.messageId,
+    required super.transactionAmount,
+    required super.transactionCode,
+    required super.dateTime,
+    required super.balance,
   }) : super(
-            messageId: messageId,
-            transactionAmount: transactionAmount,
-            transactionCode: transactionCode,
-            transactionCost: const Money(amount: 0),
-            dateTime: dateTime,
-            balance: balance);
+          subject: "Airtime",
+          transactionCost: const Money(amount: 0),
+        );
 
   factory AirtimeTransaction.fromMpesaMessage(
       {required int messageID, required RegExpMatch match}) {
@@ -40,13 +38,14 @@ class AirtimeTransaction extends Transaction {
   @override
   Map<String, String?> toJson() {
     return {
-      "type": type,
+      "balance": balance.amount.toString(),
+      "dateTime": dateTime.millisecondsSinceEpoch.toString(),
       "messageId": messageId.toString(),
-      "transactionAmount": transactionAmount?.amount.toString(),
+      "subject": subject,
+      "transactionAmount": transactionAmount.amount.toString(),
       "transactionCode": transactionCode,
-      "transactionCost": transactionCost?.amount.toString(),
-      "dateTime": dateTime?.millisecondsSinceEpoch.toString(),
-      "balance": balance?.amount.toString()
+      "transactionCost": transactionCost.amount.toString(),
+      "type": type,
     };
   }
 
@@ -57,10 +56,10 @@ class AirtimeTransaction extends Transaction {
 
   @override
   Widget toTransactionListItem() {
-    final amount = transactionAmount?.amount.toString() ?? "0.00";
+    final amount = transactionAmount.amount.toString();
     return PrimaryItemCard(
         title: "Airtime",
-        subtitle: prettifyTimeDifference(dateTime ?? DateTime.now()),
+        subtitle: prettifyTimeDifference(dateTime),
         icon: const Text("A"),
         rightWidget: Text("KES $amount"),
         onTap: () {

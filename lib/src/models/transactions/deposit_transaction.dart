@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mapesa/src/common/cards/primary_item_card.dart';
 
-import '../../utils/datetime.dart';
-import '../../utils/money.dart';
+import 'package:mapesa/src/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/utils/datetime.dart';
+import 'package:mapesa/src/utils/money.dart';
+
 import 'transaction.dart';
 
 class DepositTransaction extends Transaction {
@@ -10,19 +11,16 @@ class DepositTransaction extends Transaction {
   static const type = "deposit";
 
   const DepositTransaction(
-      {required int messageId,
-      required Money transactionAmount,
-      required String transactionCode,
-      required DateTime dateTime,
-      required Money balance,
+      {required super.messageId,
+      required super.transactionAmount,
+      required super.transactionCode,
+      required super.dateTime,
+      required super.balance,
       required this.location})
       : super(
-            messageId: messageId,
-            transactionAmount: transactionAmount,
-            transactionCode: transactionCode,
-            transactionCost: const Money(amount: 0),
-            dateTime: dateTime,
-            balance: balance);
+          subject: "Deposit",
+          transactionCost: const Money(amount: 0),
+        );
 
   factory DepositTransaction.fromMpesaMessage(
       {required int messageID, required RegExpMatch match}) {
@@ -42,14 +40,15 @@ class DepositTransaction extends Transaction {
   @override
   Map<String, String?> toJson() {
     return {
-      "type": type,
-      "messageId": messageId.toString(),
-      "transactionAmount": transactionAmount?.amount.toString(),
-      "transactionCode": transactionCode,
-      "transactionCost": transactionCost?.amount.toString(),
-      "dateTime": dateTime?.millisecondsSinceEpoch.toString(),
+      "balance": balance.amount.toString(),
+      "dateTime": dateTime.millisecondsSinceEpoch.toString(),
       "location": location,
-      "balance": balance?.amount.toString()
+      "messageId": messageId.toString(),
+      "subject": subject,
+      "transactionAmount": transactionAmount.amount.toString(),
+      "transactionCode": transactionCode,
+      "transactionCost": transactionCost.amount.toString(),
+      "type": type,
     };
   }
 
@@ -60,10 +59,10 @@ class DepositTransaction extends Transaction {
 
   @override
   Widget toTransactionListItem() {
-    final amount = transactionAmount?.amount.toString() ?? "0.00";
+    final amount = transactionAmount.amount.toString();
     return PrimaryItemCard(
       title: "Deposit",
-      subtitle: prettifyTimeDifference(dateTime ?? DateTime.now()),
+      subtitle: prettifyTimeDifference(dateTime),
       icon: const Text("D"),
       rightWidget: Text("KES $amount"),
       onTap: () {},

@@ -1,31 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:mapesa/src/common/cards/primary_item_card.dart';
 
-import '../../utils/datetime.dart';
-import '../../utils/money.dart';
+import 'package:mapesa/src/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/utils/datetime.dart';
+import 'package:mapesa/src/utils/money.dart';
+
 import 'transaction.dart';
 
 class PaybillTransaction extends Transaction {
-  final String subject;
   final String subjectAccount;
   static const type = "paybill";
 
   const PaybillTransaction(
-      {required int messageId,
-      required Money transactionAmount,
-      required String transactionCode,
-      required Money transactionCost,
-      required DateTime dateTime,
-      required Money balance,
+      {required super.messageId,
+      required super.transactionAmount,
+      required super.transactionCode,
+      required super.transactionCost,
+      required super.dateTime,
+      required super.balance,
       required this.subjectAccount,
-      required this.subject})
-      : super(
-            messageId: messageId,
-            transactionAmount: transactionAmount,
-            transactionCode: transactionCode,
-            transactionCost: transactionCost,
-            dateTime: dateTime,
-            balance: balance);
+      required super.subject});
 
   factory PaybillTransaction.fromMpesaMessage(
       {required int messageID, required RegExpMatch match}) {
@@ -48,15 +41,15 @@ class PaybillTransaction extends Transaction {
   @override
   Map<String, String?> toJson() {
     return {
-      "type": type,
+      "balance": balance.amount.toString(),
+      "dateTime": dateTime.millisecondsSinceEpoch.toString(),
       "messageId": messageId.toString(),
-      "transactionAmount": transactionAmount?.amount.toString(),
-      "transactionCode": transactionCode,
-      "transactionCost": transactionCost?.amount.toString(),
-      "dateTime": dateTime?.microsecondsSinceEpoch.toString(),
-      "balance": balance?.amount.toString(),
       "subject": subject,
-      "subjectAccount": subjectAccount
+      "subjectAccount": subjectAccount,
+      "transactionAmount": transactionAmount.amount.toString(),
+      "transactionCode": transactionCode,
+      "transactionCost": transactionCost.amount.toString(),
+      "type": type,
     };
   }
 
@@ -67,11 +60,11 @@ class PaybillTransaction extends Transaction {
 
   @override
   Widget toTransactionListItem() {
-    final amount = transactionAmount?.amount.toString() ?? "0.00";
+    final amount = transactionAmount.amount.toString();
     return PrimaryItemCard(
       icon: const Text("P"),
       title: "$subjectAccount - $subject",
-      subtitle: prettifyTimeDifference(dateTime ?? DateTime.now()),
+      subtitle: prettifyTimeDifference(dateTime),
       rightWidget: Text("KES $amount"),
       onTap: () {},
     );

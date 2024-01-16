@@ -1,10 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:mapesa/src/features/auth_provider.dart';
 import 'package:mapesa/src/features/cache/common_cache.dart';
+import 'package:mapesa/src/features/dio_provider.dart';
 import 'package:mapesa/src/features/model_mapper.dart';
 import 'package:mapesa/src/features/sms_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mapesa/src/models/transactions/fuliza_transaction.dart';
 
 import '../models/transactions/transaction.dart';
 
@@ -19,7 +22,7 @@ enum UploadStatus {
 
 class TransactionsUploadProvider {
   static final mapper = TransactionsMapper();
-  static final _dio = Dio();
+  static final _dio = DioProvider.instance.dio;
   static int? lastUploadedMessageId;
   static const lastUploadedMessageKey = "last_message_id";
 
@@ -28,21 +31,31 @@ class TransactionsUploadProvider {
     _dio.options
       ..baseUrl = CommonCache.backendURLCache.value
       ..connectTimeout = const Duration(minutes: 2)
-      ..contentType = Headers.jsonContentType;
+      ..headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Bearer ${AuthProvider.authToken}"
+      };
   }
 
   Future<(UploadStatus, bool)> uploadTransactions() async {
     var transactions = await fetchTransactions();
-    transactions.removeWhere((t) => t == null);
+    transactions.removeWhere((t) =>
+        t == null ||
+        t.runtimeType ==
+            FulizaTransaction); // TODO: Merge fuliza info with respective transactions
     if (transactions.isEmpty) {
       return (UploadStatus.nothingToUpload, false);
     }
+    var payload = transactions.map((t) => t?.toJson()).toList();
+    debugPrint("Payload: $payload");
 
     Response? response;
     try {
-      response = await _dio.post("/upload/transactions",
-          data: {"raw": transactions.map((t) => t?.toJson()).toList()},
-          onSendProgress: (int sent, int total) {});
+      response = await _dio.post(
+        "/upload/transactions",
+        data: {"raw": payload},
+      );
     } on DioException catch (e) {
       var response = e.response;
       debugPrint("[E: ${response?.statusCode}] : ${response?.data}");

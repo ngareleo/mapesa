@@ -12,21 +12,15 @@ class WithdrawTransaction extends Transaction {
   static const type = "withdraw";
 
   const WithdrawTransaction(
-      {required int messageId,
-      required Money transactionAmount,
-      required String transactionCode,
-      required Money transactionCost,
-      required DateTime dateTime,
-      required Money balance,
+      {required super.messageId,
+      required super.transactionAmount,
+      required super.transactionCode,
+      required super.transactionCost,
+      required super.dateTime,
+      required super.balance,
+      required super.subject, // Set to location for now
       required this.location,
-      required this.agentNumber})
-      : super(
-            messageId: messageId,
-            transactionAmount: transactionAmount,
-            transactionCode: transactionCode,
-            transactionCost: transactionCost,
-            dateTime: dateTime,
-            balance: balance);
+      required this.agentNumber});
 
   factory WithdrawTransaction.fromMpesaMessage(
       {required int messageID, required RegExpMatch match}) {
@@ -42,6 +36,7 @@ class WithdrawTransaction extends Transaction {
             time: match.group(3).toString().trim(),
             isAM: match.group(4).toString().trim() == "AM"),
         balance: Money.fromString(message: match.group(8).toString().trim()),
+        subject: match.group(7).toString().trim(),
         location: match.group(7).toString().trim(),
         agentNumber: match.group(6).toString().trim());
   }
@@ -49,15 +44,15 @@ class WithdrawTransaction extends Transaction {
   @override
   Map<String, String?> toJson() {
     return {
-      "type": type,
-      "messageId": messageId.toString(),
-      "transactionAmount": transactionAmount?.amount.toString(),
-      "transactionCode": transactionCode,
-      "transactionCost": transactionCost?.amount.toString(),
-      "dateTime": dateTime?.millisecondsSinceEpoch.toString(),
-      "balance": balance?.amount.toString(),
+      "agentNumber": agentNumber,
+      "balance": balance.amount.toString(),
+      "dateTime": dateTime.millisecondsSinceEpoch.toString(),
       "location": location,
-      "agentNumber": agentNumber
+      "messageId": messageId.toString(),
+      "transactionAmount": transactionAmount.amount.toString(),
+      "transactionCode": transactionCode,
+      "transactionCost": transactionCost.amount.toString(),
+      "type": type,
     };
   }
 
@@ -68,11 +63,11 @@ class WithdrawTransaction extends Transaction {
 
   @override
   Widget toTransactionListItem() {
-    final amount = transactionAmount?.amount.toString() ?? "0.00";
+    final amount = transactionAmount.amount.toString();
     return PrimaryItemCard(
       icon: const Text("W"),
       title: "Withdraw",
-      subtitle: prettifyTimeDifference(dateTime ?? DateTime.now()),
+      subtitle: prettifyTimeDifference(dateTime),
       rightWidget: Text("KES $amount"),
       onTap: () {},
     );

@@ -8,13 +8,13 @@ class PrimaryItemCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const PrimaryItemCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.subtitle,
     required this.icon,
     required this.rightWidget,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

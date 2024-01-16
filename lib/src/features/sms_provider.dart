@@ -1,8 +1,9 @@
 import 'dart:isolate';
+
 import 'package:permission_handler/permission_handler.dart';
 import 'package:telephony/telephony.dart';
 
-// module for reading sms\
+// module for reading sms
 
 class SMSProvider {
   // Modules will request SmsMessages from this class
