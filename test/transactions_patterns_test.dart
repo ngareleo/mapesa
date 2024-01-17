@@ -18,8 +18,8 @@ void main() {
     var airtimeTransaction = TransactionsMapper()
         .mapStringToTransaction(airtimeMessage, 0)! as AirtimeTransaction;
     expect(airtimeTransaction.transactionCode, "RAM2Y3531G");
-    expect(airtimeTransaction.transactionAmount?.amount, 200);
-    expect(airtimeTransaction.balance?.amount, 855.51);
+    expect(airtimeTransaction.transactionAmount.amount, 20000);
+    expect(airtimeTransaction.balance.amount, 85551);
     expect(airtimeTransaction.dateTime, DateTime.parse("2023-01-23 12:09"));
   });
 
@@ -27,9 +27,9 @@ void main() {
     var sendMoneyTransaction = TransactionsMapper()
         .mapStringToTransaction(sendMoneyMessage, 0)! as SendMoneyTransaction;
     expect(sendMoneyTransaction.transactionCode, "RAM2Y3531G");
-    expect(sendMoneyTransaction.transactionAmount?.amount, 200.03);
-    expect(sendMoneyTransaction.balance?.amount, 855.51);
-    expect(sendMoneyTransaction.transactionCost?.amount, 4.00);
+    expect(sendMoneyTransaction.transactionAmount.amount, 20003);
+    expect(sendMoneyTransaction.balance.amount, 85551);
+    expect(sendMoneyTransaction.transactionCost.amount, 400);
     expect(sendMoneyTransaction.phoneNumber, "078343443");
     expect(sendMoneyTransaction.subject, "WINFRED KANANA");
     expect(sendMoneyTransaction.dateTime, DateTime.parse("2023-01-23 00:09"));
@@ -42,10 +42,10 @@ void main() {
         .mapStringToTransaction(message, 0)! as PaybillTransaction;
     expect(paybillTransaction.subject, "WINFRED KANANA");
     expect(paybillTransaction.transactionCode, "RAM2Y3531G");
-    expect(paybillTransaction.balance?.amount, 855.51);
+    expect(paybillTransaction.balance.amount, 85551);
     expect(paybillTransaction.subjectAccount, "078343443");
-    expect(paybillTransaction.transactionAmount?.amount, 200.1);
-    expect(paybillTransaction.transactionCost?.amount, 4.01);
+    expect(paybillTransaction.transactionAmount.amount, 2001);
+    expect(paybillTransaction.transactionCost.amount, 401);
     expect(paybillTransaction.dateTime, DateTime.parse("2023-01-23 19:09"));
   });
 
@@ -55,8 +55,8 @@ void main() {
             as ReceiveMoneyTransaction;
     expect(receiveMoneyTransaction.subject, "WINFRED KANANA");
     expect(receiveMoneyTransaction.phoneNumber, "0783463443");
-    expect(receiveMoneyTransaction.transactionAmount?.amount, 200.1);
-    expect(receiveMoneyTransaction.balance?.amount, 855.51);
+    expect(receiveMoneyTransaction.transactionAmount.amount, 20010);
+    expect(receiveMoneyTransaction.balance.amount, 85551);
     expect(receiveMoneyTransaction.transactionCode, "RAM2Y3531G");
     expect(
         receiveMoneyTransaction.dateTime, DateTime.parse("2023-01-23 07:09"));
@@ -68,9 +68,9 @@ void main() {
             as LipaNaMpesaTransaction;
     expect(lipaNaMpesaTransaction.subject, "WINFRED KANANA");
     expect(lipaNaMpesaTransaction.transactionCode, "RAM2Y3531G");
-    expect(lipaNaMpesaTransaction.transactionCost?.amount, 0);
-    expect(lipaNaMpesaTransaction.transactionAmount?.amount, 200.10);
-    expect(lipaNaMpesaTransaction.balance?.amount, 855.51);
+    expect(lipaNaMpesaTransaction.transactionCost.amount, 0);
+    expect(lipaNaMpesaTransaction.transactionAmount.amount, 20010);
+    expect(lipaNaMpesaTransaction.balance.amount, 85551);
     expect(lipaNaMpesaTransaction.dateTime, DateTime.parse("2023-01-23 07:09"));
   });
 
@@ -78,9 +78,9 @@ void main() {
     var withdrawMoneyTransaction =
         TransactionsMapper().mapStringToTransaction(withdrawMoneyMessage, 0)!
             as WithdrawTransaction;
-    expect(withdrawMoneyTransaction.transactionAmount?.amount, 200.10);
-    expect(withdrawMoneyTransaction.transactionCost?.amount, 23.00);
-    expect(withdrawMoneyTransaction.balance?.amount, 855.51);
+    expect(withdrawMoneyTransaction.transactionAmount.amount, 20010);
+    expect(withdrawMoneyTransaction.transactionCost.amount, 2300);
+    expect(withdrawMoneyTransaction.balance.amount, 85551);
     expect(withdrawMoneyTransaction.transactionCode, "RAM2Y3531G");
     expect(withdrawMoneyTransaction.location, "Fkam LTD");
     expect(withdrawMoneyTransaction.agentNumber, "4834545");
@@ -92,8 +92,8 @@ void main() {
     var depositTransaction = TransactionsMapper()
         .mapStringToTransaction(depositMoneyMessage, 0)! as DepositTransaction;
     expect(depositTransaction.location, "Fkam LTD");
-    expect(depositTransaction.balance?.amount, 855.51);
-    expect(depositTransaction.transactionAmount?.amount, 200.1);
+    expect(depositTransaction.balance.amount, 85551);
+    expect(depositTransaction.transactionAmount.amount, 20010);
     expect(depositTransaction.transactionCode, "RAM2Y3531G");
     expect(depositTransaction.dateTime, DateTime.parse("2023-01-23 19:09"));
   });
@@ -103,7 +103,7 @@ void main() {
         .mapStringToTransaction(fulizaMessage, 0)! as FulizaTransaction;
     expect(fulizaTransaction.transactionCode, "RAM2Y3531G");
     expect(fulizaTransaction.interest.amount, 0.6);
-    expect(fulizaTransaction.transactionAmount?.amount, 90.1);
-    expect(fulizaTransaction.balance?.amount, -90.39);
+    expect(fulizaTransaction.transactionAmount.amount, 9010);
+    expect(fulizaTransaction.balance.amount, -9039);
   });
 }
