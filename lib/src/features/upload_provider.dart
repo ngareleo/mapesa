@@ -68,13 +68,9 @@ class TransactionsUploadProvider {
       }
     }
 
-    if (response?.statusCode != 200) {
-      return (UploadStatus.unknown, false);
-    }
-
-    debugPrint("[I: ${response?.statusCode}] : ${response?.data}");
-
-    return (UploadStatus.success, true);
+    return response?.statusCode != 200
+        ? (UploadStatus.unknown, false)
+        : (UploadStatus.success, true);
   }
 
   Future<List<Transaction?>> fetchTransactions() async {

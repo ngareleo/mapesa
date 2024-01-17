@@ -58,11 +58,7 @@ class AuthProvider extends ChangeNotifier {
       },
     );
 
-    if (response.statusCode != 200) {
-      return null;
-    }
-    final user = User.fromApi(response.data);
-    return user;
+    return response.statusCode != 200 ? null : User.fromApi(response.data);
   }
 
   Future<(UserLoginStatus, User?)> loginUser({
@@ -81,6 +77,7 @@ class AuthProvider extends ChangeNotifier {
     } on DioException catch (e) {
       var response = e.response;
       debugPrint("[E: ${response?.statusCode}] : ${response?.data}");
+
       if (response?.statusCode == 400) {
         if (response?.data["message"] == "incorrect_password") {
           return (UserLoginStatus.incorrectPassword, null);
