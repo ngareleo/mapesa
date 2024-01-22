@@ -3,7 +3,6 @@ import 'package:telephony/telephony.dart';
 import 'package:mapesa/src/models/transactions/airtime_for_transaction.dart';
 import 'package:mapesa/src/models/transactions/airtime_transaction.dart';
 import 'package:mapesa/src/models/transactions/deposit_transaction.dart';
-import 'package:mapesa/src/models/transactions/fuliza_transaction.dart';
 import 'package:mapesa/src/models/transactions/lipa_na_mpesa_transaction.dart';
 import 'package:mapesa/src/models/transactions/paybill_transaction.dart';
 import 'package:mapesa/src/models/transactions/receive_money_transaction.dart';
@@ -87,7 +86,7 @@ class TransactionsMapper extends DataMapper<SmsMessage, Transaction> {
       TransactionType.withdrawMoney => WithdrawTransaction.fromMpesaMessage(
           messageID: messageID, match: match),
       TransactionType.fuliza =>
-        FulizaTransaction.fromMpesaMessage(messageID: messageID, match: match),
+        null, // TODO: Merge fuliza info with respective transactions
       TransactionType.depositMoney =>
         DepositTransaction.fromMpesaMessage(messageID: messageID, match: match),
       TransactionType.airtimeFor => AirtimeForTransaction.fromMpesaMessage(

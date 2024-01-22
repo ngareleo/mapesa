@@ -1,15 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mapesa/src/features/auth_provider.dart';
 import 'package:mapesa/src/features/cache/common_cache.dart';
 import 'package:mapesa/src/features/dio_provider.dart';
-import 'package:mapesa/src/features/model_mapper.dart';
-import 'package:mapesa/src/features/sms_provider.dart';
-import 'package:mapesa/src/models/transactions/fuliza_transaction.dart';
-
-import '../models/transactions/transaction.dart';
+import 'package:mapesa/src/models/transactions/transaction.dart';
+import 'package:mapesa/src/types.dart';
 
 // module for uploading transactions
 
@@ -20,14 +15,12 @@ enum UploadStatus {
   unknown,
 }
 
+typedef UploadResponse = Future<(UploadStatus, bool)>;
+
 class TransactionsUploadProvider {
-  static final mapper = TransactionsMapper();
   static final _dio = DioProvider.instance.dio;
-  static int? lastUploadedMessageId;
-  static const lastUploadedMessageKey = "last_message_id";
 
   TransactionsUploadProvider() {
-    _loadLastMessageIdFromStorage();
     _dio.options
       ..baseUrl = CommonCache.backendURLCache.value
       ..connectTimeout = const Duration(minutes: 2)
@@ -38,18 +31,7 @@ class TransactionsUploadProvider {
       };
   }
 
-  Future<(UploadStatus, bool)> uploadTransactions() async {
-    var transactions = await fetchTransactions();
-    transactions.removeWhere((t) =>
-        t == null ||
-        t.runtimeType ==
-            FulizaTransaction); // TODO: Merge fuliza info with respective transactions
-    if (transactions.isEmpty) {
-      return (UploadStatus.nothingToUpload, false);
-    }
-    var payload = transactions.map((t) => t?.toJson()).toList();
-    debugPrint("Payload: $payload");
-
+  UploadResponse _uploadSingleDPayload(MultipleTransactions payload) async {
     Response? response;
     try {
       response = await _dio.post(
@@ -58,14 +40,16 @@ class TransactionsUploadProvider {
       );
     } on DioException catch (e) {
       var response = e.response;
-      debugPrint("[E: ${response?.statusCode}] : ${response?.data}");
       if (response?.statusCode == 400) {
-        // TODO: Handle this case.
         return (UploadStatus.internalServerError, false);
       } else if (e.response?.statusCode == 500) {
-        // TODO: Handle this case.
         return (UploadStatus.internalServerError, false);
       }
+    }
+
+    if (response?.statusCode == 200) {
+      var failed = response?.data["failed"] as ListOfObjects;
+      return (UploadStatus.success, true);
     }
 
     return response?.statusCode != 200
@@ -73,20 +57,27 @@ class TransactionsUploadProvider {
         : (UploadStatus.success, true);
   }
 
-  Future<List<Transaction?>> fetchTransactions() async {
-    var messages = (await SMSProvider.instance
-        .fetchRecentMessages(fromId: lastUploadedMessageId ?? 0));
-    return messages.map((msg) => mapper.mapFromAToB(msg)).toList();
+  UploadResponse uploadTransactions(
+    List<Transaction> transactions,
+  ) async {
+    if (transactions.isEmpty) {
+      return (UploadStatus.nothingToUpload, false);
+    }
+
+    var dPayload = _splitTransactionsTo2D(transactions);
+
+    // what happens if a single payload fails?
+    // we store the payload in a local db then try to upload it later
+    var data = await Future.wait(
+        dPayload.map((payload) => _uploadSingleDPayload(payload)));
   }
 
-  void _loadLastMessageIdFromStorage() async {
-    var prefs = await SharedPreferences.getInstance();
-    lastUploadedMessageId = prefs.getInt(lastUploadedMessageKey);
-  }
-
-  Future<void> _setLastUploadedMessageId(int id) async {
-    var prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(lastUploadedMessageKey, id);
-    lastUploadedMessageId = id;
+  List<MultipleTransactions> _splitTransactionsTo2D(
+      List<Transaction> transactions) {
+    const dPayload = <MultipleTransactions>[];
+    for (var i = 0; i < (transactions.length / 1000) + 1; i++) {
+      dPayload.add(transactions.sublist(i * 1000, (i + 1) * 1000));
+    }
+    return dPayload;
   }
 }

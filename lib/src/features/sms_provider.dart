@@ -3,6 +3,8 @@ import 'dart:isolate';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:telephony/telephony.dart';
 
+typedef ManySms = List<SmsMessage>;
+
 // module for reading sms
 
 class SMSProvider {
@@ -24,7 +26,7 @@ class SMSProvider {
     }
   }
 
-  Future<List<SmsMessage>> fetchRecentMessages({int fromId = 0}) async {
+  Future<ManySms> fetchRecentMessages({int fromId = 0}) async {
     await _checkPermission();
     var messages = await telephony.getInboxSms(
         columns: [SmsColumn.ADDRESS, SmsColumn.BODY, SmsColumn.ID],
