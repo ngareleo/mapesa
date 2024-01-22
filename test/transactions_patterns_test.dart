@@ -44,7 +44,7 @@ void main() {
     expect(paybillTransaction.transactionCode, "RAM2Y3531G");
     expect(paybillTransaction.balance.amount, 85551);
     expect(paybillTransaction.subjectAccount, "078343443");
-    expect(paybillTransaction.transactionAmount.amount, 2001);
+    expect(paybillTransaction.transactionAmount.amount, 20010);
     expect(paybillTransaction.transactionCost.amount, 401);
     expect(paybillTransaction.dateTime, DateTime.parse("2023-01-23 19:09"));
   });
@@ -102,7 +102,7 @@ void main() {
     var fulizaTransaction = TransactionsMapper()
         .mapStringToTransaction(fulizaMessage, 0)! as FulizaTransaction;
     expect(fulizaTransaction.transactionCode, "RAM2Y3531G");
-    expect(fulizaTransaction.interest.amount, 0.6);
+    expect(fulizaTransaction.interest.amount, 60);
     expect(fulizaTransaction.transactionAmount.amount, 9010);
     expect(fulizaTransaction.balance.amount, -9039);
   });
