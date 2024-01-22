@@ -1,22 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
+import 'package:mapesa/src/models/server_side_tmodel.dart';
 
 import 'package:mapesa/src/utils/money.dart';
-
-enum TransactionType {
-  receiveMoney(serverSide: "receive"),
-  sendMoney(serverSide: "withdraw"),
-  lipaNaMpesa(serverSide: "buygoods"),
-  payBillMoney(serverSide: "paybill"),
-  airtime(serverSide: "airtime"),
-  airtimeFor(serverSide: "airtime_for"),
-  withdrawMoney(serverSide: "withdraw"),
-  fuliza(serverSide: "fuliza"),
-  depositMoney(serverSide: "deposit");
-
-  final String serverSide;
-  const TransactionType({required this.serverSide});
-}
 
 abstract class Transaction {
   // These fields are constranied to be non-null by backend
@@ -48,6 +34,7 @@ abstract class Transaction {
 
   Map<String, String?> toJson();
   Widget toTransactionListItem();
+  ServerSideTModel? toServerSideTModel();
 }
 
 class InvalidTransaction extends Transaction {
@@ -63,19 +50,16 @@ class InvalidTransaction extends Transaction {
             balance: Money(amount: 0));
 
   @override
-  Map<String, String?> toJson() {
-    return {"type": "invalid"};
-  }
+  Map<String, String?> toJson() => {"type": "invalid"};
 
   @override
-  String toString() {
-    return toJson().toString();
-  }
+  String toString() => toJson().toString();
 
   @override
-  Widget toTransactionListItem() {
-    throw UnimplementedError();
-  }
+  Widget toTransactionListItem() => throw UnimplementedError();
+
+  @override
+  ServerSideTModel? toServerSideTModel() => null;
 }
 
 typedef MultipleTransactions = List<Transaction>;

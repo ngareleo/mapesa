@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:mapesa/src/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/models/server_side_tmodel.dart';
+import 'package:mapesa/src/types.dart';
 
 import 'package:mapesa/src/utils/datetime.dart';
 import 'package:mapesa/src/utils/money.dart';
@@ -20,7 +22,7 @@ class WithdrawTransaction extends Transaction {
   @Name("agent_number")
   final String agentNumber;
 
-  const WithdrawTransaction(
+  WithdrawTransaction(
       {required super.balance,
       required this.agentNumber,
       required super.dateTime,
@@ -66,24 +68,33 @@ class WithdrawTransaction extends Transaction {
   }
 
   @override
-  Map<String, String?> toJson() {
-    return {
-      "agentNumber": agentNumber,
-      "balance": balance.amount.toString(),
-      "dateTime": dateTime.millisecondsSinceEpoch.toString(),
-      "location": location,
-      "messageId": messageId.toString(),
-      "transactionAmount": transactionAmount.amount.toString(),
-      "transactionCode": transactionCode,
-      "transactionCost": transactionCost.amount.toString(),
-      "type": type,
-    };
+  Map<String, String?> toJson() => {
+        "agentNumber": agentNumber,
+        "balance": balance.amount.toString(),
+        "dateTime": dateTime.millisecondsSinceEpoch.toString(),
+        "location": location,
+        "messageId": messageId.toString(),
+        "transactionAmount": transactionAmount.amount.toString(),
+        "transactionCode": transactionCode,
+        "transactionCost": transactionCost.amount.toString(),
+        "type": type,
+      };
+
+  @override
+  ServerSideTModel? toServerSideTModel() {
+    return ServerSideTModel(
+        balance: balance,
+        dateTime: dateTime,
+        messageId: messageId,
+        subject: subject,
+        transactionAmount: transactionAmount,
+        transactionCode: transactionCode,
+        transactionCost: transactionCost,
+        type: TransactionType.withdrawMoney);
   }
 
   @override
-  String toString() {
-    return toJson().toString();
-  }
+  String toString() => toJson().toString();
 
   @override
   Widget toTransactionListItem() {

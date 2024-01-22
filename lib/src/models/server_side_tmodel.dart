@@ -1,9 +1,10 @@
 import 'package:isar/isar.dart';
-import 'package:mapesa/src/models/transactions/transaction.dart';
+import 'package:mapesa/src/types.dart';
 import 'package:mapesa/src/utils/money.dart';
 
 @Collection()
 class ServerSideTModel {
+  // Client side repr of the server side transaction
   final Id id = Isar.autoIncrement;
   final Money balance;
   final DateTime dateTime;
@@ -17,6 +18,8 @@ class ServerSideTModel {
 
   @Name("subject_account")
   final String? subjectAccount;
+  @Name("agent_number")
+  final String? agentNumber;
   final String? location;
   final Money? interest;
 
@@ -28,9 +31,10 @@ class ServerSideTModel {
   final Money transactionCost;
 
   @Enumerated(EnumType.value, "serverSide")
-  final TransactionType transactionType;
+  final TransactionType type;
 
   const ServerSideTModel({
+    this.agentNumber,
     required this.balance,
     required this.dateTime,
     this.interest,
@@ -42,6 +46,22 @@ class ServerSideTModel {
     required this.transactionAmount,
     required this.transactionCode,
     required this.transactionCost,
-    required this.transactionType,
+    required this.type,
   });
+
+  ObjectMap toJson() => {
+        "agentNumber": agentNumber.toString(),
+        "balance": balance.toString(),
+        "dateTime": dateTime.millisecondsSinceEpoch.toString(),
+        "interest": interest!.amount.toString(),
+        "location": location.toString(),
+        "messageId": messageId.toString(),
+        "phoneNumber": phoneNumber.toString(),
+        "subject": subject,
+        "subjectAccount": subjectAccount.toString(),
+        "transactionAmount": transactionAmount.amount.toString(),
+        "transactionCode": transactionCode,
+        "transactionCost": transactionCost.amount.toString(),
+        "type": type.toString(),
+      };
 }

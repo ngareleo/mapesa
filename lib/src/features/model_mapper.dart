@@ -1,3 +1,4 @@
+import 'package:mapesa/src/models/server_side_tmodel.dart';
 import 'package:mapesa/src/models/transactions/fuliza_transaction.dart';
 import 'package:mapesa/src/types.dart';
 import 'package:telephony/telephony.dart';
@@ -111,5 +112,35 @@ class FailedTransactionsMapper extends DataMapper<ObjectMap, Transaction> {
   @override
   ObjectMap? mapFromBtoA(Transaction from) {
     throw UnimplementedError();
+  }
+}
+
+class ServerSideTModelMapper extends DataMapper<ServerSideTModel, Transaction> {
+  @override
+  Transaction? mapFromAToB(ServerSideTModel from) {
+    var type = from.type;
+    return switch (type) {
+      TransactionType.receiveMoney =>
+        ReceiveMoneyTransaction.fromJson(from.toJson()),
+      TransactionType.sendMoney => SendMoneyTransaction.fromJson(from.toJson()),
+      TransactionType.lipaNaMpesa =>
+        LipaNaMpesaTransaction.fromJson(from.toJson()),
+      TransactionType.payBillMoney =>
+        PaybillTransaction.fromJson(from.toJson()),
+      TransactionType.airtime => AirtimeTransaction.fromJson(from.toJson()),
+      TransactionType.withdrawMoney =>
+        WithdrawTransaction.fromJson(from.toJson()),
+      TransactionType.fuliza =>
+        null, // TODO: Merge fuliza info with respective transactions
+      TransactionType.depositMoney =>
+        DepositTransaction.fromJson(from.toJson()),
+      TransactionType.airtimeFor =>
+        AirtimeForTransaction.fromJson(from.toJson()),
+    };
+  }
+
+  @override
+  ServerSideTModel? mapFromBtoA(Transaction from) {
+    return from.toServerSideTModel();
   }
 }

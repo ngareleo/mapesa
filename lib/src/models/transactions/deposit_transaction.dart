@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 
 import 'package:mapesa/src/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/models/server_side_tmodel.dart';
+import 'package:mapesa/src/types.dart';
 import 'package:mapesa/src/utils/datetime.dart';
 import 'package:mapesa/src/utils/money.dart';
 
@@ -58,18 +60,30 @@ class DepositTransaction extends Transaction {
   }
 
   @override
-  Map<String, String?> toJson() {
-    return {
-      "balance": balance.amount.toString(),
-      "dateTime": dateTime.millisecondsSinceEpoch.toString(),
-      "location": location,
-      "messageId": messageId.toString(),
-      "subject": subject,
-      "transactionAmount": transactionAmount.amount.toString(),
-      "transactionCode": transactionCode,
-      "transactionCost": transactionCost.amount.toString(),
-      "type": type,
-    };
+  Map<String, String?> toJson() => {
+        "balance": balance.amount.toString(),
+        "dateTime": dateTime.millisecondsSinceEpoch.toString(),
+        "location": location,
+        "messageId": messageId.toString(),
+        "subject": subject,
+        "transactionAmount": transactionAmount.amount.toString(),
+        "transactionCode": transactionCode,
+        "transactionCost": transactionCost.amount.toString(),
+        "type": type,
+      };
+
+  @override
+  ServerSideTModel? toServerSideTModel() {
+    return ServerSideTModel(
+        balance: balance,
+        dateTime: dateTime,
+        messageId: messageId,
+        location: location,
+        subject: subject,
+        transactionAmount: transactionAmount,
+        transactionCode: transactionCode,
+        transactionCost: transactionCost,
+        type: TransactionType.depositMoney);
   }
 
   @override
@@ -85,7 +99,5 @@ class DepositTransaction extends Transaction {
   }
 
   @override
-  String toString() {
-    return toJson().toString();
-  }
+  String toString() => toJson().toString();
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:isar/isar.dart';
+import 'package:mapesa/src/common/theme.dart';
 import 'package:mapesa/src/models/transactions/airtime_for_transaction.dart';
 import 'package:mapesa/src/models/transactions/airtime_transaction.dart';
 import 'package:mapesa/src/models/transactions/deposit_transaction.dart';
@@ -13,7 +14,6 @@ import 'package:mapesa/src/models/transactions/withdraw_transaction.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
-import 'package:mapesa/src/pages/common/theme.dart';
 import 'package:mapesa/src/features/auth_provider.dart';
 import 'package:mapesa/src/features/cache/common_cache.dart';
 import 'package:mapesa/src/pages/auth_page.dart';
