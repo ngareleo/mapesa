@@ -2,6 +2,8 @@ import 'package:isar/isar.dart';
 import 'package:mapesa/src/types.dart';
 import 'package:mapesa/src/utils/money.dart';
 
+part 'server_side_tmodel.g.dart';
+
 @Collection()
 class ServerSideTModel {
   // Client side repr of the server side transaction

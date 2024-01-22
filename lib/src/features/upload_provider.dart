@@ -15,7 +15,14 @@ enum UploadStatus {
   unknown,
 }
 
-typedef UploadResponse = Future<(UploadStatus, bool)>;
+class UploadResponse {
+  UploadStatus status;
+  ListOfObjects failed;
+
+  UploadResponse({this.status = UploadStatus.unknown, this.failed = const []});
+}
+
+typedef UploadResponseType = Future<(UploadStatus, bool)>;
 
 class TransactionsUploadProvider {
   static final _dio = DioProvider.instance.dio;
@@ -31,7 +38,8 @@ class TransactionsUploadProvider {
       };
   }
 
-  UploadResponse _uploadSingleDPayload(MultipleTransactions payload) async {
+  Future<UploadResponse> _uploadSingleDPayload(
+      MultipleTransactions payload) async {
     Response? response;
     try {
       response = await _dio.post(
@@ -41,35 +49,43 @@ class TransactionsUploadProvider {
     } on DioException catch (e) {
       var response = e.response;
       if (response?.statusCode == 400) {
-        return (UploadStatus.internalServerError, false);
+        return UploadResponse(
+            status: UploadStatus.success, failed: response?.data["failed"]);
       } else if (e.response?.statusCode == 500) {
-        return (UploadStatus.internalServerError, false);
+        return UploadResponse(status: UploadStatus.internalServerError);
       }
     }
 
     if (response?.statusCode == 200) {
       var failed = response?.data["failed"] as ListOfObjects;
-      return (UploadStatus.success, true);
+      return UploadResponse(status: UploadStatus.success, failed: failed);
     }
 
-    return response?.statusCode != 200
-        ? (UploadStatus.unknown, false)
-        : (UploadStatus.success, true);
+    return UploadResponse(status: UploadStatus.unknown);
   }
 
-  UploadResponse uploadTransactions(
+  Future<UploadResponse> uploadTransactions(
     List<Transaction> transactions,
   ) async {
     if (transactions.isEmpty) {
-      return (UploadStatus.nothingToUpload, false);
+      return UploadResponse(status: UploadStatus.nothingToUpload);
     }
 
     var dPayload = _splitTransactionsTo2D(transactions);
 
     // what happens if a single payload fails?
     // we store the payload in a local db then try to upload it later
-    var data = await Future.wait(
+    var res = await Future.wait(
         dPayload.map((payload) => _uploadSingleDPayload(payload)));
+
+    return res.reduce((value, element) {
+      // if any of the payloads failed, we return the failed transactions
+      // if any passes we returned the failed transactions and a success
+      var UploadResponse(:status, :failed) = value;
+      value.status = status == UploadStatus.success ? status : element.status;
+      value.failed.addAll(failed);
+      return value;
+    });
   }
 
   List<MultipleTransactions> _splitTransactionsTo2D(

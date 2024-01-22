@@ -13,7 +13,7 @@ typedef ObjectMap = Map<String, String>;
 
 enum TransactionType {
   receiveMoney(serverSide: "receive", clientSide: ReceiveMoneyTransaction.type),
-  sendMoney(serverSide: "withdraw", clientSide: SendMoneyTransaction.type),
+  sendMoney(serverSide: "send", clientSide: SendMoneyTransaction.type),
   lipaNaMpesa(serverSide: "buygoods", clientSide: LipaNaMpesaTransaction.type),
   payBillMoney(serverSide: "paybill", clientSide: PaybillTransaction.type),
   airtime(serverSide: "airtime", clientSide: AirtimeTransaction.type),

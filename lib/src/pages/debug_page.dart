@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mapesa/src/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/common/charts/comparison_bar.dart';
 
-import 'package:mapesa/src/pages/common/cards/primary_item_card.dart';
-import 'package:mapesa/src/pages/common/charts/comparison_bar.dart';
 import 'package:mapesa/src/features/auth_provider.dart';
 
 class DebugPage extends StatefulWidget {
