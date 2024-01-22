@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 
-import 'package:mapesa/src/pages/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/common/cards/primary_item_card.dart';
 import 'package:mapesa/src/utils/datetime.dart';
 import 'package:mapesa/src/utils/money.dart';
 
@@ -11,8 +11,11 @@ part 'deposit_transaction.g.dart';
 
 @Collection()
 class DepositTransaction extends Transaction {
-  final String location;
   static const type = "deposit";
+  static final regex = RegExp(
+      r'^(\w{9,11}) Confirmed\. On (.{5,8}) at (.+) (PM|AM) Give Ksh(.+\.\d\d) cash to (.+) New M-PESA balance is Ksh(\d\w{0,7}\.\d\d)');
+
+  final String location;
 
   DepositTransaction(
       {required super.balance,
@@ -42,8 +45,7 @@ class DepositTransaction extends Transaction {
     );
   }
 
-  @override
-  Transaction fromJson(Map<String, dynamic> json) {
+  factory DepositTransaction.fromJson(Map<String, dynamic> json) {
     return DepositTransaction(
       balance: Money(amount: int.parse(json["balance"]!)),
       dateTime:

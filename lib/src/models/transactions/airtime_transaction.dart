@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 
-import 'package:mapesa/src/pages/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/common/cards/primary_item_card.dart';
 import 'package:mapesa/src/utils/datetime.dart';
 import 'package:mapesa/src/utils/money.dart';
 
@@ -12,6 +12,8 @@ part 'airtime_transaction.g.dart';
 @Collection()
 class AirtimeTransaction extends Transaction {
   static const type = "airtime";
+  static final regex = RegExp(
+      r'^(\w{10,12}) confirmed\.You bought Ksh(.+\.\d\d) of airtime for (.+?) on (.+) at (\d\d?:\d\d) (AM|PM)\.New balance is Ksh(.+\.\d\d)\. Transaction cost,');
 
   AirtimeTransaction({
     required super.messageId,
@@ -39,6 +41,17 @@ class AirtimeTransaction extends Transaction {
     );
   }
 
+  factory AirtimeTransaction.fromJson(Map<String, dynamic> json) {
+    return AirtimeTransaction(
+      balance: Money(amount: int.parse(json["balance"]!)),
+      dateTime:
+          DateTime.fromMillisecondsSinceEpoch(int.parse(json["dateTime"]!)),
+      messageId: int.parse(json["messageId"]!),
+      transactionAmount: Money(amount: int.parse(json["transactionAmount"]!)),
+      transactionCode: json["transactionCode"]!,
+    );
+  }
+
   @override
   Map<String, String?> toJson() {
     return {
@@ -51,18 +64,6 @@ class AirtimeTransaction extends Transaction {
       "transactionCost": transactionCost.amount.toString(),
       "type": type,
     };
-  }
-
-  @override
-  Transaction fromJson(Map<String, dynamic> json) {
-    return AirtimeTransaction(
-      balance: Money(amount: int.parse(json["balance"]!)),
-      dateTime:
-          DateTime.fromMillisecondsSinceEpoch(int.parse(json["dateTime"]!)),
-      messageId: int.parse(json["messageId"]!),
-      transactionAmount: Money(amount: int.parse(json["transactionAmount"]!)),
-      transactionCode: json["transactionCode"]!,
-    );
   }
 
   @override

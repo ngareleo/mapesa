@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 
-import 'package:mapesa/src/pages/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/common/cards/primary_item_card.dart';
 import 'package:mapesa/src/utils/datetime.dart';
 import 'package:mapesa/src/utils/money.dart';
 
@@ -12,6 +12,8 @@ part 'lipa_na_mpesa_transaction.g.dart';
 @Collection()
 class LipaNaMpesaTransaction extends Transaction {
   static const type = "buygoods";
+  static final regex = RegExp(
+      r'^(\w+)\sConfirmed.\sKsh(.+\.\d\d)\spaid\sto\s(.+)\.\son\s(.+)\sat (.+) (AM|PM).New M-PESA balance is Ksh(.+\.\d\d)\. Transaction cost, Ksh(\d\w{0,7}\.\d\d).*$');
 
   LipaNaMpesaTransaction(
       {required super.balance,
@@ -37,7 +39,7 @@ class LipaNaMpesaTransaction extends Transaction {
   }
 
   @override
-  Transaction fromJson(Map<String, dynamic> json) {
+  factory LipaNaMpesaTransaction.fromJson(Map<String, dynamic> json) {
     return LipaNaMpesaTransaction(
       balance: Money(amount: int.parse(json["balance"]!)),
       dateTime:

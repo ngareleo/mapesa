@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 
-import 'package:mapesa/src/pages/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/common/cards/primary_item_card.dart';
 import 'package:mapesa/src/utils/datetime.dart';
 import 'package:mapesa/src/utils/money.dart';
 
@@ -12,6 +12,9 @@ part 'send_money_transaction.g.dart';
 @Collection()
 class SendMoneyTransaction extends Transaction {
   static const type = "send";
+  static final regex = RegExp(
+      r'^(\w+)\sConfirmed.\sKsh(.+\.\d\d)\ssent\sto\s(.+)\s(\d+)\son\s(.+)\sat\s(.+)\s(PM|AM).\sNew\sM-PESA\sbalance\sis\sKsh(.+\.\d\d)\.\sTransaction\scost,\sKsh(\d\w{0,7}\.\d\d)\..*$');
+
   @Name("phone_number")
   final String phoneNumber;
 
@@ -52,8 +55,7 @@ class SendMoneyTransaction extends Transaction {
     );
   }
 
-  @override
-  Transaction fromJson(Map<String, dynamic> json) {
+  factory SendMoneyTransaction.fromJson(Map<String, dynamic> json) {
     return SendMoneyTransaction(
       balance: Money(amount: int.parse(json["balance"]!)),
       dateTime:

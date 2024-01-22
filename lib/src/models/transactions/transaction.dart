@@ -4,15 +4,18 @@ import 'package:isar/isar.dart';
 import 'package:mapesa/src/utils/money.dart';
 
 enum TransactionType {
-  receiveMoney,
-  sendMoney,
-  lipaNaMpesa,
-  payBillMoney,
-  airtime,
-  airtimeFor,
-  withdrawMoney,
-  fuliza,
-  depositMoney,
+  receiveMoney(serverSide: "receive"),
+  sendMoney(serverSide: "withdraw"),
+  lipaNaMpesa(serverSide: "buygoods"),
+  payBillMoney(serverSide: "paybill"),
+  airtime(serverSide: "airtime"),
+  airtimeFor(serverSide: "airtime_for"),
+  withdrawMoney(serverSide: "withdraw"),
+  fuliza(serverSide: "fuliza"),
+  depositMoney(serverSide: "deposit");
+
+  final String serverSide;
+  const TransactionType({required this.serverSide});
 }
 
 abstract class Transaction {
@@ -33,17 +36,17 @@ abstract class Transaction {
   @Name("transaction_cost")
   final Money transactionCost;
 
-  const Transaction(
-      {required this.balance,
-      required this.messageId,
-      required this.transactionAmount,
-      required this.transactionCode,
-      required this.transactionCost,
-      required this.dateTime,
-      required this.subject});
+  const Transaction({
+    required this.balance,
+    required this.dateTime,
+    required this.messageId,
+    required this.subject,
+    required this.transactionAmount,
+    required this.transactionCode,
+    required this.transactionCost,
+  });
 
   Map<String, String?> toJson();
-  Transaction fromJson(Map<String, dynamic> json);
   Widget toTransactionListItem();
 }
 
@@ -71,11 +74,6 @@ class InvalidTransaction extends Transaction {
 
   @override
   Widget toTransactionListItem() {
-    throw UnimplementedError();
-  }
-
-  @override
-  Transaction fromJson(Map<String, dynamic> json) {
     throw UnimplementedError();
   }
 }

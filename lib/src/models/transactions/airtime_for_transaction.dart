@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 
-import 'package:mapesa/src/pages/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/common/cards/primary_item_card.dart';
 import 'package:mapesa/src/models/transactions/transaction.dart';
 import 'package:mapesa/src/utils/datetime.dart';
 import 'package:mapesa/src/utils/money.dart';
@@ -10,6 +10,8 @@ part 'airtime_for_transaction.g.dart';
 
 @Collection()
 class AirtimeForTransaction extends Transaction {
+  static var regex = RegExp(
+      r"([A-Z0-9]{10}) Confirmed\. Ksh([0-9,]+) sent to ([0-9]{10}) on ([0-9]{2}\/[0-9]{2}\/[0-9]{2}) at ([0-9]{2}:[0-9]{2} [AP]M)\. New M-PESA balance is Ksh([0-9,]+)\.");
   static const type = "airtime-for";
 
   AirtimeForTransaction({
@@ -40,6 +42,18 @@ class AirtimeForTransaction extends Transaction {
   }
 
   @override
+  factory AirtimeForTransaction.fromJson(Map<String, dynamic> json) {
+    return AirtimeForTransaction(
+      balance: Money(amount: int.parse(json["balance"]!)),
+      dateTime:
+          DateTime.fromMillisecondsSinceEpoch(int.parse(json["dateTime"]!)),
+      messageId: int.parse(json["messageId"]!),
+      subject: json["subject"]!,
+      transactionAmount: Money(amount: int.parse(json["transactionAmount"]!)),
+      transactionCode: json["transactionCode"]!,
+    );
+  }
+  @override
   Map<String, String?> toJson() {
     return {
       "balance": balance.amount.toString(),
@@ -51,19 +65,6 @@ class AirtimeForTransaction extends Transaction {
       "transactionCost": transactionCost.amount.toString(),
       "type": type,
     };
-  }
-
-  @override
-  Transaction fromJson(Map<String, dynamic> json) {
-    return AirtimeForTransaction(
-      balance: Money(amount: int.parse(json["balance"]!)),
-      dateTime:
-          DateTime.fromMillisecondsSinceEpoch(int.parse(json["dateTime"]!)),
-      messageId: int.parse(json["messageId"]!),
-      subject: json["subject"]!,
-      transactionAmount: Money(amount: int.parse(json["transactionAmount"]!)),
-      transactionCode: json["transactionCode"]!,
-    );
   }
 
   @override

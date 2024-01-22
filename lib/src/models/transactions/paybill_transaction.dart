@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 
-import 'package:mapesa/src/pages/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/common/cards/primary_item_card.dart';
 import 'package:mapesa/src/utils/datetime.dart';
 import 'package:mapesa/src/utils/money.dart';
 
@@ -12,6 +12,8 @@ part 'paybill_transaction.g.dart';
 @Collection()
 class PaybillTransaction extends Transaction {
   static const type = "paybill";
+  static final regex = RegExp(
+      r'^(\w{10})\sConfirmed\.\sKsh(.+\.\d\d)\ssent\sto\s(.+)\sfor\saccount\s(.*)\s?on(.{6,9})\sat\s(\d\d?:\d\d)\s(AM|PM)\.?\sNew\sM-PESA\sbalance\sis\sKsh(.+\.\d\d)\.\sTransaction\scost,\sKsh(.{1,3}\.\d\d?)\..*$');
 
   final String subjectAccount;
 
@@ -48,6 +50,20 @@ class PaybillTransaction extends Transaction {
     );
   }
 
+  factory PaybillTransaction.fromJson(Map<String, dynamic> json) {
+    return PaybillTransaction(
+      balance: Money(amount: int.parse(json["balance"]!)),
+      dateTime:
+          DateTime.fromMillisecondsSinceEpoch(int.parse(json["dateTime"]!)),
+      messageId: int.parse(json["messageId"]!),
+      subject: json["subject"]!,
+      subjectAccount: json["subjectAccount"]!,
+      transactionAmount: Money(amount: int.parse(json["transactionAmount"]!)),
+      transactionCode: json["transactionCode"]!,
+      transactionCost: Money(amount: int.parse(json["transactionCost"]!)),
+    );
+  }
+
   @override
   Map<String, String?> toJson() {
     return {
@@ -61,21 +77,6 @@ class PaybillTransaction extends Transaction {
       "transactionCost": transactionCost.amount.toString(),
       "type": type,
     };
-  }
-
-  @override
-  Transaction fromJson(Map<String, dynamic> json) {
-    return PaybillTransaction(
-      balance: Money(amount: int.parse(json["balance"]!)),
-      dateTime:
-          DateTime.fromMillisecondsSinceEpoch(int.parse(json["dateTime"]!)),
-      messageId: int.parse(json["messageId"]!),
-      subject: json["subject"]!,
-      subjectAccount: json["subjectAccount"]!,
-      transactionAmount: Money(amount: int.parse(json["transactionAmount"]!)),
-      transactionCode: json["transactionCode"]!,
-      transactionCost: Money(amount: int.parse(json["transactionCost"]!)),
-    );
   }
 
   @override

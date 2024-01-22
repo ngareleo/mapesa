@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 
-import 'package:mapesa/src/pages/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/common/cards/primary_item_card.dart';
 import 'package:mapesa/src/utils/datetime.dart';
 import 'package:mapesa/src/utils/money.dart';
 
@@ -11,10 +11,12 @@ part 'receive_money_transaction.g.dart';
 
 @Collection()
 class ReceiveMoneyTransaction extends Transaction {
+  static const type = "receive";
+  static final regex = RegExp(
+      r'^You have received Ksh(.+\.\d\d) from (.+?) on (.+) at (\d\d?:\d\d) (AM|PM)\. New M-PESA balance is Ksh(.+\.\d\d)\. Transaction cost, Ksh(\d\w{0,7}\.\d\d)\..*$');
+
   @Name("phone_number")
   final String phoneNumber;
-
-  static const type = "receive";
 
   ReceiveMoneyTransaction(
       {required super.balance,
@@ -43,6 +45,20 @@ class ReceiveMoneyTransaction extends Transaction {
   }
 
   @override
+  factory ReceiveMoneyTransaction.fromJson(Map<String, dynamic> json) {
+    return ReceiveMoneyTransaction(
+      balance: Money(amount: int.parse(json["balance"]!)),
+      dateTime:
+          DateTime.fromMillisecondsSinceEpoch(int.parse(json["dateTime"]!)),
+      messageId: int.parse(json["messageId"]!),
+      subject: json["subject"]!,
+      phoneNumber: json["subjectPhoneNumber"]!,
+      transactionAmount: Money(amount: int.parse(json["transactionAmount"]!)),
+      transactionCode: json["transactionCode"]!,
+    );
+  }
+
+  @override
   Map<String, String?> toJson() {
     return {
       "balance": balance.amount.toString(),
@@ -55,20 +71,6 @@ class ReceiveMoneyTransaction extends Transaction {
       "transactionCost": transactionCost.amount.toString(),
       "type": type,
     };
-  }
-
-  @override
-  Transaction fromJson(Map<String, dynamic> json) {
-    return ReceiveMoneyTransaction(
-      balance: Money(amount: int.parse(json["balance"]!)),
-      dateTime:
-          DateTime.fromMillisecondsSinceEpoch(int.parse(json["dateTime"]!)),
-      messageId: int.parse(json["messageId"]!),
-      subject: json["subject"]!,
-      phoneNumber: json["subjectPhoneNumber"]!,
-      transactionAmount: Money(amount: int.parse(json["transactionAmount"]!)),
-      transactionCode: json["transactionCode"]!,
-    );
   }
 
   @override

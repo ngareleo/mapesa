@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:isar/isar.dart';
+import 'package:mapesa/src/models/transactions/airtime_for_transaction.dart';
+import 'package:mapesa/src/models/transactions/airtime_transaction.dart';
+import 'package:mapesa/src/models/transactions/deposit_transaction.dart';
+import 'package:mapesa/src/models/transactions/fuliza_transaction.dart';
+import 'package:mapesa/src/models/transactions/lipa_na_mpesa_transaction.dart';
+import 'package:mapesa/src/models/transactions/paybill_transaction.dart';
+import 'package:mapesa/src/models/transactions/receive_money_transaction.dart';
+import 'package:mapesa/src/models/transactions/send_money_transaction.dart';
+import 'package:mapesa/src/models/transactions/withdraw_transaction.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -13,7 +22,17 @@ import 'package:mapesa/src/pages/home_page.dart';
 void main() async {
   await dotenv.load();
   final dir = await getApplicationDocumentsDirectory();
-  final isar = await Isar.open([], directory: dir.path);
+  final isar = await Isar.open([
+    AirtimeForTransactionSchema,
+    AirtimeTransactionSchema,
+    DepositTransactionSchema,
+    FulizaTransactionSchema,
+    LipaNaMpesaTransactionSchema,
+    PaybillTransactionSchema,
+    ReceiveMoneyTransactionSchema,
+    SendMoneyTransactionSchema,
+    WithdrawTransactionSchema
+  ], directory: dir.path);
   CommonCache();
   runApp(ChangeNotifierProvider(
       create: (context) => AuthProvider.instance, child: const MapesaApp()));

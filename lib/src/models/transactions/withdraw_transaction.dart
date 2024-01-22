@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
+import 'package:mapesa/src/common/cards/primary_item_card.dart';
 
-import 'package:mapesa/src/pages/common/cards/primary_item_card.dart';
 import 'package:mapesa/src/utils/datetime.dart';
 import 'package:mapesa/src/utils/money.dart';
 
@@ -11,12 +11,14 @@ part 'withdraw_transaction.g.dart';
 
 @Collection()
 class WithdrawTransaction extends Transaction {
+  static const type = "withdraw";
+  static final regex = RegExp(
+      r'^(\w{0,12})\s[C,c]onfirmed.on\s(.{0,8})\sat\s(\d\d?:\d\d)\s(PM|AM)Withdraw\sKsh(.+\.\d\d)\sfrom\s(\d+)\s-\s(.+)\sNew\sM-PESA\sbalance\sis\sKsh(.+\.\d\d)\.\sTransaction\scost,\sKsh(\d\w{0,7}\.\d\d)\..*$');
+
   final String location;
 
   @Name("agent_number")
   final String agentNumber;
-
-  static const type = "withdraw";
 
   const WithdrawTransaction(
       {required super.balance,
@@ -48,6 +50,21 @@ class WithdrawTransaction extends Transaction {
         location: match.group(7).toString().trim());
   }
 
+  factory WithdrawTransaction.fromJson(Map<String, dynamic> json) {
+    return WithdrawTransaction(
+      agentNumber: json["agentNumber"]!,
+      balance: Money(amount: int.parse(json["balance"]!)),
+      dateTime:
+          DateTime.fromMillisecondsSinceEpoch(int.parse(json["dateTime"]!)),
+      location: json["location"]!,
+      messageId: int.parse(json["messageId"]!),
+      transactionAmount: Money(amount: int.parse(json["transactionAmount"]!)),
+      transactionCode: json["transactionCode"]!,
+      transactionCost: Money(amount: int.parse(json["transactionCost"]!)),
+      subject: json["subject"]!,
+    );
+  }
+
   @override
   Map<String, String?> toJson() {
     return {
@@ -61,22 +78,6 @@ class WithdrawTransaction extends Transaction {
       "transactionCost": transactionCost.amount.toString(),
       "type": type,
     };
-  }
-
-  @override
-  Transaction fromJson(Map<String, dynamic> json) {
-    return WithdrawTransaction(
-      agentNumber: json["agentNumber"]!,
-      balance: Money(amount: int.parse(json["balance"]!)),
-      dateTime:
-          DateTime.fromMillisecondsSinceEpoch(int.parse(json["dateTime"]!)),
-      location: json["location"]!,
-      messageId: int.parse(json["messageId"]!),
-      transactionAmount: Money(amount: int.parse(json["transactionAmount"]!)),
-      transactionCode: json["transactionCode"]!,
-      transactionCost: Money(amount: int.parse(json["transactionCost"]!)),
-      subject: json["subject"]!,
-    );
   }
 
   @override
