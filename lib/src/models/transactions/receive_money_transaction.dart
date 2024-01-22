@@ -1,38 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
 
-import 'package:mapesa/src/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/pages/common/cards/primary_item_card.dart';
 import 'package:mapesa/src/utils/datetime.dart';
 import 'package:mapesa/src/utils/money.dart';
 
 import 'transaction.dart';
 
+part 'receive_money_transaction.g.dart';
+
+@Collection()
 class ReceiveMoneyTransaction extends Transaction {
+  @Name("phone_number")
   final String phoneNumber;
+
   static const type = "receive";
 
-  const ReceiveMoneyTransaction(
-      {required super.messageId,
-      required super.transactionAmount,
-      required super.transactionCode,
+  ReceiveMoneyTransaction(
+      {required super.balance,
       required super.dateTime,
-      required super.balance,
+      required super.messageId,
+      required this.phoneNumber,
       required super.subject,
-      required this.phoneNumber})
-      : super(transactionCost: const Money(amount: 0));
+      required super.transactionAmount,
+      required super.transactionCode})
+      : super(transactionCost: Money(amount: 0));
 
   factory ReceiveMoneyTransaction.fromMpesaMessage(
       {required int messageID, required RegExpMatch match}) {
     return ReceiveMoneyTransaction(
-        messageId: messageID,
-        transactionAmount: Money.fromString(message: match.group(2).toString()),
-        transactionCode: match.group(1).toString(),
-        dateTime: getDateTimeFromMessage(
-            date: match.group(8).toString().trim(),
-            time: match.group(9).toString().trim(),
-            isAM: match.group(10).toString().trim() == "AM"),
-        balance: Money.fromString(message: match.group(11).toString()),
-        subject: match.group(4) ?? match.group(6).toString(),
-        phoneNumber: match.group(5) ?? match.group(7).toString());
+      balance: Money.fromString(message: match.group(11).toString()),
+      dateTime: getDateTimeFromMessage(
+          date: match.group(8).toString().trim(),
+          time: match.group(9).toString().trim(),
+          isAM: match.group(10).toString().trim() == "AM"),
+      messageId: messageID,
+      phoneNumber: match.group(5) ?? match.group(7).toString(),
+      subject: match.group(4) ?? match.group(6).toString(),
+      transactionAmount: Money.fromString(message: match.group(2).toString()),
+      transactionCode: match.group(1).toString(),
+    );
   }
 
   @override
@@ -48,6 +55,20 @@ class ReceiveMoneyTransaction extends Transaction {
       "transactionCost": transactionCost.amount.toString(),
       "type": type,
     };
+  }
+
+  @override
+  Transaction fromJson(Map<String, dynamic> json) {
+    return ReceiveMoneyTransaction(
+      balance: Money(amount: int.parse(json["balance"]!)),
+      dateTime:
+          DateTime.fromMillisecondsSinceEpoch(int.parse(json["dateTime"]!)),
+      messageId: int.parse(json["messageId"]!),
+      subject: json["subject"]!,
+      phoneNumber: json["subjectPhoneNumber"]!,
+      transactionAmount: Money(amount: int.parse(json["transactionAmount"]!)),
+      transactionCode: json["transactionCode"]!,
+    );
   }
 
   @override

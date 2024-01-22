@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
+
 import 'package:mapesa/src/utils/money.dart';
 
 enum TransactionType {
@@ -16,12 +18,19 @@ enum TransactionType {
 abstract class Transaction {
   // These fields are constranied to be non-null by backend
 
+  final Id id = Isar.autoIncrement;
   final Money balance;
   final DateTime dateTime;
+
+  @Name("message_id")
   final int messageId;
   final String subject;
+
+  @Name("transaction_amount")
   final Money transactionAmount;
+  @Name("transaction_code")
   final String transactionCode;
+  @Name("transaction_cost")
   final Money transactionCost;
 
   const Transaction(
@@ -34,6 +43,7 @@ abstract class Transaction {
       required this.subject});
 
   Map<String, String?> toJson();
+  Transaction fromJson(Map<String, dynamic> json);
   Widget toTransactionListItem();
 }
 
@@ -43,11 +53,11 @@ class InvalidTransaction extends Transaction {
       : super(
             subject: "Invalid Transaction",
             messageId: 0,
-            transactionAmount: const Money(amount: 0),
+            transactionAmount: Money(amount: 0),
             transactionCode: "",
-            transactionCost: const Money(amount: 0),
+            transactionCost: Money(amount: 0),
             dateTime: DateTime.fromMicrosecondsSinceEpoch(0),
-            balance: const Money(amount: 0));
+            balance: Money(amount: 0));
 
   @override
   Map<String, String?> toJson() {
@@ -63,4 +73,11 @@ class InvalidTransaction extends Transaction {
   Widget toTransactionListItem() {
     throw UnimplementedError();
   }
+
+  @override
+  Transaction fromJson(Map<String, dynamic> json) {
+    throw UnimplementedError();
+  }
 }
+
+typedef MultipleTransactions = List<Transaction>;

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
 
-import 'package:mapesa/src/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/pages/common/cards/primary_item_card.dart';
 import 'package:mapesa/src/models/transactions/transaction.dart';
 import 'package:mapesa/src/utils/datetime.dart';
 import 'package:mapesa/src/utils/money.dart';
 
+part 'airtime_for_transaction.g.dart';
+
+@Collection()
 class AirtimeForTransaction extends Transaction {
   static const type = "airtime-for";
 
@@ -16,7 +20,7 @@ class AirtimeForTransaction extends Transaction {
     required super.balance,
     required super.subject,
   }) : super(
-          transactionCost: const Money(amount: 0),
+          transactionCost: Money(amount: 0),
         );
 
   factory AirtimeForTransaction.fromMpesaMessage(
@@ -50,6 +54,19 @@ class AirtimeForTransaction extends Transaction {
   }
 
   @override
+  Transaction fromJson(Map<String, dynamic> json) {
+    return AirtimeForTransaction(
+      balance: Money(amount: int.parse(json["balance"]!)),
+      dateTime:
+          DateTime.fromMillisecondsSinceEpoch(int.parse(json["dateTime"]!)),
+      messageId: int.parse(json["messageId"]!),
+      subject: json["subject"]!,
+      transactionAmount: Money(amount: int.parse(json["transactionAmount"]!)),
+      transactionCode: json["transactionCode"]!,
+    );
+  }
+
+  @override
   String toString() {
     return toJson().toString();
   }
@@ -62,8 +79,6 @@ class AirtimeForTransaction extends Transaction {
         subtitle: prettifyTimeDifference(dateTime),
         icon: const Text("A"),
         rightWidget: Text("KES $amount"),
-        onTap: () {
-          // TODO: open transaction details page
-        });
+        onTap: () {});
   }
 }
