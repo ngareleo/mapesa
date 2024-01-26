@@ -10,17 +10,21 @@ import 'package:mapesa/src/models/users.dart';
 // modules handles authentication
 
 enum UserLoginStatus {
-  success,
-  incorrectPassword,
-  userNotFound,
-  internalServerError,
-  unknown,
+  success(message: "Login successful"),
+  incorrectPassword(message: "Incorrect password"),
+  userNotFound(message: "User not found"),
+  internalServerError(message: "Internal server error"),
+  unknown(message: "An error occured while logging in");
+
+  final String message;
+
+  const UserLoginStatus({required this.message});
 }
 
 class AuthProvider extends ChangeNotifier {
   static AuthProvider? _instance;
-  static User? _loggedInUser;
-  static String? _authToken;
+  late User? _loggedInUser;
+  late String? _authToken;
   late Dio _dio; // Cannot use DioProvider here to avoid circular dependency
 
   AuthProvider._() {
@@ -36,9 +40,9 @@ class AuthProvider extends ChangeNotifier {
 
   static AuthProvider get instance => _instance ?? AuthProvider._();
 
-  static User? get loggedInUser => _loggedInUser;
+  static User? get loggedInUser => _instance?._loggedInUser;
 
-  static String? get authToken => _authToken;
+  static String? get authToken => _instance?._authToken;
 
   bool isLoggedIn() {
     return _loggedInUser != null && _authToken != null;

@@ -1,8 +1,7 @@
-import 'package:mapesa/src/models/server_side_tmodel.dart';
-import 'package:mapesa/src/models/transactions/fuliza_transaction.dart';
-import 'package:mapesa/src/types.dart';
 import 'package:telephony/telephony.dart';
 
+import 'package:mapesa/src/models/server_side_tmodel.dart';
+import 'package:mapesa/src/models/transactions/fuliza_transaction.dart';
 import 'package:mapesa/src/models/transactions/airtime_for_transaction.dart';
 import 'package:mapesa/src/models/transactions/airtime_transaction.dart';
 import 'package:mapesa/src/models/transactions/deposit_transaction.dart';
@@ -12,6 +11,7 @@ import 'package:mapesa/src/models/transactions/receive_money_transaction.dart';
 import 'package:mapesa/src/models/transactions/send_money_transaction.dart';
 import 'package:mapesa/src/models/transactions/transaction.dart';
 import 'package:mapesa/src/models/transactions/withdraw_transaction.dart';
+import 'package:mapesa/src/types.dart';
 
 abstract class DataMapper<A, B> {
   // from [A] to [B]
@@ -24,7 +24,7 @@ abstract class DataMapper<A, B> {
 
 class TransactionsMapper extends DataMapper<SmsMessage, Transaction> {
   static final _patterns = {
-    TransactionType.airtime: AirtimeForTransaction.regex,
+    TransactionType.airtime: AirtimeTransaction.regex,
     TransactionType.airtimeFor: AirtimeForTransaction.regex,
     TransactionType.depositMoney: DepositTransaction.regex,
     TransactionType.fuliza: FulizaTransaction.regex,
@@ -90,6 +90,7 @@ class TransactionsMapper extends DataMapper<SmsMessage, Transaction> {
 }
 
 class FailedTransactionsMapper extends DataMapper<ObjectMap, Transaction> {
+  // TODO: Write tests for this
   @override
   Transaction? mapFromAToB(ObjectMap from) {
     var type = from["type"];
@@ -116,26 +117,28 @@ class FailedTransactionsMapper extends DataMapper<ObjectMap, Transaction> {
 }
 
 class ServerSideTModelMapper extends DataMapper<ServerSideTModel, Transaction> {
+  // TODO: Write tests for this
+
   @override
   Transaction? mapFromAToB(ServerSideTModel from) {
     var type = from.type;
     return switch (type) {
-      TransactionType.receiveMoney =>
-        ReceiveMoneyTransaction.fromJson(from.toJson()),
-      TransactionType.sendMoney => SendMoneyTransaction.fromJson(from.toJson()),
+      TransactionType.airtime => AirtimeTransaction.fromJson(from.toJson()),
+      TransactionType.airtimeFor =>
+        AirtimeForTransaction.fromJson(from.toJson()),
+      TransactionType.depositMoney =>
+        DepositTransaction.fromJson(from.toJson()),
+      TransactionType.fuliza =>
+        null, // TODO: Merge fuliza info with respective transactions
       TransactionType.lipaNaMpesa =>
         LipaNaMpesaTransaction.fromJson(from.toJson()),
       TransactionType.payBillMoney =>
         PaybillTransaction.fromJson(from.toJson()),
-      TransactionType.airtime => AirtimeTransaction.fromJson(from.toJson()),
+      TransactionType.receiveMoney =>
+        ReceiveMoneyTransaction.fromJson(from.toJson()),
+      TransactionType.sendMoney => SendMoneyTransaction.fromJson(from.toJson()),
       TransactionType.withdrawMoney =>
         WithdrawTransaction.fromJson(from.toJson()),
-      TransactionType.fuliza =>
-        null, // TODO: Merge fuliza info with respective transactions
-      TransactionType.depositMoney =>
-        DepositTransaction.fromJson(from.toJson()),
-      TransactionType.airtimeFor =>
-        AirtimeForTransaction.fromJson(from.toJson()),
     };
   }
 

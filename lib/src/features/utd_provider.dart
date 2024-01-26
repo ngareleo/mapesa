@@ -11,25 +11,27 @@ import 'package:mapesa/src/models/transactions/transaction.dart';
 class UTDProvider {
   // Keeps transactions server side [u]p [t]o [d]ate.
   // Generally this is a service that runs in the background
+  static UTDProvider? _instance;
+  static const _lastUploadedMessageKey = "last_message_id";
+  static final _after30Minutes = Schedule(minutes: 30);
 
-  static final mapper = TransactionsMapper();
-  static int? lastUploadedMessageId;
-  static const lastUploadedMessageKey = "last_message_id";
-  static final transactionUploadProvider = TransactionsUploadProvider();
-  static final after30Minutes = Schedule(minutes: 30);
+  final _mapper = TransactionsMapper();
+  int? _lastUploadedMessageId;
+  final _transactionUploadProvider = TransactionsUploadProvider();
+  final _cron = Cron();
 
-  final cron = Cron();
-
-  UTDProvider() {
+  UTDProvider._() {
     _loadLastMessageIdFromStorage();
   }
 
+  static UTDProvider get instance => _instance ?? UTDProvider._();
+
   Future<MultipleTransactions> fetchTransactions() async {
     var messages = (await SMSProvider.instance
-        .fetchRecentMessages(fromId: lastUploadedMessageId ?? 0));
+        .fetchRecentMessages(fromId: _lastUploadedMessageId ?? 0));
     var transactions = <Transaction>[];
     for (var msg in messages) {
-      var transaction = mapper.mapFromAToB(msg);
+      var transaction = _mapper.mapFromAToB(msg);
       if (transaction != null) {
         transactions.add(transaction);
       }
@@ -39,13 +41,13 @@ class UTDProvider {
 
   void _loadLastMessageIdFromStorage() async {
     var prefs = await SharedPreferences.getInstance();
-    lastUploadedMessageId = prefs.getInt(lastUploadedMessageKey);
+    _lastUploadedMessageId = prefs.getInt(_lastUploadedMessageKey);
   }
 
   Future<void> _setLastUploadedMessageId(int id) async {
     var prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(lastUploadedMessageKey, id);
-    lastUploadedMessageId = id;
+    await prefs.setInt(_lastUploadedMessageKey, id);
+    _lastUploadedMessageId = id;
   }
 
   Future<MultipleTransactions> refresh() async {
@@ -55,10 +57,11 @@ class UTDProvider {
 
   Future<void> uploadTransactions(List<Transaction> transactions) async {
     // TODO: Add limit for failed transactions
+    // TODO: Handle all return cases
 
     transactions.sort((a, b) => a.messageId.compareTo(b.messageId));
     var res = await Isolate.run(
-        () => transactionUploadProvider.uploadTransactions(transactions));
+        () => _transactionUploadProvider.uploadTransactions(transactions));
 
     if (res.failed.isNotEmpty) {
       await FailedTransactionsRepository.instance
@@ -69,7 +72,7 @@ class UTDProvider {
       await _setLastUploadedMessageId(transactions.last.messageId);
     }
 
-    cron.schedule(after30Minutes, () => scheduleFailedTransactionsUpload());
+    _cron.schedule(_after30Minutes, () => scheduleFailedTransactionsUpload());
   }
 
   Future<void> scheduleFailedTransactionsUpload() async {
@@ -79,9 +82,11 @@ class UTDProvider {
     var failedTransactions = fromServerSideT
         .map((failedTransaction) => mapper.mapFromAToB(failedTransaction)!)
         .toList();
+    if (failedTransactions.isEmpty) return;
+
     if (failedTransactions.isNotEmpty) {
       var res = await Isolate.run(() =>
-          transactionUploadProvider.uploadTransactions(failedTransactions));
+          _transactionUploadProvider.uploadTransactions(failedTransactions));
 
       if (res.status == UploadStatus.success) {
         await FailedTransactionsRepository.instance

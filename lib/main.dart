@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:isar/isar.dart';
+import 'package:mapesa/src/features/utd_provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +17,7 @@ void main() async {
   await dotenv.load();
   final dir = await getApplicationDocumentsDirectory();
   final isar = await Isar.open([ServerSideTModelSchema], directory: dir.path);
-
+  
   FailedTransactionsRepository(isar);
   CommonCache();
   runApp(ChangeNotifierProvider(

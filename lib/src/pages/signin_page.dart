@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:mapesa/src/features/auth_provider.dart';
-import 'package:mapesa/src/models/users.dart';
 import 'package:mapesa/src/pages/home_page.dart';
 import 'package:mapesa/src/pages/signup_page.dart';
 
@@ -13,13 +12,13 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  static const usernameKey = "Username";
-  static const passwordKey = "Password";
+  static const _usernameKey = "Username";
+  static const _passwordKey = "Password";
   static final _authProvider = AuthProvider.instance;
 
   final _controllers = {
-    usernameKey: TextEditingController(),
-    passwordKey: TextEditingController(),
+    _usernameKey: TextEditingController(),
+    _passwordKey: TextEditingController(),
   };
 
   @override
@@ -45,9 +44,9 @@ class _SignInPageState extends State<SignInPage> {
               ),
               const SizedBox(height: 20),
               TextFormField(
-                controller: _controllers[usernameKey],
+                controller: _controllers[_usernameKey],
                 decoration: const InputDecoration(
-                  labelText: usernameKey,
+                  labelText: _usernameKey,
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   border: UnderlineInputBorder(),
                 ),
@@ -55,9 +54,9 @@ class _SignInPageState extends State<SignInPage> {
               ),
               const SizedBox(height: 20),
               TextFormField(
-                controller: _controllers[passwordKey],
+                controller: _controllers[_passwordKey],
                 decoration: const InputDecoration(
-                  labelText: passwordKey,
+                  labelText: _passwordKey,
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   border: UnderlineInputBorder(),
                 ),
@@ -67,13 +66,13 @@ class _SignInPageState extends State<SignInPage> {
               SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: FilledButton(
-                  onPressed: signUpUser,
+                  onPressed: _signUpUser,
                   child: const Text("Sign In"),
                 ),
               ),
               const SizedBox(height: 20),
               TextButton(
-                  onPressed: navigateToSignUpPage,
+                  onPressed: _navigateToSignUpPage,
                   child: const Text("I don't have an account"))
             ],
           ),
@@ -82,71 +81,46 @@ class _SignInPageState extends State<SignInPage> {
     )));
   }
 
-  void signUpUser() async {
+  void _signUpUser() async {
     for (final controller in _controllers.entries) {
       if (controller.value.text.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Please fill in ${controller.key}"),
-          ),
-        );
+        _showSnackBar("${controller.key} cannot be empty");
         return;
       }
     }
 
     var (status, user) = await _authProvider.loginUser(
-      username: _controllers[usernameKey]!.text,
-      password: _controllers[passwordKey]!.text,
+      username: _controllers[_usernameKey]!.text,
+      password: _controllers[_passwordKey]!.text,
     );
 
-    postSignUp(status, user);
-  }
-
-  void postSignUp(UserLoginStatus status, User? newUser) {
     switch (status) {
       case UserLoginStatus.success:
-        if (newUser == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Unknown error"),
-            ),
-          );
+        if (user == null) {
+          _showSnackBar("An error occured while logging in");
           return;
         }
-        navigateToHomePage();
+        _navigateToHomePage();
         break;
       case UserLoginStatus.incorrectPassword:
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Incorrect password"),
-          ),
-        );
-        break;
       case UserLoginStatus.userNotFound:
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("User not found"),
-          ),
-        );
-        break;
       case UserLoginStatus.internalServerError:
       case UserLoginStatus.unknown:
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Sorry something went wrong :("),
-          ),
-        );
+        _showSnackBar(status.message);
         break;
     }
   }
 
-  void navigateToHomePage() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (_) => const HomePage()));
-  }
+  void _navigateToHomePage() => Navigator.push(
+      context, MaterialPageRoute(builder: (_) => const HomePage()));
 
-  void navigateToSignUpPage() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (_) => const SignUpPage()));
-  }
+  void _navigateToSignUpPage() => Navigator.push(
+      context, MaterialPageRoute(builder: (_) => const SignUpPage()));
+
+  void _showSnackBar(String message) =>
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+        ),
+      );
 }

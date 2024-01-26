@@ -15,7 +15,7 @@ part 'airtime_transaction.g.dart';
 class AirtimeTransaction extends Transaction {
   static const type = "airtime";
   static final regex = RegExp(
-      r'^(\w{10,12}) confirmed\.You bought Ksh(.+\.\d\d) of airtime for (.+?) on (.+) at (\d\d?:\d\d) (AM|PM)\.New balance is Ksh(.+\.\d\d)\. Transaction cost,');
+      r'^(\w{10,12}) confirmed\.You bought Ksh(.+\.\d\d) of airtime on (.+) at (\d\d?:\d\d) (AM|PM)\.New M-PESA balance is Ksh(.+\.\d\d)\. Transaction cost, ');
 
   AirtimeTransaction({
     required super.messageId,

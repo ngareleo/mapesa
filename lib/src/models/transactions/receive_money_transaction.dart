@@ -15,7 +15,7 @@ part 'receive_money_transaction.g.dart';
 class ReceiveMoneyTransaction extends Transaction {
   static const type = "receive";
   static final regex = RegExp(
-      r'^You have received Ksh(.+\.\d\d) from (.+?) on (.+) at (\d\d?:\d\d) (AM|PM)\. New M-PESA balance is Ksh(.+\.\d\d)\. Transaction cost, Ksh(\d\w{0,7}\.\d\d)\..*$');
+      r'^(?:Congratulations!\s)?(\w{10})\s[Cc]onfirmed.You\shave\sreceived\sKsh(.+\.\d\d)\sfrom\s((.+)\s(\d*)\s|(.+)(\d*)\s)on\s(.*)\sat\s(.*)\s(PM|AM)\s*\.?New\sM-PESA\sbalance\sis\sKsh(\d\w{0,7}\.\d\d)\..*$');
 
   @Name("phone_number")
   final String phoneNumber;

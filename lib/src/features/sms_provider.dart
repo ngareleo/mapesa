@@ -10,9 +10,9 @@ typedef ManySms = List<SmsMessage>;
 class SMSProvider {
   // Modules will request SmsMessages from this class
   static SMSProvider? _instance;
-  static final telephony = Telephony.instance;
-  final maxMessages = 100000;
+  static const maxMessages = 100000;
 
+  final telephony = Telephony.instance;
   SMSProvider._() {
     _instance = this;
   }

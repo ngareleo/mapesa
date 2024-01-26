@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart';
 
-import 'package:mapesa/src/features/auth_provider.dart';
-import 'package:mapesa/src/features/cache/common_cache.dart';
 import 'package:mapesa/src/features/dio_provider.dart';
 import 'package:mapesa/src/models/transactions/transaction.dart';
 import 'package:mapesa/src/types.dart';
@@ -27,31 +25,21 @@ typedef UploadResponseType = Future<(UploadStatus, bool)>;
 class TransactionsUploadProvider {
   static final _dio = DioProvider.instance.dio;
 
-  TransactionsUploadProvider() {
-    _dio.options
-      ..baseUrl = CommonCache.backendURLCache.value
-      ..connectTimeout = const Duration(minutes: 2)
-      ..headers = {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "Authorization": "Bearer ${AuthProvider.authToken}"
-      };
-  }
-
   Future<UploadResponse> _uploadSingleDPayload(
       MultipleTransactions payload) async {
     Response? response;
+
     try {
       response = await _dio.post(
         "/upload/transactions",
         data: {"raw": payload},
       );
     } on DioException catch (e) {
-      var response = e.response;
-      if (response?.statusCode == 400) {
+      var errResponse = e.response;
+      if (errResponse?.statusCode == 400) {
         return UploadResponse(
-            status: UploadStatus.success, failed: response?.data["failed"]);
-      } else if (e.response?.statusCode == 500) {
+            status: UploadStatus.success, failed: errResponse?.data["failed"]);
+      } else if (errResponse?.statusCode == 500) {
         return UploadResponse(status: UploadStatus.internalServerError);
       }
     }
@@ -67,6 +55,18 @@ class TransactionsUploadProvider {
   Future<UploadResponse> uploadTransactions(
     List<Transaction> transactions,
   ) async {
+    // Generally there will be three results after uploading
+    // 1. [Complete] All transactions are uploaded successfully.
+    //    All requests return 200 but there are failed transactions, maybe due to duplicate transactions
+    //
+    // 2. [Parital] Some transactions are uploaded successfully
+    //    Some requests return 200 but there are failed transactions, maybe 500
+    //
+    // 3. [Fail] No transactions are uploaded successfully
+    //    All requests return 500
+    // -----------------------------------------------------
+    // 4. An error occurs
+
     if (transactions.isEmpty) {
       return UploadResponse(status: UploadStatus.nothingToUpload);
     }
