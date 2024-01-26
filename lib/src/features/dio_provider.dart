@@ -28,6 +28,40 @@ class DioProvider {
       // TODO: Log response
       return handler.next(response);
     }, onError: (error, handler) {
+      switch (error.type) {
+        case DioExceptionType.connectionError:
+          debugStringForDioProviderTemplate("Connection timeout",
+              error.response!.realUri.toString(), error.message!);
+          break;
+        case DioExceptionType.connectionTimeout:
+          debugStringForDioProviderTemplate("Connection timeout",
+              error.response!.realUri.toString(), error.message!);
+          break;
+        case DioExceptionType.sendTimeout:
+          debugStringForDioProviderTemplate("Send timeout",
+              error.response!.realUri.toString(), error.message!);
+          break;
+        case DioExceptionType.receiveTimeout:
+          debugStringForDioProviderTemplate("Receive timeout",
+              error.response!.realUri.toString(), error.message!);
+          break;
+        case DioExceptionType.badCertificate:
+          debugStringForDioProviderTemplate("Response error",
+              error.response!.realUri.toString(), error.message!);
+          break;
+        case DioExceptionType.badResponse:
+          debugStringForDioProviderTemplate("Response error",
+              error.response!.realUri.toString(), error.message!);
+          break;
+        case DioExceptionType.cancel:
+          debugStringForDioProviderTemplate("Request cancelled",
+              error.response!.realUri.toString(), error.message!);
+          break;
+        case DioExceptionType.unknown:
+          debugStringForDioProviderTemplate("Other error",
+              error.response!.realUri.toString(), error.message!);
+          break;
+      }
       debugPrint("Error: ${error.response?.data}");
       if (error.response?.statusCode == 401) {
         AuthProvider.instance.logoutUser();
@@ -39,6 +73,12 @@ class DioProvider {
   }
 
   static DioProvider get instance => _instance ?? DioProvider._();
+
+  void debugStringForDioProviderTemplate(
+      String message, String url, String serverMessage) {
+    debugPrint(
+        "Dio Provider Error: $message\nError came up when calling $url\nMessage from server: $serverMessage");
+  }
 
   Dio get dio => _dio;
 }

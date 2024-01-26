@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:mapesa/src/features/upload_provider.dart';
+import 'package:mapesa/src/features/upload/upload_provider.dart';
 import 'package:mapesa/src/pages/budget_page.dart';
 import 'package:mapesa/src/pages/dashboard_page.dart';
 import 'package:mapesa/src/pages/debug_page.dart';

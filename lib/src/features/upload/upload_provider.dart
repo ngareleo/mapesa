@@ -1,58 +1,52 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:mapesa/src/features/dio_provider.dart';
 import 'package:mapesa/src/models/transactions/transaction.dart';
-import 'package:mapesa/src/types.dart';
+
+import 'types.dart';
 
 // module for uploading transactions
-
-enum UploadStatus {
-  success,
-  internalServerError,
-  nothingToUpload,
-  unknown,
-}
-
-class UploadResponse {
-  UploadStatus status;
-  ListOfObjects failed;
-
-  UploadResponse({this.status = UploadStatus.unknown, this.failed = const []});
-}
-
-typedef UploadResponseType = Future<(UploadStatus, bool)>;
 
 class TransactionsUploadProvider {
   static final _dio = DioProvider.instance.dio;
 
-  Future<UploadResponse> _uploadSingleDPayload(
+  Future<SinglePayloadUploadResponse> _uploadSingleDPayload(
       MultipleTransactions payload) async {
     Response? response;
+    var pay = payload.map((e) => e.toJson() as Map<String, String>).toList();
 
     try {
       response = await _dio.post(
         "/upload/transactions",
-        data: {"raw": payload},
+        data: {"raw": pay},
       );
     } on DioException catch (e) {
       var errResponse = e.response;
       if (errResponse?.statusCode == 400) {
-        return UploadResponse(
-            status: UploadStatus.success, failed: errResponse?.data["failed"]);
-      } else if (errResponse?.statusCode == 500) {
-        return UploadResponse(status: UploadStatus.internalServerError);
+        // Means we screwed up with the payload
+        debugPrint("Payload is invalid:: $pay");
+        return SinglePayloadUploadResponse(
+            status: SingleUploadStatusType.clientSideError, failed: pay);
       }
+      return SinglePayloadUploadResponse(
+          status: SingleUploadStatusType.serverSideError, failed: pay);
     }
 
-    if (response?.statusCode == 200) {
-      var failed = response?.data["failed"] as ListOfObjects;
-      return UploadResponse(status: UploadStatus.success, failed: failed);
+    if (response.statusCode == 200) {
+      var duplicates = response.data["failed"];
+      var unknowns = response.data["unknown"];
+      return SinglePayloadUploadResponse(
+          status: SingleUploadStatusType.success,
+          duplicates: duplicates,
+          failed: unknowns);
     }
 
-    return UploadResponse(status: UploadStatus.unknown);
+    return SinglePayloadUploadResponse(
+        status: SingleUploadStatusType.unknown, failed: pay);
   }
 
-  Future<UploadResponse> uploadTransactions(
+  Future<BatchUpload> uploadTransactions(
     List<Transaction> transactions,
   ) async {
     // Generally there will be three results after uploading
@@ -68,7 +62,7 @@ class TransactionsUploadProvider {
     // 4. An error occurs
 
     if (transactions.isEmpty) {
-      return UploadResponse(status: UploadStatus.nothingToUpload);
+      return BatchUpload(status: BatchUploadStatusType.nothingToUpload);
     }
 
     var dPayload = _splitTransactionsTo2D(transactions);
@@ -78,18 +72,29 @@ class TransactionsUploadProvider {
     var res = await Future.wait(
         dPayload.map((payload) => _uploadSingleDPayload(payload)));
 
-    return res.reduce((value, element) {
-      // if any of the payloads failed, we return the failed transactions
-      // if any passes we returned the failed transactions and a success
-      var UploadResponse(:status, :failed) = value;
-      value.status = status == UploadStatus.success ? status : element.status;
-      value.failed.addAll(failed);
-      return value;
-    });
+    var totalResponse = BatchUpload(
+      status:
+          res.any((element) => element.status == SingleUploadStatusType.success)
+              ? BatchUploadStatusType.partial
+              : BatchUploadStatusType.fail,
+    );
+
+    if (totalResponse.status == BatchUploadStatusType.fail) {
+      // no need to try recover, we'll just retry later
+      return totalResponse;
+    }
+
+    for (var element in res) {
+      totalResponse.duplicates.addAll(element.duplicates);
+      totalResponse.failed.addAll(element.failed);
+    }
+
+    return totalResponse;
   }
 
   List<MultipleTransactions> _splitTransactionsTo2D(
       List<Transaction> transactions) {
+    // split transactions into 2D array of 1000 transactions each
     const dPayload = <MultipleTransactions>[];
     for (var i = 0; i < (transactions.length / 1000) + 1; i++) {
       dPayload.add(transactions.sublist(i * 1000, (i + 1) * 1000));
