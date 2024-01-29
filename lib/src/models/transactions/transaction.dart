@@ -1,40 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:mapesa/src/utils/money.dart';
+import 'package:isar/isar.dart';
+import 'package:mapesa/src/models/server_side_tmodel.dart';
 
-enum TransactionType {
-  receiveMoney,
-  sendMoney,
-  lipaNaMpesa,
-  payBillMoney,
-  airtime,
-  airtimeFor,
-  withdrawMoney,
-  fuliza,
-  depositMoney,
-}
+import 'package:mapesa/src/utils/money.dart';
 
 abstract class Transaction {
   // These fields are constranied to be non-null by backend
 
+  final Id id = Isar.autoIncrement;
   final Money balance;
   final DateTime dateTime;
+
+  @Name("message_id")
   final int messageId;
   final String subject;
+
+  @Name("transaction_amount")
   final Money transactionAmount;
+  @Name("transaction_code")
   final String transactionCode;
+  @Name("transaction_cost")
   final Money transactionCost;
 
-  const Transaction(
-      {required this.balance,
-      required this.messageId,
-      required this.transactionAmount,
-      required this.transactionCode,
-      required this.transactionCost,
-      required this.dateTime,
-      required this.subject});
+  const Transaction({
+    required this.balance,
+    required this.dateTime,
+    required this.messageId,
+    required this.subject,
+    required this.transactionAmount,
+    required this.transactionCode,
+    required this.transactionCost,
+  });
 
-  Map<String, String?> toJson();
+  Map<String, String> toJson();
   Widget toTransactionListItem();
+  ServerSideTModel? toServerSideTModel();
 }
 
 class InvalidTransaction extends Transaction {
@@ -43,24 +43,23 @@ class InvalidTransaction extends Transaction {
       : super(
             subject: "Invalid Transaction",
             messageId: 0,
-            transactionAmount: const Money(amount: 0),
+            transactionAmount: Money(amount: 0),
             transactionCode: "",
-            transactionCost: const Money(amount: 0),
+            transactionCost: Money(amount: 0),
             dateTime: DateTime.fromMicrosecondsSinceEpoch(0),
-            balance: const Money(amount: 0));
+            balance: Money(amount: 0));
 
   @override
-  Map<String, String?> toJson() {
-    return {"type": "invalid"};
-  }
+  Map<String, String> toJson() => {"type": "invalid"};
 
   @override
-  String toString() {
-    return toJson().toString();
-  }
+  String toString() => toJson().toString();
 
   @override
-  Widget toTransactionListItem() {
-    throw UnimplementedError();
-  }
+  Widget toTransactionListItem() => throw UnimplementedError();
+
+  @override
+  ServerSideTModel? toServerSideTModel() => null;
 }
+
+typedef MultipleTransactions = List<Transaction>;

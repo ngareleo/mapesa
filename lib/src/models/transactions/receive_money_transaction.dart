@@ -1,59 +1,95 @@
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
 
 import 'package:mapesa/src/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/models/server_side_tmodel.dart';
+import 'package:mapesa/src/types.dart';
 import 'package:mapesa/src/utils/datetime.dart';
 import 'package:mapesa/src/utils/money.dart';
 
 import 'transaction.dart';
 
-class ReceiveMoneyTransaction extends Transaction {
-  final String phoneNumber;
-  static const type = "receive";
+part 'receive_money_transaction.g.dart';
 
-  const ReceiveMoneyTransaction(
-      {required super.messageId,
-      required super.transactionAmount,
-      required super.transactionCode,
+@Collection()
+class ReceiveMoneyTransaction extends Transaction {
+  static const type = "receive";
+  static final regex = RegExp(
+      r'^(?:Congratulations!\s)?(\w{10})\s[Cc]onfirmed.You\shave\sreceived\sKsh(.+\.\d\d)\sfrom\s((.+)\s(\d*)\s|(.+)(\d*)\s)on\s(.*)\sat\s(.*)\s(PM|AM)\s*\.?New\sM-PESA\sbalance\sis\sKsh(\d\w{0,7}\.\d\d)\..*$');
+
+  @Name("phone_number")
+  final String phoneNumber;
+
+  ReceiveMoneyTransaction(
+      {required super.balance,
       required super.dateTime,
-      required super.balance,
+      required super.messageId,
+      required this.phoneNumber,
       required super.subject,
-      required this.phoneNumber})
-      : super(transactionCost: const Money(amount: 0));
+      required super.transactionAmount,
+      required super.transactionCode})
+      : super(transactionCost: Money(amount: 0));
 
   factory ReceiveMoneyTransaction.fromMpesaMessage(
       {required int messageID, required RegExpMatch match}) {
     return ReceiveMoneyTransaction(
-        messageId: messageID,
-        transactionAmount: Money.fromString(message: match.group(2).toString()),
-        transactionCode: match.group(1).toString(),
-        dateTime: getDateTimeFromMessage(
-            date: match.group(8).toString().trim(),
-            time: match.group(9).toString().trim(),
-            isAM: match.group(10).toString().trim() == "AM"),
-        balance: Money.fromString(message: match.group(11).toString()),
-        subject: match.group(4) ?? match.group(6).toString(),
-        phoneNumber: match.group(5) ?? match.group(7).toString());
+      balance: Money.fromString(message: match.group(11).toString()),
+      dateTime: getDateTimeFromMessage(
+          date: match.group(8).toString().trim(),
+          time: match.group(9).toString().trim(),
+          isAM: match.group(10).toString().trim() == "AM"),
+      messageId: messageID,
+      phoneNumber: match.group(5) ?? match.group(7).toString(),
+      subject: match.group(4) ?? match.group(6).toString(),
+      transactionAmount: Money.fromString(message: match.group(2).toString()),
+      transactionCode: match.group(1).toString(),
+    );
   }
 
   @override
-  Map<String, String?> toJson() {
-    return {
-      "balance": balance.amount.toString(),
-      "dateTime": dateTime.millisecondsSinceEpoch.toString(),
-      "messageId": messageId.toString(),
-      "subject": subject,
-      "subjectPhoneNumber": phoneNumber,
-      "transactionAmount": transactionAmount.amount.toString(),
-      "transactionCode": transactionCode,
-      "transactionCost": transactionCost.amount.toString(),
-      "type": type,
-    };
+  factory ReceiveMoneyTransaction.fromJson(Map<String, dynamic> json) {
+    return ReceiveMoneyTransaction(
+      balance: Money(amount: int.parse(json["balance"]!)),
+      dateTime:
+          DateTime.fromMillisecondsSinceEpoch(int.parse(json["dateTime"]!)),
+      messageId: int.parse(json["messageId"]!),
+      subject: json["subject"]!,
+      phoneNumber: json["subjectPhoneNumber"]!,
+      transactionAmount: Money(amount: int.parse(json["transactionAmount"]!)),
+      transactionCode: json["transactionCode"]!,
+    );
   }
 
   @override
-  String toString() {
-    return toJson().toString();
+  Map<String, String> toJson() => {
+        "balance": balance.amount.toString(),
+        "dateTime": dateTime.millisecondsSinceEpoch.toString(),
+        "messageId": messageId.toString(),
+        "subject": subject,
+        "subjectPhoneNumber": phoneNumber,
+        "transactionAmount": transactionAmount.amount.toString(),
+        "transactionCode": transactionCode,
+        "transactionCost": transactionCost.amount.toString(),
+        "type": type,
+      };
+
+  @override
+  ServerSideTModel? toServerSideTModel() {
+    return ServerSideTModel(
+      balance: balance,
+      dateTime: dateTime,
+      messageId: messageId,
+      phoneNumber: phoneNumber,
+      subject: subject,
+      transactionAmount: transactionAmount,
+      transactionCode: transactionCode,
+      transactionCost: transactionCost,
+      type: TransactionType.receiveMoney,
+    );
   }
+
+  @override
+  String toString() => toJson().toString();
 
   @override
   Widget toTransactionListItem() {

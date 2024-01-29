@@ -10,10 +10,6 @@ class CommonCache {
   final _backendUrlCache = BackendURLCacheItem(
       key: "backend_url", value: dotenv.env["BACKEND_URL"] ?? "");
 
-  factory CommonCache() {
-    return CommonCache._();
-  }
-
   CommonCache._() {
     _instance = this;
   }

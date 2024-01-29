@@ -2,43 +2,69 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:mapesa/src/features/cache/common_cache.dart';
 import 'package:mapesa/src/models/users.dart';
 
 // modules handles authentication
 
 enum UserLoginStatus {
-  success,
-  incorrectPassword,
-  userNotFound,
-  internalServerError,
-  unknown,
+  success(message: "Login successful"),
+  incorrectPassword(message: "Incorrect password"),
+  userNotFound(message: "User not found"),
+  internalServerError(message: "Internal server error"),
+  unknown(message: "An error occured while logging in");
+
+  final String message;
+
+  const UserLoginStatus({required this.message});
 }
 
 class AuthProvider extends ChangeNotifier {
   static AuthProvider? _instance;
-  static User? _loggedInUser;
-  static String? _authToken;
+  User? _loggedInUser;
+  String? _authToken;
   late Dio _dio; // Cannot use DioProvider here to avoid circular dependency
 
-  AuthProvider._() {
-    _getUserDetailsFromPersist();
-    _getAuthTokenFromPersist();
+  static Future<void> init() async {
+    /// Called in the main function to initialize the provider and perform aync tasks
+    if (_instance != null) {
+      throw Exception("AuthProvider already initialized");
+    }
+    _instance = AuthProvider._(baseUrl: dotenv.env['BACKEND_URL'] ?? "");
+    await _instance?._getUserDetailsFromPersist();
+    await _instance?._getAuthTokenFromPersist();
+    debugPrint("AuthProvider initialized");
+  }
+
+  static Future<void> initSafe({required String overrideUrl}) async {
+    /// An way of initializing the provider within an Isolate
+    if (_instance != null) {
+      throw Exception("AuthProvider already initialized");
+    }
+    _instance = AuthProvider._(baseUrl: overrideUrl);
+    await _instance?._getUserDetailsFromPersist();
+    await _instance?._getAuthTokenFromPersist();
+    debugPrint("AuthProvider initialized safe");
+  }
+
+  AuthProvider._({required String baseUrl}) {
     var dio = Dio();
-    dio.options.baseUrl = CommonCache.backendURLCache.value;
+    dio.options.baseUrl = baseUrl;
     dio.options.connectTimeout = const Duration(minutes: 2);
     dio.options.receiveTimeout = const Duration(minutes: 2);
     _dio = dio;
-    _instance = this;
   }
 
-  static AuthProvider get instance => _instance ?? AuthProvider._();
+  static AuthProvider get instance {
+    nullCheck();
+    return _instance!;
+  }
 
-  static User? get loggedInUser => _loggedInUser;
+  static User? get loggedInUser => _instance?._loggedInUser;
 
-  static String? get authToken => _authToken;
+  static String? get authToken => _instance?._authToken;
 
   bool isLoggedIn() {
     return _loggedInUser != null && _authToken != null;
@@ -137,5 +163,12 @@ class AuthProvider extends ChangeNotifier {
     if (token != null) {
       _authToken = token;
     }
+  }
+
+  static void nullCheck() {
+    if (_instance == null) {
+      throw Exception("AuthProvider not initialized");
+    }
+    debugPrint("AuthProvider null check");
   }
 }

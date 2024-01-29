@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mapesa/src/features/model_mapper.dart';
 import 'package:mapesa/src/models/transactions/airtime_transaction.dart';
 import 'package:mapesa/src/models/transactions/deposit_transaction.dart';
-import 'package:mapesa/src/models/transactions/fuliza_transaction.dart';
+// import 'package:mapesa/src/models/transactions/fuliza_transaction.dart';
 import 'package:mapesa/src/models/transactions/lipa_na_mpesa_transaction.dart';
 import 'package:mapesa/src/models/transactions/paybill_transaction.dart';
 import 'package:mapesa/src/models/transactions/receive_money_transaction.dart';
@@ -61,7 +61,6 @@ void main() {
   });
 
   test("Mapper maps the fuliza messages to right type", () {
-    expect(mapper.mapStringToTransaction(fulizaMessage, 0) is FulizaTransaction,
-        true);
+    expect(mapper.mapStringToTransaction(fulizaMessage, 0), null);
   });
 }

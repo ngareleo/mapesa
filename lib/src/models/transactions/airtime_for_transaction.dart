@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
 
 import 'package:mapesa/src/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/models/server_side_tmodel.dart';
 import 'package:mapesa/src/models/transactions/transaction.dart';
+import 'package:mapesa/src/types.dart';
 import 'package:mapesa/src/utils/datetime.dart';
 import 'package:mapesa/src/utils/money.dart';
 
+part 'airtime_for_transaction.g.dart';
+
+@Collection()
 class AirtimeForTransaction extends Transaction {
+  static var regex = RegExp(
+      r"([A-Z0-9]{10}) Confirmed\. Ksh([0-9,]+) sent to ([0-9]{10}) on ([0-9]{2}\/[0-9]{2}\/[0-9]{2}) at ([0-9]{2}:[0-9]{2} [AP]M)\. New M-PESA balance is Ksh([0-9,]+)\.");
   static const type = "airtime-for";
 
   AirtimeForTransaction({
@@ -16,7 +24,7 @@ class AirtimeForTransaction extends Transaction {
     required super.balance,
     required super.subject,
   }) : super(
-          transactionCost: const Money(amount: 0),
+          transactionCost: Money(amount: 0),
         );
 
   factory AirtimeForTransaction.fromMpesaMessage(
@@ -36,23 +44,45 @@ class AirtimeForTransaction extends Transaction {
   }
 
   @override
-  Map<String, String?> toJson() {
-    return {
-      "balance": balance.amount.toString(),
-      "dateTime": dateTime.millisecondsSinceEpoch.toString(),
-      "messageId": messageId.toString(),
-      "subject": subject,
-      "transactionAmount": transactionAmount.amount.toString(),
-      "transactionCode": transactionCode,
-      "transactionCost": transactionCost.amount.toString(),
-      "type": type,
-    };
+  factory AirtimeForTransaction.fromJson(Map<String, dynamic> json) {
+    return AirtimeForTransaction(
+      balance: Money(amount: int.parse(json["balance"]!)),
+      dateTime:
+          DateTime.fromMillisecondsSinceEpoch(int.parse(json["dateTime"]!)),
+      messageId: int.parse(json["messageId"]!),
+      subject: json["subject"]!,
+      transactionAmount: Money(amount: int.parse(json["transactionAmount"]!)),
+      transactionCode: json["transactionCode"]!,
+    );
+  }
+  @override
+  Map<String, String> toJson() => {
+        "balance": balance.amount.toString(),
+        "dateTime": dateTime.millisecondsSinceEpoch.toString(),
+        "messageId": messageId.toString(),
+        "subject": subject,
+        "transactionAmount": transactionAmount.amount.toString(),
+        "transactionCode": transactionCode,
+        "transactionCost": transactionCost.amount.toString(),
+        "type": type,
+      };
+
+  @override
+  ServerSideTModel? toServerSideTModel() {
+    return ServerSideTModel(
+      balance: balance,
+      dateTime: dateTime,
+      messageId: messageId,
+      subject: subject,
+      transactionAmount: transactionAmount,
+      transactionCode: transactionCode,
+      transactionCost: transactionCost,
+      type: TransactionType.airtimeFor,
+    );
   }
 
   @override
-  String toString() {
-    return toJson().toString();
-  }
+  String toString() => toJson().toString();
 
   @override
   Widget toTransactionListItem() {
@@ -62,8 +92,6 @@ class AirtimeForTransaction extends Transaction {
         subtitle: prettifyTimeDifference(dateTime),
         icon: const Text("A"),
         rightWidget: Text("KES $amount"),
-        onTap: () {
-          // TODO: open transaction details page
-        });
+        onTap: () {});
   }
 }

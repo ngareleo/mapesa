@@ -1,15 +1,46 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:mapesa/src/features/auth_provider.dart';
-import 'package:mapesa/src/features/cache/common_cache.dart';
 
 class DioProvider {
+  static final _dio = Dio();
   static DioProvider? _instance;
-  final _dio = Dio();
 
-  DioProvider._() {
-    _dio.options.baseUrl = CommonCache.backendURLCache.value;
+  static Future<void> init() async {
+    /// Called in the main function to initialize the provider and perform aync tasks
+    /// Should be called with url if provider is used in Isolate
+    /// Provided url to allow overriding the default url or to skip reading from dotenv
+
+    if (_instance != null) {
+      throw Exception("DioProvider already initialized");
+    }
+
+    _instance = DioProvider._(baseUrl: dotenv.env['BACKEND_URL'] ?? "");
+    debugPrint("DioProvider initialized");
+  }
+
+  static Future<void> initSafe({required String overrideUrl}) async {
+    /// An way of initializing the provider within an Isolate
+
+    if (_instance != null) {
+      throw Exception("DioProvider already initialized");
+    }
+
+    _instance = DioProvider._(baseUrl: overrideUrl);
+    debugPrint("DioProvider initialized");
+  }
+
+  static DioProvider get instance {
+    if (_instance == null) {
+      throw Exception("DioProvider not initialized. Call DioProvider.init()");
+    }
+    return _instance!;
+  }
+
+  DioProvider._({required String baseUrl}) {
+    _dio.options.baseUrl = baseUrl;
     _dio.options.connectTimeout = const Duration(minutes: 2);
     _dio.options.receiveTimeout = const Duration(minutes: 2);
 
@@ -22,23 +53,66 @@ class DioProvider {
     }
 
     _dio.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
-      // TODO: Log request
       return handler.next(options);
     }, onResponse: (response, handler) {
-      // TODO: Log response
       return handler.next(response);
     }, onError: (error, handler) {
+      switch (error.type) {
+        case DioExceptionType.connectionError:
+          debugStringForDioProviderTemplate("Connection timeout",
+              error.response!.realUri.toString(), error.message!);
+          break;
+        case DioExceptionType.connectionTimeout:
+          debugStringForDioProviderTemplate("Connection timeout",
+              error.response!.realUri.toString(), error.message!);
+          break;
+        case DioExceptionType.sendTimeout:
+          debugStringForDioProviderTemplate("Send timeout",
+              error.response!.realUri.toString(), error.message!);
+          break;
+        case DioExceptionType.receiveTimeout:
+          debugStringForDioProviderTemplate("Receive timeout",
+              error.response!.realUri.toString(), error.message!);
+          break;
+        case DioExceptionType.badCertificate:
+          debugStringForDioProviderTemplate("Response error",
+              error.response!.realUri.toString(), error.message!);
+          break;
+        case DioExceptionType.badResponse:
+          debugStringForDioProviderTemplate("Response error",
+              error.response!.realUri.toString(), error.message!);
+          break;
+        case DioExceptionType.cancel:
+          debugStringForDioProviderTemplate("Request cancelled",
+              error.response!.realUri.toString(), error.message!);
+          break;
+        case DioExceptionType.unknown:
+          debugStringForDioProviderTemplate("Other error",
+              error.response!.realUri.toString(), error.message!);
+          break;
+      }
       debugPrint("Error: ${error.response?.data}");
       if (error.response?.statusCode == 401) {
         AuthProvider.instance.logoutUser();
       }
       return handler.next(error);
     }));
-
-    _instance = this;
   }
 
-  static DioProvider get instance => _instance ?? DioProvider._();
+  void debugStringForDioProviderTemplate(
+      String message, String url, String serverMessage) {
+    debugPrint(
+        "Dio Provider Error: $message\nError came up when calling $url\nMessage from server: $serverMessage");
+  }
 
   Dio get dio => _dio;
+
+  set baseUrl(String baseUrl) {
+    _dio.options.baseUrl = baseUrl;
+  }
+
+  static void nullCheck() {
+    assert(_instance != null, true);
+    debugPrint("DioProvider null check");
+  }
 }

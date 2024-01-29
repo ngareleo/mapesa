@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:mapesa/src/features/auth_provider.dart';
-import 'package:mapesa/src/models/users.dart';
 import 'package:mapesa/src/pages/signin_page.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -90,13 +89,13 @@ class _SignUpPageState extends State<SignUpPage> {
               SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: FilledButton(
-                  onPressed: signUpUser,
+                  onPressed: _signUpUser,
                   child: const Text("Sign Up"),
                 ),
               ),
               const SizedBox(height: 20),
               TextButton(
-                  onPressed: navigateToLoginPage,
+                  onPressed: _navigateToLoginPage,
                   child: const Text("I already have an account")),
             ],
           ),
@@ -105,49 +104,40 @@ class _SignUpPageState extends State<SignUpPage> {
     )));
   }
 
-  void signUpUser() async {
+  Future<void> _signUpUser() async {
     for (final entry in _controllers.entries) {
       final key = entry.key;
       final controller = entry.value;
       // Use key and controller variables here
 
       if (controller.text.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Please fill in $key"),
-          ),
-        );
+        _showSnackBar("$key cannot be empty");
         return;
       }
     }
+
     var newUser = await _authProvider.createNewUser(
       username: _controllers["Username"]!.text,
       email: _controllers["Email"]!.text,
       password: _controllers["Password"]!.text,
     );
-    postSignUp(newUser);
-  }
 
-  void postSignUp(User? newUser) {
+    if (!context.mounted) return;
     if (newUser == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("An error occured while creating your account"),
-        ),
-      );
+      _showSnackBar("An error occured while creating account");
       return;
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Account created successfully"),
-      ),
-    );
-
-    navigateToLoginPage();
+    _showSnackBar("Account created successfully");
+    _navigateToLoginPage();
   }
 
-  void navigateToLoginPage() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (_) => const SignInPage()));
-  }
+  void _navigateToLoginPage() => Navigator.push(
+      context, MaterialPageRoute(builder: (_) => const SignInPage()));
+
+  void _showSnackBar(String message) =>
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+        ),
+      );
 }
