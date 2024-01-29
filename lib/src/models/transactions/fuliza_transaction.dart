@@ -56,7 +56,7 @@ class FulizaTransaction extends Transaction {
   }
 
   @override
-  Map<String, String?> toJson() => {
+  Map<String, String> toJson() => {
         "balance": balance.amount.toString(),
         "dateTime": dateTime.millisecondsSinceEpoch.toString(),
         "interest": interest.amount.toString(),

@@ -32,7 +32,7 @@ abstract class Transaction {
     required this.transactionCost,
   });
 
-  Map<String, String?> toJson();
+  Map<String, String> toJson();
   Widget toTransactionListItem();
   ServerSideTModel? toServerSideTModel();
 }
@@ -50,7 +50,7 @@ class InvalidTransaction extends Transaction {
             balance: Money(amount: 0));
 
   @override
-  Map<String, String?> toJson() => {"type": "invalid"};
+  Map<String, String> toJson() => {"type": "invalid"};
 
   @override
   String toString() => toJson().toString();

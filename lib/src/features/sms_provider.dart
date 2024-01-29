@@ -1,5 +1,6 @@
 import 'dart:isolate';
 
+import 'package:flutter/foundation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:telephony/telephony.dart';
 
@@ -9,10 +10,13 @@ typedef ManySms = List<SmsMessage>;
 
 class SMSProvider {
   // Modules will request SmsMessages from this class
+  // This provider doesn't need to be initialized using init()
+
   static SMSProvider? _instance;
   static const maxMessages = 100000;
 
   final telephony = Telephony.instance;
+
   SMSProvider._() {
     _instance = this;
   }
@@ -29,8 +33,12 @@ class SMSProvider {
   Future<ManySms> fetchRecentMessages({int fromId = 0}) async {
     await _checkPermission();
     var messages = await telephony.getInboxSms(
-        columns: [SmsColumn.ADDRESS, SmsColumn.BODY, SmsColumn.ID],
-        filter: SmsFilter.where(SmsColumn.ADDRESS).equals("MPESA"));
+      columns: [SmsColumn.ADDRESS, SmsColumn.BODY, SmsColumn.ID],
+      filter: SmsFilter.where(SmsColumn.ADDRESS)
+          .equals("MPESA")
+          .and(SmsColumn.ID)
+          .greaterThan(fromId.toString()),
+    );
     return messages;
   }
 
@@ -48,5 +56,10 @@ class SMSProvider {
           OrderBy(SmsColumn.ID, sort: Sort.DESC),
         ]));
     return (messages.first.id ?? 0, messages.first.id ?? 0);
+  }
+
+  void nullCheck() {
+    assert(_instance != null, true);
+    debugPrint("SMSProvider null check");
   }
 }

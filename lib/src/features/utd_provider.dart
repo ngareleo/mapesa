@@ -1,14 +1,16 @@
-import 'dart:isolate';
 import 'package:cron/cron.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mapesa/src/features/repository/failed_transactions.dart';
 import 'package:mapesa/src/features/model_mapper.dart';
 import 'package:mapesa/src/features/sms_provider.dart';
-import 'package:mapesa/src/features/upload/upload_provider.dart';
+import 'package:mapesa/src/features/upload/transaction_upload_provider.dart';
 import 'package:mapesa/src/models/transactions/transaction.dart';
 
 import 'upload/types.dart';
+
+enum UTDStatus { idle, busy }
 
 class UTDProvider {
   // Keeps transactions server side [u]p [t]o [d]ate.
@@ -22,13 +24,30 @@ class UTDProvider {
   final _transactionUploadProvider = TransactionsUploadProvider();
   final _cron = Cron();
 
-  UTDProvider._() {
-    _loadLastMessageIdFromStorage();
+  UTDStatus status = UTDStatus.idle;
+
+  static Future<void> init() async {
+    /// Called in the main function to initialize the provider and perform aync tasks
+    if (_instance != null) {
+      throw Exception("UTDProvider already initialized");
+    }
+    _instance = UTDProvider._();
+    _instance!._retryFailedTransactions();
+    await _instance!._loadLastMessageIdFromStorage();
+    debugPrint("UTDProvider initialized");
   }
 
-  static UTDProvider get instance => _instance ?? UTDProvider._();
+  UTDProvider._();
+
+  static UTDProvider get instance {
+    if (_instance == null) {
+      throw Exception("UTDProvider not initialized. Call UTDProvider.init()");
+    }
+    return _instance!;
+  }
 
   Future<MultipleTransactions> fetchTransactions() async {
+    debugPrint("Last message ID: $_lastUploadedMessageId");
     var messages = (await SMSProvider.instance
         .fetchRecentMessages(fromId: _lastUploadedMessageId ?? 0));
     var transactions = <Transaction>[];
@@ -41,33 +60,45 @@ class UTDProvider {
     return transactions;
   }
 
-  Future<MultipleTransactions> refresh() async {
+  Future<void> refresh() async {
+    if (status == UTDStatus.busy) {
+      debugPrint("UTDProvider is busy");
+      return;
+    }
     var transactions = await fetchTransactions();
     await uploadTransactions(transactions);
-    return transactions;
   }
 
-  Future<void> uploadTransactions(List<Transaction> transactions) async {
+  Future<void> uploadTransactions(List<Transaction> transactions,
+      {bool overrideLastMessageID = true}) async {
     // TODO: Add limit for failed transactions
 
-    transactions.sort((a, b) => a.messageId.compareTo(b.messageId));
-    var res = await Isolate.run(
-        () => _transactionUploadProvider.uploadTransactions(transactions));
+    if (transactions.isEmpty) {
+      debugPrint("No transactions to upload");
+      return;
+    }
+    status = UTDStatus.busy;
+    transactions.sort(
+      (a, b) => a.messageId.compareTo(b.messageId),
+    );
+    var res = await _transactionUploadProvider.uploadTransactions(transactions);
+
+    debugPrint("UTDProvider uploadTransactions: $res");
 
     switch (res.status) {
       case BatchUploadStatusType.success:
+        if (!overrideLastMessageID) break;
         await _setLastUploadedMessageId(transactions.last.messageId);
         break;
       case BatchUploadStatusType.partial:
         // Some transactions have been uploaded successfully
         // Save the failed transactions and try again later
-        await FailedTransactionsRepository.instance
-            .saveFailedTransactions(res.failed);
         if (res.failed.isNotEmpty) {
           await FailedTransactionsRepository.instance
               .saveFailedTransactions(res.failed);
         }
         _scheduleFailedTransactionsUpload();
+        await _setLastUploadedMessageId(transactions.last.messageId);
         break;
       case BatchUploadStatusType.fail:
         // Nothing we can do but try again later from the previous message ID
@@ -77,9 +108,10 @@ class UTDProvider {
             .saveFailedTransactions(res.failed);
         break;
     }
+    status = UTDStatus.idle;
   }
 
-  Future<void> scheduleFailedTransactionsUpload() async {
+  void _retryFailedTransactions() async {
     var fromServerSideT =
         await FailedTransactionsRepository.instance.fetchFailedTransactions();
     ServerSideTModelMapper mapper = ServerSideTModelMapper();
@@ -87,10 +119,10 @@ class UTDProvider {
         .map((failedTransaction) => mapper.mapFromAToB(failedTransaction)!)
         .toList();
     if (failedTransactions.isEmpty) return;
-    await Isolate.run(() => uploadTransactions(failedTransactions));
+    await uploadTransactions(failedTransactions, overrideLastMessageID: false);
   }
 
-  void _loadLastMessageIdFromStorage() async {
+  Future<void> _loadLastMessageIdFromStorage() async {
     var prefs = await SharedPreferences.getInstance();
     _lastUploadedMessageId = prefs.getInt(_lastUploadedMessageKey);
   }
@@ -102,6 +134,11 @@ class UTDProvider {
   }
 
   void _scheduleFailedTransactionsUpload() {
-    _cron.schedule(_after30Minutes, () => scheduleFailedTransactionsUpload());
+    _cron.schedule(_after30Minutes, () => _retryFailedTransactions());
+  }
+
+  static void nullCheck() {
+    assert(_instance != null, true);
+    debugPrint("UTDProvider null check");
   }
 }

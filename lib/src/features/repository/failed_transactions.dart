@@ -7,7 +7,14 @@ class FailedTransactionsRepository {
   final Isar _isar;
   static FailedTransactionsRepository? _instance;
 
-  FailedTransactionsRepository(this._isar);
+  static void init(Isar isar) {
+    if (_instance != null) {
+      throw Exception("FailedTransactionsRepository already initialized");
+    }
+    _instance = FailedTransactionsRepository._(isar);
+  }
+
+  FailedTransactionsRepository._(this._isar);
 
   static FailedTransactionsRepository get instance {
     if (_instance == null) {

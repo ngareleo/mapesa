@@ -3,23 +3,28 @@ import 'package:flutter/foundation.dart';
 
 import 'package:mapesa/src/features/dio_provider.dart';
 import 'package:mapesa/src/models/transactions/transaction.dart';
+import 'package:mapesa/src/utils/common.dart';
 
 import 'types.dart';
 
 // module for uploading transactions
 
 class TransactionsUploadProvider {
-  static final _dio = DioProvider.instance.dio;
+  static const payloadSize = 1000;
 
   Future<SinglePayloadUploadResponse> _uploadSingleDPayload(
       MultipleTransactions payload) async {
+    var dio = DioProvider.instance.dio;
     Response? response;
-    var pay = payload.map((e) => e.toJson() as Map<String, String>).toList();
+    var pay = payload.map((e) => e.toJson()).toList();
 
     try {
-      response = await _dio.post(
+      response = await dio.post(
         "/upload/transactions",
         data: {"raw": pay},
+        onSendProgress: (sent, total) {
+          debugPrint("Sent: $sent, Total: $total");
+        },
       );
     } on DioException catch (e) {
       var errResponse = e.response;
@@ -34,12 +39,15 @@ class TransactionsUploadProvider {
     }
 
     if (response.statusCode == 200) {
-      var duplicates = response.data["failed"];
-      var unknowns = response.data["unknown"];
+      debugPrint(response.data.toString());
+      var oks = mapListOfObjects(response.data["oks"]);
+      var duplicates = mapListOfObjects(response.data["duplicates"]);
+      var failed = mapListOfObjects(response.data["failed"]);
       return SinglePayloadUploadResponse(
           status: SingleUploadStatusType.success,
+          oks: oks,
           duplicates: duplicates,
-          failed: unknowns);
+          failed: failed);
     }
 
     return SinglePayloadUploadResponse(
@@ -49,6 +57,7 @@ class TransactionsUploadProvider {
   Future<BatchUpload> uploadTransactions(
     List<Transaction> transactions,
   ) async {
+    /// Call this method in an isolate
     // Generally there will be three results after uploading
     // 1. [Complete] All transactions are uploaded successfully.
     //    All requests return 200 but there are failed transactions, maybe due to duplicate transactions
@@ -85,8 +94,12 @@ class TransactionsUploadProvider {
     }
 
     for (var element in res) {
-      totalResponse.duplicates.addAll(element.duplicates);
-      totalResponse.failed.addAll(element.failed);
+      var BatchUpload(:duplicates, :failed, :oks) = totalResponse;
+      totalResponse = BatchUpload(
+        duplicates: duplicates + element.duplicates,
+        failed: failed + element.failed,
+        oks: oks + element.oks,
+      );
     }
 
     return totalResponse;
@@ -95,9 +108,20 @@ class TransactionsUploadProvider {
   List<MultipleTransactions> _splitTransactionsTo2D(
       List<Transaction> transactions) {
     // split transactions into 2D array of 1000 transactions each
-    const dPayload = <MultipleTransactions>[];
-    for (var i = 0; i < (transactions.length / 1000) + 1; i++) {
-      dPayload.add(transactions.sublist(i * 1000, (i + 1) * 1000));
+    var dPayload = <MultipleTransactions>[];
+    var end = transactions.length;
+
+    if (transactions.length <= payloadSize) {
+      dPayload.add(transactions);
+      return dPayload;
+    }
+    for (var i = 0; i < (transactions.length / payloadSize) + 1; i++) {
+      if ((i + 1) * payloadSize > end) {
+        dPayload.add(transactions.sublist(i * payloadSize, end));
+        break;
+      }
+      dPayload
+          .add(transactions.sublist(i * payloadSize, (i + 1) * payloadSize));
     }
     return dPayload;
   }
