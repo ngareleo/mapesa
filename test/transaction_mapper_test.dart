@@ -26,9 +26,18 @@ void main() {
         true);
   });
 
+  test("Mapper maps the alt Paybill message with lowercase 'c' to right type",
+      () {
+    expect(
+        mapper.mapStringToTransaction(paybillMessageWithLowercaseC, 0)
+            is PaybillTransaction,
+        true);
+  });
+
   test("Mapper maps the paybill messages to right type", () {
     expect(
-        mapper.mapStringToTransaction(paybillMessage, 0) is PaybillTransaction,
+        mapper.mapStringToTransaction(paybillMessageWithUppercaseC, 0)
+            is PaybillTransaction,
         true);
   });
 
@@ -46,9 +55,26 @@ void main() {
         true);
   });
 
+  test(
+      "Mapper maps receive money transactions that start with Congratulations to the right type",
+      () {
+    expect(
+        mapper.mapStringToTransaction(
+                receiveMoneyStartingWithCongratulations, 0)
+            is ReceiveMoneyTransaction,
+        true);
+  });
+
   test("Mapper maps the receive money messages to right type", () {
     expect(
         mapper.mapStringToTransaction(receiveMoneyMessage, 0)
+            is ReceiveMoneyTransaction,
+        true);
+  });
+
+  test("Mapper maps the receive money messages to right type", () {
+    expect(
+        mapper.mapStringToTransaction(receiveMoneyMessage2, 0)
             is ReceiveMoneyTransaction,
         true);
   });

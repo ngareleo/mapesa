@@ -55,6 +55,7 @@ class AirtimeForTransaction extends Transaction {
       transactionCode: json["transactionCode"]!,
     );
   }
+
   @override
   Map<String, String> toJson() => {
         "balance": balance.amount.toString(),

@@ -74,6 +74,7 @@ class WithdrawTransaction extends Transaction {
         "dateTime": dateTime.millisecondsSinceEpoch.toString(),
         "location": location,
         "messageId": messageId.toString(),
+        "subject": subject,
         "transactionAmount": transactionAmount.amount.toString(),
         "transactionCode": transactionCode,
         "transactionCost": transactionCost.amount.toString(),

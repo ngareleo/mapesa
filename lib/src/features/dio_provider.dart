@@ -10,31 +10,29 @@ class DioProvider {
 
   static Future<void> init() async {
     /// Called in the main function to initialize the provider and perform aync tasks
-    /// Should be called with url if provider is used in Isolate
-    /// Provided url to allow overriding the default url or to skip reading from dotenv
 
     if (_instance != null) {
       throw Exception("DioProvider already initialized");
     }
 
+    // TODO: Remember to replace this
     _instance = DioProvider._(baseUrl: dotenv.env['BACKEND_URL'] ?? "");
     debugPrint("DioProvider initialized");
   }
 
   static Future<void> initSafe({required String overrideUrl}) async {
-    /// An way of initializing the provider within an Isolate
-
+    /// A safe way of initializing the provider within an Isolate
     if (_instance != null) {
       throw Exception("DioProvider already initialized");
     }
-
     _instance = DioProvider._(baseUrl: overrideUrl);
     debugPrint("DioProvider initialized");
   }
 
   static DioProvider get instance {
     if (_instance == null) {
-      throw Exception("DioProvider not initialized. Call DioProvider.init()");
+      throw Exception(
+          "DioProvider not initialized. Call DioProvider.init() before accessing instance");
     }
     return _instance!;
   }

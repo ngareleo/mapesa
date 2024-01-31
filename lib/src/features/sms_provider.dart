@@ -1,19 +1,17 @@
 import 'dart:isolate';
 
-import 'package:flutter/foundation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:telephony/telephony.dart';
 
 typedef ManySms = List<SmsMessage>;
 
-// module for reading sms
-
+// module for reading sms messages
 class SMSProvider {
   // Modules will request SmsMessages from this class
   // This provider doesn't need to be initialized using init()
 
   static SMSProvider? _instance;
-  static const maxMessages = 100000;
+  static const maxMessages = 1000;
 
   final telephony = Telephony.instance;
 
@@ -39,6 +37,11 @@ class SMSProvider {
           .and(SmsColumn.ID)
           .greaterThan(fromId.toString()),
     );
+
+    if (messages.length > maxMessages) {
+      messages = messages.sublist(0, maxMessages);
+    }
+
     return messages;
   }
 
@@ -60,6 +63,5 @@ class SMSProvider {
 
   void nullCheck() {
     assert(_instance != null, true);
-    debugPrint("SMSProvider null check");
   }
 }

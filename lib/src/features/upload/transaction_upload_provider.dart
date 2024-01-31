@@ -10,7 +10,7 @@ import 'types.dart';
 // module for uploading transactions
 
 class TransactionsUploadProvider {
-  static const payloadSize = 1000;
+  static const payloadSize = 300;
 
   Future<SinglePayloadUploadResponse> _uploadSingleDPayload(
       MultipleTransactions payload) async {
@@ -57,7 +57,6 @@ class TransactionsUploadProvider {
   Future<BatchUpload> uploadTransactions(
     List<Transaction> transactions,
   ) async {
-    /// Call this method in an isolate
     // Generally there will be three results after uploading
     // 1. [Complete] All transactions are uploaded successfully.
     //    All requests return 200 but there are failed transactions, maybe due to duplicate transactions
@@ -68,7 +67,7 @@ class TransactionsUploadProvider {
     // 3. [Fail] No transactions are uploaded successfully
     //    All requests return 500
     // -----------------------------------------------------
-    // 4. An error occurs
+    // 4. An error occurs before response is received
 
     if (transactions.isEmpty) {
       return BatchUpload(status: BatchUploadStatusType.nothingToUpload);

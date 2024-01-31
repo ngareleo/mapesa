@@ -25,7 +25,9 @@ class AuthProvider extends ChangeNotifier {
   static AuthProvider? _instance;
   User? _loggedInUser;
   String? _authToken;
-  late Dio _dio; // Cannot use DioProvider here to avoid circular dependency
+
+  // Cannot use DioProvider here to avoid circular dependency
+  late Dio _dio;
 
   static Future<void> init() async {
     /// Called in the main function to initialize the provider and perform aync tasks
@@ -39,7 +41,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   static Future<void> initSafe({required String overrideUrl}) async {
-    /// An way of initializing the provider within an Isolate
+    /// A safe way of initializing the provider within an Isolate
     if (_instance != null) {
       throw Exception("AuthProvider already initialized");
     }
@@ -83,7 +85,6 @@ class AuthProvider extends ChangeNotifier {
         "password": password,
       },
     );
-
     return response.statusCode != 200 ? null : User.fromApi(response.data);
   }
 
@@ -169,6 +170,5 @@ class AuthProvider extends ChangeNotifier {
     if (_instance == null) {
       throw Exception("AuthProvider not initialized");
     }
-    debugPrint("AuthProvider null check");
   }
 }
