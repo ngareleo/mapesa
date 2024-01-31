@@ -15,7 +15,7 @@ part 'deposit_transaction.g.dart';
 class DepositTransaction extends Transaction {
   static const type = "deposit";
   static final regex = RegExp(
-      r'^(\w{9,11}) Confirmed\. On (.{5,8}) at (.+) (PM|AM) Give Ksh(.+\.\d\d) cash to (.+) New M-PESA balance is Ksh(\d\w{0,7}\.\d\d)');
+      r'^(?<code>\w{9,11})\sConfirmed\.\sOn\s(?<date>\d{1,2}\/\d{1,2}\/\d{2,4})\sat\s(?<time>\d{1,2}:\d{2})\s(?<am>AM|PM)\sGive\sKsh(?<amount>[\d,]*.\d\d)\scash\sto\s(?<location>.*)\sNew\sM-PESA\sbalance\sis\sKsh(?<balance>[\d,]*.\d\d)\..*$');
 
   final String location;
 
@@ -34,16 +34,18 @@ class DepositTransaction extends Transaction {
   factory DepositTransaction.fromMpesaMessage(
       {required int messageID, required RegExpMatch match}) {
     return DepositTransaction(
-      balance: Money.fromString(message: match.group(7).toString().trim()),
+      balance: Money.fromString(
+          message: match.namedGroup("balance").toString().trim()),
       dateTime: getDateTimeFromMessage(
-          date: match.group(2).toString().trim(),
-          time: match.group(3).toString().trim(),
-          isAM: match.group(4).toString().trim() == "AM"),
-      location: match.group(6).toString().trim(),
+        date: match.namedGroup("date").toString().trim(),
+        time: match.namedGroup("time").toString().trim(),
+        isAM: match.namedGroup("am").toString().trim() == "AM",
+      ),
+      location: match.namedGroup("location").toString().trim(),
       messageId: messageID,
-      transactionAmount:
-          Money.fromString(message: match.group(5).toString().trim()),
-      transactionCode: match.group(1).toString().trim(),
+      transactionAmount: Money.fromString(
+          message: match.namedGroup("amount").toString().trim()),
+      transactionCode: match.namedGroup("code").toString().trim(),
     );
   }
 

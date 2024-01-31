@@ -15,7 +15,7 @@ part 'receive_money_transaction.g.dart';
 class ReceiveMoneyTransaction extends Transaction {
   static const type = "receive";
   static final regex = RegExp(
-      r'^(?:Congratulations!\s)?(\w{10})\s[Cc]onfirmed.You\shave\sreceived\sKsh(.+\.\d\d)\sfrom\s((.+)\s(\d*)\s|(.+)(\d*)\s)on\s(.*)\sat\s(.*)\s(PM|AM)\s*\.?New\sM-PESA\sbalance\sis\sKsh(\d\w{0,7}\.\d\d)\..*$');
+      r'^(?:Congratulations!\s)?(?<code>\w{10})\s[Cc]onfirmed.You\shave\sreceived\sKsh(?<amount>.+\.\d\d)\sfrom\s(?<from>.*)\son\s(?<date>\d*\/\d*\/\d*)\sat\s(?<time>\d*:\d*)\s(?<am>AM|PM).*New\sM-PESA\sbalance\sis\sKsh(?<balance>.+\.\d\d).*$');
 
   @Name("phone_number")
   final String phoneNumber;
@@ -33,16 +33,18 @@ class ReceiveMoneyTransaction extends Transaction {
   factory ReceiveMoneyTransaction.fromMpesaMessage(
       {required int messageID, required RegExpMatch match}) {
     return ReceiveMoneyTransaction(
-      balance: Money.fromString(message: match.group(11).toString()),
+      balance:
+          Money.fromString(message: match.namedGroup("balance").toString()),
       dateTime: getDateTimeFromMessage(
-          date: match.group(8).toString().trim(),
-          time: match.group(9).toString().trim(),
-          isAM: match.group(10).toString().trim() == "AM"),
+          date: match.namedGroup("date").toString().trim(),
+          time: match.namedGroup("time").toString().trim(),
+          isAM: match.namedGroup("am").toString().trim() == "AM"),
       messageId: messageID,
-      phoneNumber: match.group(5) ?? match.group(7).toString(),
-      subject: match.group(4) ?? match.group(6).toString(),
-      transactionAmount: Money.fromString(message: match.group(2).toString()),
-      transactionCode: match.group(1).toString(),
+      phoneNumber: "",
+      subject: match.namedGroup("from").toString().trim(),
+      transactionAmount: Money.fromString(
+          message: match.namedGroup("amount").toString().trim()),
+      transactionCode: match.namedGroup("code").toString().trim(),
     );
   }
 

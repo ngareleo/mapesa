@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:telephony/telephony.dart';
 
 import 'package:mapesa/src/models/server_side_tmodel.dart';
@@ -37,7 +38,7 @@ class TransactionsMapper extends DataMapper<SmsMessage, Transaction> {
 
   static Map<TransactionType, RegExp> get transactionPatterns => _patterns;
 
-  // Added the extra parameter to allow for testing
+  // Added the extra function call to allow for testing
   @override
   Transaction? mapFromAToB(SmsMessage from) {
     var SmsMessage(:id, :body) = from;
@@ -51,11 +52,14 @@ class TransactionsMapper extends DataMapper<SmsMessage, Transaction> {
       var transactionType = map.key;
       var expression = _patterns[transactionType];
       var isMatch = expression?.hasMatch(body);
+
       if (isMatch != null && expression != null && isMatch) {
         return getTransaction(
             transactionType, id, expression.firstMatch(body)!);
       }
     }
+
+    debugPrint("Invalid transaction: $body");
     return null;
   }
 

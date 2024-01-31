@@ -30,8 +30,8 @@ void main() {
     expect(sendMoneyTransaction.transactionAmount.amount, 20003);
     expect(sendMoneyTransaction.balance.amount, 85551);
     expect(sendMoneyTransaction.transactionCost.amount, 400);
-    expect(sendMoneyTransaction.phoneNumber, "078343443");
-    expect(sendMoneyTransaction.subject, "WINFRED KANANA");
+    expect(sendMoneyTransaction.phoneNumber, "");
+    expect(sendMoneyTransaction.subject, "WINFRED KANANA 078343443");
     expect(sendMoneyTransaction.dateTime, DateTime.parse("2023-01-23 00:09"));
   });
 
@@ -53,8 +53,8 @@ void main() {
     var receiveMoneyTransaction =
         TransactionsMapper().mapStringToTransaction(receiveMoneyMessage, 0)!
             as ReceiveMoneyTransaction;
-    expect(receiveMoneyTransaction.subject, "WINFRED KANANA");
-    expect(receiveMoneyTransaction.phoneNumber, "0783463443");
+    expect(receiveMoneyTransaction.subject, "WINFRED KANANA 0783463443");
+    expect(receiveMoneyTransaction.phoneNumber, "");
     expect(receiveMoneyTransaction.transactionAmount.amount, 20010);
     expect(receiveMoneyTransaction.balance.amount, 85551);
     expect(receiveMoneyTransaction.transactionCode, "RAM2Y3531G");

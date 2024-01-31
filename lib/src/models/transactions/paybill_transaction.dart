@@ -15,7 +15,7 @@ part 'paybill_transaction.g.dart';
 class PaybillTransaction extends Transaction {
   static const type = "paybill";
   static final regex = RegExp(
-      r'^(\w{10})\sConfirmed\.\sKsh(.+\.\d\d)\ssent\sto\s(.+)\sfor\saccount\s(.*)\s?on(.{6,9})\sat\s(\d\d?:\d\d)\s(AM|PM)\.?\sNew\sM-PESA\sbalance\sis\sKsh(.+\.\d\d)\.\sTransaction\scost,\sKsh(.{1,3}\.\d\d?)\..*$');
+      r'^(?<code>\w+)\s[Cc]onfirmed\.\sKsh(?<amount>.+\.\d\d)\ssent\sto\s(?<subject>.*)\s*for\saccount\s(?<account>.+)\son\s(?<date>\d*\/\d*\/\d*) at (?<time>\d*:\d*)\s(?<am>AM|PM)\sNew\sM-PESA\sbalance\sis\sKsh(?<balance>.*\.\d\d).*Transaction\scost,\sKsh(?<cost>\d*\.\d\d).*$');
 
   final String subjectAccount;
 
@@ -35,20 +35,21 @@ class PaybillTransaction extends Transaction {
     required RegExpMatch match,
   }) {
     return PaybillTransaction(
-      balance: Money.fromString(message: match.group(8).toString().trim()),
+      balance:
+          Money.fromString(message: match.namedGroup("balance").toString()),
       dateTime: getDateTimeFromMessage(
-        date: match.group(5).toString().trim(),
-        time: match.group(6).toString().trim(),
-        isAM: match.group(7).toString().trim() == "AM",
+        date: match.namedGroup("date").toString().trim(),
+        time: match.namedGroup("time").toString().trim(),
+        isAM: match.namedGroup("am").toString().trim() == "AM",
       ),
       messageId: messageID,
-      subject: match.group(3).toString().trim(),
-      subjectAccount: match.group(4).toString().trim(),
+      subject: match.namedGroup("subject").toString().trim(),
+      subjectAccount: match.namedGroup("account").toString().trim(),
       transactionAmount:
-          Money.fromString(message: match.group(2).toString().trim()),
-      transactionCode: match.group(1).toString().trim(),
+          Money.fromString(message: match.namedGroup("amount").toString()),
+      transactionCode: match.namedGroup("code").toString().trim(),
       transactionCost:
-          Money.fromString(message: match.group(9).toString().trim()),
+          Money.fromString(message: match.namedGroup("cost").toString()),
     );
   }
 
