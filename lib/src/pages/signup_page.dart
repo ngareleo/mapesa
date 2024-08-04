@@ -124,7 +124,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
     if (!context.mounted) return;
     if (newUser == null) {
-      _showSnackBar("An error occured while creating account");
+      _showSnackBar("An error occurred while creating account");
       return;
     }
     _showSnackBar("Account created successfully");

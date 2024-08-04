@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mapesa/src/features/utd_provider.dart';
+import 'package:mapesa/src/features/up_to_date/utd_provider.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});

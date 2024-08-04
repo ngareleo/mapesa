@@ -97,7 +97,7 @@ class _SignInPageState extends State<SignInPage> {
     switch (status) {
       case UserLoginStatus.success:
         if (user == null) {
-          _showSnackBar("An error occured while logging in");
+          _showSnackBar("An error occurred while logging in");
           return;
         }
         _navigateToHomePage();

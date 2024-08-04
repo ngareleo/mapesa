@@ -8,7 +8,7 @@ import 'package:mapesa/src/features/sms_provider.dart';
 import 'package:mapesa/src/features/upload/transaction_upload_provider.dart';
 import 'package:mapesa/src/models/transactions/transaction.dart';
 
-import 'upload/types.dart';
+import '../upload/types.dart';
 
 enum UTDStatus { idle, busy }
 
@@ -48,7 +48,7 @@ class UTDProvider {
     return _instance!;
   }
 
-  Future<MultipleTransactions> fetchTransactions() async {
+  Future<MultipleTransactions> fetchTransactionsFromLocalStorage() async {
     var messages = (await SMSProvider.instance
         .fetchRecentMessages(fromId: _lastUploadedMessageId ?? 0));
     var transactions = <Transaction>[];
@@ -66,8 +66,38 @@ class UTDProvider {
       debugPrint("UTDProvider is busy");
       return;
     }
-    var transactions = await fetchTransactions();
+    var transactions = await fetchTransactionsFromLocalStorage();
     await uploadTransactions(transactions);
+  }
+
+  Future<void> uploadTransactionsInSingleLoad(
+    List<Transaction> transactions,
+  ) async {
+    if (transactions.isEmpty) {
+      debugPrint("No transactions to upload");
+      return;
+    }
+
+    status = UTDStatus.busy;
+
+    transactions.sort((a, b) => a.messageId.compareTo(b.messageId));
+
+    var response = await _transactionUploadProvider
+        .uploadTransactionsInSinglePayload(transactions);
+
+    switch (response.status) {
+      case SingleUploadStatusType.success:
+        await _setLastUploadedMessageId(transactions.last.messageId);
+        break;
+      case SingleUploadStatusType.clientSideError:
+      case SingleUploadStatusType.nothingToUpload:
+        debugPrint("We had nothing to upload");
+      case SingleUploadStatusType.unknown:
+      case SingleUploadStatusType.serverSideError:
+        break;
+    }
+
+    status = UTDStatus.idle;
   }
 
   Future<void> uploadTransactions(List<Transaction> transactions,
@@ -84,7 +114,8 @@ class UTDProvider {
       (a, b) => a.messageId.compareTo(b.messageId),
     );
 
-    var res = await _transactionUploadProvider.uploadTransactions(transactions);
+    var res = await _transactionUploadProvider
+        .uploadTransactionsInSplitPayloads(transactions);
     debugPrint("UTDProvider uploadTransactions: $res");
 
     switch (res.status) {
