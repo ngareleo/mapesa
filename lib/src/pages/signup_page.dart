@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:mapesa/src/features/auth_provider.dart';
 import 'package:mapesa/src/pages/signin_page.dart';
 
@@ -17,6 +16,7 @@ class _SignUpPageState extends State<SignUpPage> {
   // TODO: Autofil form fields with data from previous page
 
   final _authProvider = AuthProvider.instance;
+
   final _controllers = {
     "Username": TextEditingController(),
     "Email": TextEditingController(),

@@ -12,14 +12,12 @@ class SMSProvider {
 
   static SMSProvider? _instance;
   static const maxMessages = 1000;
-
   final telephony = Telephony.instance;
+  static SMSProvider get instance => _instance ?? SMSProvider._();
 
   SMSProvider._() {
     _instance = this;
   }
-
-  static SMSProvider get instance => _instance ?? SMSProvider._();
 
   Future<void> _checkPermission() async {
     var permission = await Permission.sms.status;
@@ -45,15 +43,35 @@ class SMSProvider {
     return messages;
   }
 
+  Future<ManySms> fetchSmsWithinLastNMonths(int n) async {
+    await _checkPermission();
+    var messages = await telephony.getInboxSms(
+      columns: [SmsColumn.ADDRESS, SmsColumn.BODY, SmsColumn.ID],
+      filter: SmsFilter.where(SmsColumn.ADDRESS)
+          .equals("MPESA")
+          .and(SmsColumn.DATE)
+          .greaterThan(
+              DateTime.now().subtract(Duration(days: n * 30)).toString()),
+    );
+
+    if (messages.length > maxMessages) {
+      messages = messages.sublist(0, maxMessages);
+    }
+
+    return messages;
+  }
+
   Future<(int, int)> _findSmsRange() async {
     /// Looks for the first and last ids from db
     /// Low Perf executed as little as possible
-    ///
-    // TODO: Persist this value and to reuse during next compute
-
     await _checkPermission();
     var messages = await Isolate.run(() => telephony.getInboxSms(
-        columns: [SmsColumn.ID, SmsColumn.ADDRESS, SmsColumn.BODY],
+        columns: [
+          SmsColumn.ID,
+          SmsColumn.ADDRESS,
+          SmsColumn.BODY,
+          SmsColumn.DATE
+        ],
         filter: SmsFilter.where(SmsColumn.ADDRESS).equals("MPESA"),
         sortOrder: [
           OrderBy(SmsColumn.ID, sort: Sort.DESC),

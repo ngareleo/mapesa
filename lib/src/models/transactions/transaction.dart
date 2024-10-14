@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
-import 'package:mapesa/src/models/server_side_tmodel.dart';
+import 'package:mapesa/src/models/compact_transaction.dart';
 
 import 'package:mapesa/src/utils/money.dart';
 
@@ -34,7 +34,7 @@ abstract class Transaction {
 
   Map<String, String> toJson();
   Widget toTransactionListItem();
-  ServerSideTModel? toServerSideTModel();
+  CompactTransaction? toCompactTransaction();
 }
 
 class InvalidTransaction extends Transaction {
@@ -59,7 +59,7 @@ class InvalidTransaction extends Transaction {
   Widget toTransactionListItem() => throw UnimplementedError();
 
   @override
-  ServerSideTModel? toServerSideTModel() => null;
+  CompactTransaction? toCompactTransaction() => null;
 }
 
 typedef MultipleTransactions = List<Transaction>;

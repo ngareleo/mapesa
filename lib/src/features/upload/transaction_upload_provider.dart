@@ -15,7 +15,9 @@ class TransactionsUploadProvider {
   Future<SinglePayloadUploadResponse> uploadTransactionsInSinglePayload(
       List<Transaction> transactions) async {
     if (transactions.isEmpty) {
-      return SinglePayloadUploadResponse(message: "Payload is empty");
+      return SinglePayloadUploadResponse(
+          message: "Payload is empty",
+          status: SingleUploadStatusType.nothingToUpload);
     }
     var dio = DioProvider.instance.dio;
     Response? response;

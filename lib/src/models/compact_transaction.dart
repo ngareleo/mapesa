@@ -2,11 +2,11 @@ import 'package:isar/isar.dart';
 import 'package:mapesa/src/types.dart';
 import 'package:mapesa/src/utils/money.dart';
 
-part 'server_side_tmodel.g.dart';
+part 'compact_transaction.g.dart';
 
 @Collection()
-class ServerSideTModel {
-  // Client side repr of the server side transaction
+class CompactTransaction {
+  // Compact representation of a transaction
   final Id id = Isar.autoIncrement;
   final Money balance;
   final DateTime dateTime;
@@ -35,7 +35,7 @@ class ServerSideTModel {
   @Enumerated(EnumType.value, "serverSide")
   final TransactionType type;
 
-  const ServerSideTModel({
+  const CompactTransaction({
     this.agentNumber,
     required this.balance,
     required this.dateTime,

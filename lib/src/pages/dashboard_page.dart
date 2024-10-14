@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mapesa/src/features/up_to_date/utd_provider.dart';
+import 'package:mapesa/src/features/mobile_server_reconciliation_provider.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -11,7 +11,7 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
-    UTDProvider.instance.refresh();
+    MobileServerReconciliationProvider.instance.refresh();
     super.initState();
   }
 
@@ -56,18 +56,18 @@ class _DashboardPageState extends State<DashboardPage> {
         color: Theme.of(context).primaryColor,
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Column(
+      child: const Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Text(
+          Text(
             'Balance',
             style: TextStyle(
               color: Colors.white,
               fontSize: 20,
             ),
           ),
-          const Text(
+          Text(
             'KES 0.00',
             style: TextStyle(
               color: Colors.white,
@@ -80,6 +80,6 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget showRecentTransactionsSection() {
-    return Text("Recent transactions");
+    return const Text("Recent transactions");
   }
 }

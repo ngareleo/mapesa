@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:mapesa/src/features/auth_provider.dart';
 import 'package:mapesa/src/pages/home_page.dart';
 import 'package:mapesa/src/pages/signup_page.dart';
@@ -72,7 +71,8 @@ class _SignInPageState extends State<SignInPage> {
               ),
               const SizedBox(height: 20),
               TextButton(
-                  onPressed: _navigateToSignUpPage,
+                  onPressed: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const SignUpPage())),
                   child: const Text("I don't have an account"))
             ],
           ),
@@ -100,7 +100,8 @@ class _SignInPageState extends State<SignInPage> {
           _showSnackBar("An error occurred while logging in");
           return;
         }
-        _navigateToHomePage();
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => const HomePage()));
         break;
       case UserLoginStatus.incorrectPassword:
       case UserLoginStatus.userNotFound:
@@ -110,12 +111,6 @@ class _SignInPageState extends State<SignInPage> {
         break;
     }
   }
-
-  void _navigateToHomePage() => Navigator.push(
-      context, MaterialPageRoute(builder: (_) => const HomePage()));
-
-  void _navigateToSignUpPage() => Navigator.push(
-      context, MaterialPageRoute(builder: (_) => const SignUpPage()));
 
   void _showSnackBar(String message) =>
       ScaffoldMessenger.of(context).showSnackBar(

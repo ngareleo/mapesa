@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'server_side_tmodel.dart';
+part of 'compact_transaction.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
@@ -9,13 +9,14 @@ part of 'server_side_tmodel.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetServerSideTModelCollection on Isar {
-  IsarCollection<ServerSideTModel> get serverSideTModels => this.collection();
+extension GetCompactTransactionCollection on Isar {
+  IsarCollection<CompactTransaction> get compactTransactions =>
+      this.collection();
 }
 
-const ServerSideTModelSchema = CollectionSchema(
-  name: r'ServerSideTModel',
-  id: 3624531698623825734,
+const CompactTransactionSchema = CollectionSchema(
+  name: r'CompactTransaction',
+  id: -1944694126826447565,
   properties: {
     r'agent_number': PropertySchema(
       id: 0,
@@ -85,25 +86,25 @@ const ServerSideTModelSchema = CollectionSchema(
       id: 12,
       name: r'type',
       type: IsarType.string,
-      enumMap: _ServerSideTModeltypeEnumValueMap,
+      enumMap: _CompactTransactiontypeEnumValueMap,
     )
   },
-  estimateSize: _serverSideTModelEstimateSize,
-  serialize: _serverSideTModelSerialize,
-  deserialize: _serverSideTModelDeserialize,
-  deserializeProp: _serverSideTModelDeserializeProp,
+  estimateSize: _compactTransactionEstimateSize,
+  serialize: _compactTransactionSerialize,
+  deserialize: _compactTransactionDeserialize,
+  deserializeProp: _compactTransactionDeserializeProp,
   idName: r'id',
   indexes: {},
   links: {},
   embeddedSchemas: {r'Money': MoneySchema},
-  getId: _serverSideTModelGetId,
-  getLinks: _serverSideTModelGetLinks,
-  attach: _serverSideTModelAttach,
+  getId: _compactTransactionGetId,
+  getLinks: _compactTransactionGetLinks,
+  attach: _compactTransactionAttach,
   version: '3.1.0+1',
 );
 
-int _serverSideTModelEstimateSize(
-  ServerSideTModel object,
+int _compactTransactionEstimateSize(
+  CompactTransaction object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -153,8 +154,8 @@ int _serverSideTModelEstimateSize(
   return bytesCount;
 }
 
-void _serverSideTModelSerialize(
-  ServerSideTModel object,
+void _compactTransactionSerialize(
+  CompactTransaction object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
@@ -194,13 +195,13 @@ void _serverSideTModelSerialize(
   writer.writeString(offsets[12], object.type.serverSide);
 }
 
-ServerSideTModel _serverSideTModelDeserialize(
+CompactTransaction _compactTransactionDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = ServerSideTModel(
+  final object = CompactTransaction(
     agentNumber: reader.readStringOrNull(offsets[0]),
     balance: reader.readObjectOrNull<Money>(
           offsets[1],
@@ -232,14 +233,14 @@ ServerSideTModel _serverSideTModelDeserialize(
           allOffsets,
         ) ??
         Money(),
-    type: _ServerSideTModeltypeValueEnumMap[
+    type: _CompactTransactiontypeValueEnumMap[
             reader.readStringOrNull(offsets[12])] ??
         TransactionType.receiveMoney,
   );
   return object;
 }
 
-P _serverSideTModelDeserializeProp<P>(
+P _compactTransactionDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -290,7 +291,7 @@ P _serverSideTModelDeserializeProp<P>(
           ) ??
           Money()) as P;
     case 12:
-      return (_ServerSideTModeltypeValueEnumMap[
+      return (_CompactTransactiontypeValueEnumMap[
               reader.readStringOrNull(offset)] ??
           TransactionType.receiveMoney) as P;
     default:
@@ -298,7 +299,7 @@ P _serverSideTModelDeserializeProp<P>(
   }
 }
 
-const _ServerSideTModeltypeEnumValueMap = {
+const _CompactTransactiontypeEnumValueMap = {
   r'receiveMoney': r'receive',
   r'sendMoney': r'send',
   r'lipaNaMpesa': r'buygoods',
@@ -309,7 +310,7 @@ const _ServerSideTModeltypeEnumValueMap = {
   r'fuliza': r'fuliza',
   r'depositMoney': r'deposit',
 };
-const _ServerSideTModeltypeValueEnumMap = {
+const _CompactTransactiontypeValueEnumMap = {
   r'receive': TransactionType.receiveMoney,
   r'send': TransactionType.sendMoney,
   r'buygoods': TransactionType.lipaNaMpesa,
@@ -321,30 +322,31 @@ const _ServerSideTModeltypeValueEnumMap = {
   r'deposit': TransactionType.depositMoney,
 };
 
-Id _serverSideTModelGetId(ServerSideTModel object) {
+Id _compactTransactionGetId(CompactTransaction object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _serverSideTModelGetLinks(ServerSideTModel object) {
+List<IsarLinkBase<dynamic>> _compactTransactionGetLinks(
+    CompactTransaction object) {
   return [];
 }
 
-void _serverSideTModelAttach(
-    IsarCollection<dynamic> col, Id id, ServerSideTModel object) {}
+void _compactTransactionAttach(
+    IsarCollection<dynamic> col, Id id, CompactTransaction object) {}
 
-extension ServerSideTModelQueryWhereSort
-    on QueryBuilder<ServerSideTModel, ServerSideTModel, QWhere> {
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterWhere> anyId() {
+extension CompactTransactionQueryWhereSort
+    on QueryBuilder<CompactTransaction, CompactTransaction, QWhere> {
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension ServerSideTModelQueryWhere
-    on QueryBuilder<ServerSideTModel, ServerSideTModel, QWhereClause> {
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterWhereClause> idEqualTo(
-      Id id) {
+extension CompactTransactionQueryWhere
+    on QueryBuilder<CompactTransaction, CompactTransaction, QWhereClause> {
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterWhereClause>
+      idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: id,
@@ -353,7 +355,7 @@ extension ServerSideTModelQueryWhere
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterWhereClause>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterWhereClause>
       idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
@@ -376,7 +378,7 @@ extension ServerSideTModelQueryWhere
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterWhereClause>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterWhereClause>
       idGreaterThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -385,7 +387,7 @@ extension ServerSideTModelQueryWhere
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterWhereClause>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterWhereClause>
       idLessThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -394,7 +396,8 @@ extension ServerSideTModelQueryWhere
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterWhereClause> idBetween(
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterWhereClause>
+      idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -411,9 +414,9 @@ extension ServerSideTModelQueryWhere
   }
 }
 
-extension ServerSideTModelQueryFilter
-    on QueryBuilder<ServerSideTModel, ServerSideTModel, QFilterCondition> {
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+extension CompactTransactionQueryFilter
+    on QueryBuilder<CompactTransaction, CompactTransaction, QFilterCondition> {
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       agentNumberIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -422,7 +425,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       agentNumberIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
@@ -431,7 +434,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       agentNumberEqualTo(
     String? value, {
     bool caseSensitive = true,
@@ -445,7 +448,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       agentNumberGreaterThan(
     String? value, {
     bool include = false,
@@ -461,7 +464,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       agentNumberLessThan(
     String? value, {
     bool include = false,
@@ -477,7 +480,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       agentNumberBetween(
     String? lower,
     String? upper, {
@@ -497,7 +500,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       agentNumberStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -511,7 +514,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       agentNumberEndsWith(
     String value, {
     bool caseSensitive = true,
@@ -525,7 +528,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       agentNumberContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -536,7 +539,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       agentNumberMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -547,7 +550,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       agentNumberIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -557,7 +560,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       agentNumberIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -567,7 +570,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       dateTimeEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -577,7 +580,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       dateTimeGreaterThan(
     DateTime value, {
     bool include = false,
@@ -591,7 +594,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       dateTimeLessThan(
     DateTime value, {
     bool include = false,
@@ -605,7 +608,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       dateTimeBetween(
     DateTime lower,
     DateTime upper, {
@@ -623,7 +626,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -633,7 +636,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       idGreaterThan(
     Id value, {
     bool include = false,
@@ -647,7 +650,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       idLessThan(
     Id value, {
     bool include = false,
@@ -661,7 +664,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       idBetween(
     Id lower,
     Id upper, {
@@ -679,7 +682,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       interestIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -688,7 +691,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       interestIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
@@ -697,7 +700,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       locationIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -706,7 +709,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       locationIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
@@ -715,7 +718,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       locationEqualTo(
     String? value, {
     bool caseSensitive = true,
@@ -729,7 +732,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       locationGreaterThan(
     String? value, {
     bool include = false,
@@ -745,7 +748,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       locationLessThan(
     String? value, {
     bool include = false,
@@ -761,7 +764,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       locationBetween(
     String? lower,
     String? upper, {
@@ -781,7 +784,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       locationStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -795,7 +798,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       locationEndsWith(
     String value, {
     bool caseSensitive = true,
@@ -809,7 +812,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       locationContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -820,7 +823,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       locationMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -831,7 +834,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       locationIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -841,7 +844,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       locationIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -851,7 +854,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       messageIdEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -861,7 +864,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       messageIdGreaterThan(
     int value, {
     bool include = false,
@@ -875,7 +878,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       messageIdLessThan(
     int value, {
     bool include = false,
@@ -889,7 +892,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       messageIdBetween(
     int lower,
     int upper, {
@@ -907,7 +910,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -921,7 +924,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectGreaterThan(
     String value, {
     bool include = false,
@@ -937,7 +940,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectLessThan(
     String value, {
     bool include = false,
@@ -953,7 +956,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectBetween(
     String lower,
     String upper, {
@@ -973,7 +976,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -987,7 +990,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectEndsWith(
     String value, {
     bool caseSensitive = true,
@@ -1001,7 +1004,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -1012,7 +1015,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -1023,7 +1026,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -1033,7 +1036,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -1043,7 +1046,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectAccountIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1052,7 +1055,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectAccountIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
@@ -1061,7 +1064,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectAccountEqualTo(
     String? value, {
     bool caseSensitive = true,
@@ -1075,7 +1078,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectAccountGreaterThan(
     String? value, {
     bool include = false,
@@ -1091,7 +1094,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectAccountLessThan(
     String? value, {
     bool include = false,
@@ -1107,7 +1110,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectAccountBetween(
     String? lower,
     String? upper, {
@@ -1127,7 +1130,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectAccountStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -1141,7 +1144,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectAccountEndsWith(
     String value, {
     bool caseSensitive = true,
@@ -1155,7 +1158,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectAccountContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -1166,7 +1169,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectAccountMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -1177,7 +1180,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectAccountIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -1187,7 +1190,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       subjectAccountIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -1197,7 +1200,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       phoneNumberIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1206,7 +1209,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       phoneNumberIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
@@ -1215,7 +1218,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       phoneNumberEqualTo(
     String? value, {
     bool caseSensitive = true,
@@ -1229,7 +1232,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       phoneNumberGreaterThan(
     String? value, {
     bool include = false,
@@ -1245,7 +1248,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       phoneNumberLessThan(
     String? value, {
     bool include = false,
@@ -1261,7 +1264,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       phoneNumberBetween(
     String? lower,
     String? upper, {
@@ -1281,7 +1284,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       phoneNumberStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -1295,7 +1298,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       phoneNumberEndsWith(
     String value, {
     bool caseSensitive = true,
@@ -1309,7 +1312,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       phoneNumberContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -1320,7 +1323,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       phoneNumberMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -1331,7 +1334,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       phoneNumberIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -1341,7 +1344,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       phoneNumberIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -1351,7 +1354,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       transactionCodeEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1365,7 +1368,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       transactionCodeGreaterThan(
     String value, {
     bool include = false,
@@ -1381,7 +1384,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       transactionCodeLessThan(
     String value, {
     bool include = false,
@@ -1397,7 +1400,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       transactionCodeBetween(
     String lower,
     String upper, {
@@ -1417,7 +1420,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       transactionCodeStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -1431,7 +1434,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       transactionCodeEndsWith(
     String value, {
     bool caseSensitive = true,
@@ -1445,7 +1448,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       transactionCodeContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -1456,7 +1459,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       transactionCodeMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -1467,7 +1470,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       transactionCodeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -1477,7 +1480,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       transactionCodeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -1487,7 +1490,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       typeEqualTo(
     TransactionType value, {
     bool caseSensitive = true,
@@ -1501,7 +1504,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       typeGreaterThan(
     TransactionType value, {
     bool include = false,
@@ -1517,7 +1520,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       typeLessThan(
     TransactionType value, {
     bool include = false,
@@ -1533,7 +1536,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       typeBetween(
     TransactionType lower,
     TransactionType upper, {
@@ -1553,7 +1556,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       typeStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -1567,7 +1570,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       typeEndsWith(
     String value, {
     bool caseSensitive = true,
@@ -1581,7 +1584,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       typeContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -1592,7 +1595,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       typeMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -1603,7 +1606,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       typeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -1613,7 +1616,7 @@ extension ServerSideTModelQueryFilter
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       typeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -1624,30 +1627,30 @@ extension ServerSideTModelQueryFilter
   }
 }
 
-extension ServerSideTModelQueryObject
-    on QueryBuilder<ServerSideTModel, ServerSideTModel, QFilterCondition> {
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+extension CompactTransactionQueryObject
+    on QueryBuilder<CompactTransaction, CompactTransaction, QFilterCondition> {
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       balance(FilterQuery<Money> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'balance');
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       interest(FilterQuery<Money> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'interest');
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       transactionAmount(FilterQuery<Money> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'transaction_amount');
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterFilterCondition>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterFilterCondition>
       transactionCost(FilterQuery<Money> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'transaction_cost');
@@ -1655,130 +1658,131 @@ extension ServerSideTModelQueryObject
   }
 }
 
-extension ServerSideTModelQueryLinks
-    on QueryBuilder<ServerSideTModel, ServerSideTModel, QFilterCondition> {}
+extension CompactTransactionQueryLinks
+    on QueryBuilder<CompactTransaction, CompactTransaction, QFilterCondition> {}
 
-extension ServerSideTModelQuerySortBy
-    on QueryBuilder<ServerSideTModel, ServerSideTModel, QSortBy> {
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+extension CompactTransactionQuerySortBy
+    on QueryBuilder<CompactTransaction, CompactTransaction, QSortBy> {
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       sortByAgentNumber() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'agent_number', Sort.asc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       sortByAgentNumberDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'agent_number', Sort.desc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       sortByDateTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dateTime', Sort.asc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       sortByDateTimeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dateTime', Sort.desc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       sortByLocation() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'location', Sort.asc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       sortByLocationDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'location', Sort.desc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       sortByMessageId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'message_id', Sort.asc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       sortByMessageIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'message_id', Sort.desc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       sortBySubject() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subject', Sort.asc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       sortBySubjectDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subject', Sort.desc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       sortBySubjectAccount() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subject_account', Sort.asc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       sortBySubjectAccountDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subject_account', Sort.desc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       sortByPhoneNumber() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subject_phone_number', Sort.asc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       sortByPhoneNumberDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subject_phone_number', Sort.desc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       sortByTransactionCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'transaction_code', Sort.asc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       sortByTransactionCodeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'transaction_code', Sort.desc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy> sortByType() {
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
+      sortByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       sortByTypeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.desc);
@@ -1786,140 +1790,142 @@ extension ServerSideTModelQuerySortBy
   }
 }
 
-extension ServerSideTModelQuerySortThenBy
-    on QueryBuilder<ServerSideTModel, ServerSideTModel, QSortThenBy> {
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+extension CompactTransactionQuerySortThenBy
+    on QueryBuilder<CompactTransaction, CompactTransaction, QSortThenBy> {
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       thenByAgentNumber() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'agent_number', Sort.asc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       thenByAgentNumberDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'agent_number', Sort.desc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       thenByDateTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dateTime', Sort.asc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       thenByDateTimeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dateTime', Sort.desc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy> thenById() {
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
+      thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       thenByLocation() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'location', Sort.asc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       thenByLocationDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'location', Sort.desc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       thenByMessageId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'message_id', Sort.asc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       thenByMessageIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'message_id', Sort.desc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       thenBySubject() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subject', Sort.asc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       thenBySubjectDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subject', Sort.desc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       thenBySubjectAccount() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subject_account', Sort.asc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       thenBySubjectAccountDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subject_account', Sort.desc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       thenByPhoneNumber() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subject_phone_number', Sort.asc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       thenByPhoneNumberDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subject_phone_number', Sort.desc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       thenByTransactionCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'transaction_code', Sort.asc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       thenByTransactionCodeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'transaction_code', Sort.desc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy> thenByType() {
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
+      thenByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QAfterSortBy>
+  QueryBuilder<CompactTransaction, CompactTransaction, QAfterSortBy>
       thenByTypeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.desc);
@@ -1927,44 +1933,44 @@ extension ServerSideTModelQuerySortThenBy
   }
 }
 
-extension ServerSideTModelQueryWhereDistinct
-    on QueryBuilder<ServerSideTModel, ServerSideTModel, QDistinct> {
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QDistinct>
+extension CompactTransactionQueryWhereDistinct
+    on QueryBuilder<CompactTransaction, CompactTransaction, QDistinct> {
+  QueryBuilder<CompactTransaction, CompactTransaction, QDistinct>
       distinctByAgentNumber({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'agent_number', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QDistinct>
+  QueryBuilder<CompactTransaction, CompactTransaction, QDistinct>
       distinctByDateTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'dateTime');
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QDistinct>
+  QueryBuilder<CompactTransaction, CompactTransaction, QDistinct>
       distinctByLocation({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'location', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QDistinct>
+  QueryBuilder<CompactTransaction, CompactTransaction, QDistinct>
       distinctByMessageId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'message_id');
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QDistinct> distinctBySubject(
-      {bool caseSensitive = true}) {
+  QueryBuilder<CompactTransaction, CompactTransaction, QDistinct>
+      distinctBySubject({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'subject', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QDistinct>
+  QueryBuilder<CompactTransaction, CompactTransaction, QDistinct>
       distinctBySubjectAccount({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'subject_account',
@@ -1972,7 +1978,7 @@ extension ServerSideTModelQueryWhereDistinct
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QDistinct>
+  QueryBuilder<CompactTransaction, CompactTransaction, QDistinct>
       distinctByPhoneNumber({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'subject_phone_number',
@@ -1980,7 +1986,7 @@ extension ServerSideTModelQueryWhereDistinct
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QDistinct>
+  QueryBuilder<CompactTransaction, CompactTransaction, QDistinct>
       distinctByTransactionCode({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'transaction_code',
@@ -1988,102 +1994,104 @@ extension ServerSideTModelQueryWhereDistinct
     });
   }
 
-  QueryBuilder<ServerSideTModel, ServerSideTModel, QDistinct> distinctByType(
-      {bool caseSensitive = true}) {
+  QueryBuilder<CompactTransaction, CompactTransaction, QDistinct>
+      distinctByType({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'type', caseSensitive: caseSensitive);
     });
   }
 }
 
-extension ServerSideTModelQueryProperty
-    on QueryBuilder<ServerSideTModel, ServerSideTModel, QQueryProperty> {
-  QueryBuilder<ServerSideTModel, int, QQueryOperations> idProperty() {
+extension CompactTransactionQueryProperty
+    on QueryBuilder<CompactTransaction, CompactTransaction, QQueryProperty> {
+  QueryBuilder<CompactTransaction, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<ServerSideTModel, String?, QQueryOperations>
+  QueryBuilder<CompactTransaction, String?, QQueryOperations>
       agentNumberProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'agent_number');
     });
   }
 
-  QueryBuilder<ServerSideTModel, Money, QQueryOperations> balanceProperty() {
+  QueryBuilder<CompactTransaction, Money, QQueryOperations> balanceProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'balance');
     });
   }
 
-  QueryBuilder<ServerSideTModel, DateTime, QQueryOperations>
+  QueryBuilder<CompactTransaction, DateTime, QQueryOperations>
       dateTimeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'dateTime');
     });
   }
 
-  QueryBuilder<ServerSideTModel, Money?, QQueryOperations> interestProperty() {
+  QueryBuilder<CompactTransaction, Money?, QQueryOperations>
+      interestProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'interest');
     });
   }
 
-  QueryBuilder<ServerSideTModel, String?, QQueryOperations> locationProperty() {
+  QueryBuilder<CompactTransaction, String?, QQueryOperations>
+      locationProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'location');
     });
   }
 
-  QueryBuilder<ServerSideTModel, int, QQueryOperations> messageIdProperty() {
+  QueryBuilder<CompactTransaction, int, QQueryOperations> messageIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'message_id');
     });
   }
 
-  QueryBuilder<ServerSideTModel, String, QQueryOperations> subjectProperty() {
+  QueryBuilder<CompactTransaction, String, QQueryOperations> subjectProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'subject');
     });
   }
 
-  QueryBuilder<ServerSideTModel, String?, QQueryOperations>
+  QueryBuilder<CompactTransaction, String?, QQueryOperations>
       subjectAccountProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'subject_account');
     });
   }
 
-  QueryBuilder<ServerSideTModel, String?, QQueryOperations>
+  QueryBuilder<CompactTransaction, String?, QQueryOperations>
       phoneNumberProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'subject_phone_number');
     });
   }
 
-  QueryBuilder<ServerSideTModel, Money, QQueryOperations>
+  QueryBuilder<CompactTransaction, Money, QQueryOperations>
       transactionAmountProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'transaction_amount');
     });
   }
 
-  QueryBuilder<ServerSideTModel, String, QQueryOperations>
+  QueryBuilder<CompactTransaction, String, QQueryOperations>
       transactionCodeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'transaction_code');
     });
   }
 
-  QueryBuilder<ServerSideTModel, Money, QQueryOperations>
+  QueryBuilder<CompactTransaction, Money, QQueryOperations>
       transactionCostProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'transaction_cost');
     });
   }
 
-  QueryBuilder<ServerSideTModel, TransactionType, QQueryOperations>
+  QueryBuilder<CompactTransaction, TransactionType, QQueryOperations>
       typeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'type');

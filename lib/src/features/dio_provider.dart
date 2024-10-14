@@ -7,21 +7,20 @@ import 'package:mapesa/src/features/auth_provider.dart';
 class DioProvider {
   static final _dio = Dio();
   static DioProvider? _instance;
+  Dio get dio => _dio;
 
   static Future<void> init() async {
-    /// Called in the main function to initialize the provider and perform aync tasks
-
+    /// Called in the main function to initialize the provider and perform async tasks
     if (_instance != null) {
       throw Exception("DioProvider already initialized");
     }
-
-    // TODO: Remember to replace this
     _instance = DioProvider._(baseUrl: dotenv.env['BACKEND_URL'] ?? "");
     debugPrint("DioProvider initialized");
   }
 
   static Future<void> initSafe({required String overrideUrl}) async {
     /// A safe way of initializing the provider within an Isolate
+    /// Inside Isolates we don't have access to dotenv
     if (_instance != null) {
       throw Exception("DioProvider already initialized");
     }
@@ -102,8 +101,6 @@ class DioProvider {
     debugPrint(
         "Dio Provider Error: $message\nError came up when calling $url\nMessage from server: $serverMessage");
   }
-
-  Dio get dio => _dio;
 
   set baseUrl(String baseUrl) {
     _dio.options.baseUrl = baseUrl;

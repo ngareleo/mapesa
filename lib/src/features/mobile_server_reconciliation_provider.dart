@@ -8,15 +8,15 @@ import 'package:mapesa/src/features/sms_provider.dart';
 import 'package:mapesa/src/features/upload/transaction_upload_provider.dart';
 import 'package:mapesa/src/models/transactions/transaction.dart';
 
-import '../upload/types.dart';
+import 'upload/types.dart';
 
 enum UTDStatus { idle, busy }
 
 // Generally this is a service that runs in the background
-class UTDProvider {
+class MobileServerReconciliationProvider {
   // Keeps transactions server side [u]p [t]o [d]ate.
 
-  static UTDProvider? _instance;
+  static MobileServerReconciliationProvider? _instance;
   static const _lastUploadedMessageKey = "last_message_id";
   static final _after30Minutes = Schedule(minutes: 30);
 
@@ -31,17 +31,17 @@ class UTDProvider {
     /// Called in the main function to initialize the provider and perform aync tasks
 
     if (_instance != null) {
-      throw Exception("UTDProvider already initialized");
+      throw Exception("MobileServerReconciliationProvider already initialized");
     }
-    _instance = UTDProvider._();
+    _instance = MobileServerReconciliationProvider._();
     await _instance!._retryFailedTransactions();
     await _instance!._loadLastMessageIdFromStorage();
-    debugPrint("UTDProvider initialized");
+    debugPrint("MobileServerReconciliationProvider initialized");
   }
 
-  UTDProvider._();
+  MobileServerReconciliationProvider._();
 
-  static UTDProvider get instance {
+  static MobileServerReconciliationProvider get instance {
     if (_instance == null) {
       throw Exception("UTDProvider not initialized. Call UTDProvider.init()");
     }
@@ -89,11 +89,9 @@ class UTDProvider {
       case SingleUploadStatusType.success:
         await _setLastUploadedMessageId(transactions.last.messageId);
         break;
-      case SingleUploadStatusType.clientSideError:
       case SingleUploadStatusType.nothingToUpload:
         debugPrint("We had nothing to upload");
-      case SingleUploadStatusType.unknown:
-      case SingleUploadStatusType.serverSideError:
+      default:
         break;
     }
 
@@ -123,7 +121,6 @@ class UTDProvider {
         if (!overrideLastMessageID) break;
         await _setLastUploadedMessageId(transactions.last.messageId);
         break;
-
       case BatchUploadStatusType.partial:
         // Some transactions have been uploaded successfully
         // Save the failed transactions and try again later
@@ -134,11 +131,9 @@ class UTDProvider {
         _scheduleFailedTransactionsUpload();
         await _setLastUploadedMessageId(transactions.last.messageId);
         break;
-
       case BatchUploadStatusType.fail:
         // Nothing we can do but try again later from the previous message ID
         break;
-
       case BatchUploadStatusType.nothingToUpload:
         await FailedTransactionsRepository.instance
             .saveFailedTransactions(res.failed);
