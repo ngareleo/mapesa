@@ -43,24 +43,6 @@ class SMSProvider {
     return messages;
   }
 
-  Future<ManySms> fetchSmsWithinLastNMonths(int n) async {
-    await _checkPermission();
-    var messages = await telephony.getInboxSms(
-      columns: [SmsColumn.ADDRESS, SmsColumn.BODY, SmsColumn.ID],
-      filter: SmsFilter.where(SmsColumn.ADDRESS)
-          .equals("MPESA")
-          .and(SmsColumn.DATE)
-          .greaterThan(
-              DateTime.now().subtract(Duration(days: n * 30)).toString()),
-    );
-
-    if (messages.length > maxMessages) {
-      messages = messages.sublist(0, maxMessages);
-    }
-
-    return messages;
-  }
-
   Future<(int, int)> _findSmsRange() async {
     /// Looks for the first and last ids from db
     /// Low Perf executed as little as possible
