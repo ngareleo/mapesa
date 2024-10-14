@@ -94,7 +94,9 @@ class DepositTransaction extends Transaction {
     return PrimaryItemCard(
       title: "Deposit",
       subtitle: prettifyTimeDifference(dateTime),
-      icon: const Text("D"),
+      icon: const CircleAvatar(
+        child: Text("D"),
+      ),
       rightWidget: Text("KES $amount"),
       onTap: () {},
     );

@@ -88,7 +88,9 @@ class AirtimeTransaction extends Transaction {
     return PrimaryItemCard(
         title: "Airtime",
         subtitle: prettifyTimeDifference(dateTime),
-        icon: const Text("A"),
+        icon: const CircleAvatar(
+          child: Text("A"),
+        ),
         rightWidget: Text("KES $amount"),
         onTap: () {
           // TODO: open transaction details page

@@ -91,7 +91,9 @@ class FulizaTransaction extends Transaction {
     return PrimaryItemCard(
       title: "Fuliza",
       subtitle: prettifyTimeDifference(dateTime),
-      icon: const Text("F"),
+      icon: const CircleAvatar(
+        child: Text("F"),
+      ),
       rightWidget: Text(
         "Ksh. $amount",
       ),

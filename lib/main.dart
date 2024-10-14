@@ -15,11 +15,12 @@ import 'package:mapesa/src/models/compact_transaction.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load();
-
   // Initialize isar: our local store
   final dir = await getApplicationDocumentsDirectory();
   // Initialize repositories: for fetching data
   final isar = await Isar.open([CompactTransactionSchema], directory: dir.path);
+
+  // A store for failed transactions. Will deprecate later
   FailedTransactionsRepository.init(isar);
   // Initialize auth provider; for auth related
   await AuthProvider.init();

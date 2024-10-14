@@ -97,7 +97,9 @@ class ReceiveMoneyTransaction extends Transaction {
   Widget toTransactionListItem() {
     final amount = transactionAmount.amount.toString();
     return PrimaryItemCard(
-      icon: const Text("R"),
+      icon: const CircleAvatar(
+        child: Text("R"),
+      ),
       title: subject,
       subtitle: prettifyTimeDifference(dateTime),
       rightWidget: Text("KES $amount"),

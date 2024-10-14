@@ -91,7 +91,9 @@ class AirtimeForTransaction extends Transaction {
     return PrimaryItemCard(
         title: "Airtime",
         subtitle: prettifyTimeDifference(dateTime),
-        icon: const Text("A"),
+        icon: const CircleAvatar(
+          child: Text("AF"),
+        ),
         rightWidget: Text("KES $amount"),
         onTap: () {});
   }

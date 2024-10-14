@@ -3,6 +3,7 @@ import 'package:mapesa/src/common/theme.dart';
 import 'package:mapesa/src/features/auth_provider.dart';
 import 'package:mapesa/src/features/feature_flags_provider.dart';
 import 'package:mapesa/src/pages/m1/auth_page.dart';
+import 'package:mapesa/src/pages/m1/home_page.dart';
 import 'package:mapesa/src/pages/m2/home_page.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +23,7 @@ class MapesaApp extends StatelessWidget {
         home: mapesaM1Enabled
             ? const HomePageV2()
             : authProvider.isLoggedIn()
-                ? const HomePageV2()
+                ? const HomePage()
                 : const AuthPage(),
       );
     });

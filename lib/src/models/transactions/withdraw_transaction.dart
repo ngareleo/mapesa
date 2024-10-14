@@ -101,7 +101,9 @@ class WithdrawTransaction extends Transaction {
   Widget toTransactionListItem() {
     final amount = transactionAmount.amount.toString();
     return PrimaryItemCard(
-      icon: const Text("W"),
+      icon: const CircleAvatar(
+        child: Text("W"),
+      ),
       title: "Withdraw",
       subtitle: prettifyTimeDifference(dateTime),
       rightWidget: Text("KES $amount"),

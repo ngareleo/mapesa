@@ -84,7 +84,9 @@ class LipaNaMpesaTransaction extends Transaction {
     return PrimaryItemCard(
       title: subject,
       subtitle: prettifyTimeDifference(dateTime),
-      icon: const Text("L"),
+      icon: const CircleAvatar(
+        child: Text("L"),
+      ),
       rightWidget: Text("KES $amount"),
       onTap: () {},
     );

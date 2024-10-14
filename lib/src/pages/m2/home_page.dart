@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mapesa/src/features/model_mapper.dart';
-import 'package:mapesa/src/features/sms_provider.dart';
-import 'package:mapesa/src/models/transactions/transaction.dart';
-
-typedef ManyFutureTransactions = Future<List<Transaction>>;
+import 'package:mapesa/src/debug/debug_page.dart';
+import 'package:mapesa/src/pages/m1/search_page.dart';
+import 'package:mapesa/src/pages/m2/dashboard_page.dart';
 
 class HomePageV2 extends StatefulWidget {
   const HomePageV2({super.key});
@@ -13,54 +11,39 @@ class HomePageV2 extends StatefulWidget {
 }
 
 class _HomePageV2State extends State<HomePageV2> {
-  final smsMapper = TransactionsMapper();
-  late ManyFutureTransactions messages;
+  var _currentPageIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    messages = getMessagesFromLast3Months();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-            child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: buildMessagesList())));
-  }
-
-  ManyFutureTransactions getMessagesFromLast3Months() async {
-    var msgs = await SMSProvider.instance.fetchRecentMessages();
-    return msgs
-        .map((m) => smsMapper.mapFromAToB(m))
-        .whereType<Transaction>()
-        .toList();
-  }
-
-  Widget buildMessagesList() {
-    return FutureBuilder(
-        future: messages,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Column(
-              children: (snapshot.data ?? [])
-                  .map((d) => d.toTransactionListItem())
-                  .toList(),
-            );
-          }
-          return const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(bottom: 20),
-                child: CircularProgressIndicator(),
-              ),
-              Text("Reading messages")
-            ],
-          );
-        });
+        bottomNavigationBar: NavigationBar(
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.home_rounded),
+              label: 'Home',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.search_rounded),
+              label: 'Search',
+            ),
+            NavigationDestination(icon: Icon(Icons.adb_rounded), label: "Debug")
+          ],
+          selectedIndex: _currentPageIndex,
+          onDestinationSelected: (index) {
+            setState(() {
+              _currentPageIndex = index;
+            });
+          },
+        ),
+        body: [
+          const DashboardPageV2(),
+          const SearchPage(),
+          const DebugPage()
+        ][_currentPageIndex]);
   }
 }

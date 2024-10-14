@@ -21,10 +21,7 @@ class PrimaryItemCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: SizedBox(
-        width: MediaQuery.of(context)
-            .size
-            .width, // sets width to full width of screen),
-        // sets height to full height of screen),
+        width: MediaQuery.of(context).size.width,
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(
@@ -37,14 +34,16 @@ class PrimaryItemCard extends StatelessWidget {
                   const SizedBox(
                     width: 10,
                   ),
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                  Flexible(
+                    child: Text(
+                      title,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                  const Spacer(),
                   rightWidget
                 ],
               ),

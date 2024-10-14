@@ -99,7 +99,9 @@ class PaybillTransaction extends Transaction {
   Widget toTransactionListItem() {
     final amount = transactionAmount.amount.toString();
     return PrimaryItemCard(
-      icon: const Text("P"),
+      icon: const CircleAvatar(
+        child: Text("P"),
+      ),
       title: "$subjectAccount - $subject",
       subtitle: prettifyTimeDifference(dateTime),
       rightWidget: Text("KES $amount"),

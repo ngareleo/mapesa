@@ -12,6 +12,9 @@ final appTheme = ThemeData(
         background: Color(0xFFF0F0F0),
         surface: Color(0xFFEDEDFC)),
     useMaterial3: true,
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Color(0xFFFCFCFC),
+    ),
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: const Color(0xFFFCFCFC),
       indicatorColor: _primaryColor,
