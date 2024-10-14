@@ -12,56 +12,41 @@ import 'types.dart';
 class TransactionsUploadProvider {
   static const payloadSize = 300;
 
-  Future<SinglePayloadUploadResponse> _uploadSingleDPayload(
-      MultipleTransactions payload) async {
+  Future<SinglePayloadUploadResponse> uploadTransactionsInSinglePayload(
+      List<Transaction> transactions) async {
+    if (transactions.isEmpty) {
+      return SinglePayloadUploadResponse(
+          message: "Payload is empty",
+          status: SingleUploadStatusType.nothingToUpload);
+    }
     var dio = DioProvider.instance.dio;
     Response? response;
-    var pay = payload.map((e) => e.toJson()).toList();
-
     try {
-      response = await dio.post(
-        "/upload/transactions",
-        data: {"raw": pay},
-        onSendProgress: (sent, total) {
-          debugPrint("Sent: $sent, Total: $total");
-        },
-      );
+      response = await dio.post("/upload/transactions/v2/",
+          data: {"raw": transactions.map((e) => e.toJson()).toList()},
+          onSendProgress: (sent, total) {});
     } on DioException catch (e) {
-      var errResponse = e.response;
-      if (errResponse?.statusCode == 400) {
-        // Means we screwed up with the payload
-        debugPrint("Payload is invalid:: $pay");
-        return SinglePayloadUploadResponse(
-            status: SingleUploadStatusType.clientSideError, failed: pay);
-      }
-      return SinglePayloadUploadResponse(
-          status: SingleUploadStatusType.serverSideError, failed: pay);
+      debugPrint("Message from server ${e.message}");
     }
 
-    if (response.statusCode == 200) {
-      debugPrint(response.data.toString());
-      var oks = mapListOfObjects(response.data["oks"]);
-      var duplicates = mapListOfObjects(response.data["duplicates"]);
-      var failed = mapListOfObjects(response.data["failed"]);
+    if (response?.statusCode == 200) {
+      debugPrint(response?.data.toString());
       return SinglePayloadUploadResponse(
-          status: SingleUploadStatusType.success,
-          oks: oks,
-          duplicates: duplicates,
-          failed: failed);
+          status: SingleUploadStatusType.success);
     }
 
     return SinglePayloadUploadResponse(
-        status: SingleUploadStatusType.unknown, failed: pay);
+        message: "Don't know where we went wrong");
   }
 
-  Future<BatchUpload> uploadTransactions(
+  Future<BatchUpload> uploadTransactionsInSplitPayloads(
     List<Transaction> transactions,
   ) async {
     // Generally there will be three results after uploading
     // 1. [Complete] All transactions are uploaded successfully.
     //    All requests return 200 but there are failed transactions, maybe due to duplicate transactions
     //
-    // 2. [Parital] Some transactions are uploaded successfully
+    // 2. [Partial] Some transactions are uploaded successfully
     //    Some requests return 200 but there are failed transactions, maybe 500
     //
     // 3. [Fail] No transactions are uploaded successfully
@@ -102,6 +87,48 @@ class TransactionsUploadProvider {
     }
 
     return totalResponse;
+  }
+
+  Future<SinglePayloadUploadResponse> _uploadSingleDPayload(
+      MultipleTransactions payload) async {
+    var dio = DioProvider.instance.dio;
+    Response? response;
+    var pay = payload.map((e) => e.toJson()).toList();
+
+    try {
+      response = await dio.post(
+        "/upload/transactions",
+        data: {"raw": pay},
+        onSendProgress: (sent, total) {
+          debugPrint("Sent: $sent, Total: $total");
+        },
+      );
+    } on DioException catch (e) {
+      var errResponse = e.response;
+      if (errResponse?.statusCode == 400) {
+        // Means we screwed up with the payload
+        debugPrint("Payload is invalid:: $pay");
+        return SinglePayloadUploadResponse(
+            status: SingleUploadStatusType.clientSideError, failed: pay);
+      }
+      return SinglePayloadUploadResponse(
+          status: SingleUploadStatusType.serverSideError, failed: pay);
+    }
+
+    if (response.statusCode == 200) {
+      debugPrint(response.data.toString());
+      var oks = mapListOfObjects(response.data["oks"]);
+      var duplicates = mapListOfObjects(response.data["duplicates"]);
+      var failed = mapListOfObjects(response.data["failed"]);
+      return SinglePayloadUploadResponse(
+          status: SingleUploadStatusType.success,
+          oks: oks,
+          duplicates: duplicates,
+          failed: failed);
+    }
+
+    return SinglePayloadUploadResponse(
+        status: SingleUploadStatusType.unknown, failed: pay);
   }
 
   List<MultipleTransactions> _splitTransactionsTo2D(

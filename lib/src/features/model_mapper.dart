@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:telephony/telephony.dart';
-
-import 'package:mapesa/src/models/server_side_tmodel.dart';
+import 'package:mapesa/src/models/compact_transaction.dart';
 import 'package:mapesa/src/models/transactions/fuliza_transaction.dart';
 import 'package:mapesa/src/models/transactions/airtime_for_transaction.dart';
 import 'package:mapesa/src/models/transactions/airtime_transaction.dart';
@@ -52,13 +51,11 @@ class TransactionsMapper extends DataMapper<SmsMessage, Transaction> {
       var transactionType = map.key;
       var expression = _patterns[transactionType];
       var isMatch = expression?.hasMatch(body);
-
       if (isMatch != null && expression != null && isMatch) {
         return getTransaction(
             transactionType, id, expression.firstMatch(body)!);
       }
     }
-
     debugPrint("Invalid transaction: $body");
     return null;
   }
@@ -120,11 +117,12 @@ class FailedTransactionsMapper extends DataMapper<ObjectMap, Transaction> {
   }
 }
 
-class ServerSideTModelMapper extends DataMapper<ServerSideTModel, Transaction> {
+class ServerSideTModelMapper
+    extends DataMapper<CompactTransaction, Transaction> {
   // TODO: Write tests for this
 
   @override
-  Transaction? mapFromAToB(ServerSideTModel from) {
+  Transaction? mapFromAToB(CompactTransaction from) {
     var type = from.type;
     return switch (type) {
       TransactionType.airtime => AirtimeTransaction.fromJson(from.toJson()),
@@ -147,7 +145,7 @@ class ServerSideTModelMapper extends DataMapper<ServerSideTModel, Transaction> {
   }
 
   @override
-  ServerSideTModel? mapFromBtoA(Transaction from) {
-    return from.toServerSideTModel();
+  CompactTransaction? mapFromBtoA(Transaction from) {
+    return from.toCompactTransaction();
   }
 }

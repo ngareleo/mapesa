@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-
-import 'package:mapesa/src/features/utd_provider.dart';
+import 'package:mapesa/src/features/mobile_server_reconciliation_provider.dart';
 import 'package:mapesa/src/pages/budget_page.dart';
 import 'package:mapesa/src/pages/dashboard_page.dart';
-import 'package:mapesa/src/pages/debug_page.dart';
+import 'package:mapesa/src/debug/debug_page.dart';
 import 'package:mapesa/src/pages/search_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,7 +17,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    UTDProvider.instance.refresh();
+    MobileServerReconciliationProvider.instance.refresh();
     super.initState();
   }
 

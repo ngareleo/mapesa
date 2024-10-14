@@ -13,10 +13,10 @@ import 'upload/types.dart';
 enum UTDStatus { idle, busy }
 
 // Generally this is a service that runs in the background
-class UTDProvider {
+class MobileServerReconciliationProvider {
   // Keeps transactions server side [u]p [t]o [d]ate.
 
-  static UTDProvider? _instance;
+  static MobileServerReconciliationProvider? _instance;
   static const _lastUploadedMessageKey = "last_message_id";
   static final _after30Minutes = Schedule(minutes: 30);
 
@@ -31,24 +31,24 @@ class UTDProvider {
     /// Called in the main function to initialize the provider and perform aync tasks
 
     if (_instance != null) {
-      throw Exception("UTDProvider already initialized");
+      throw Exception("MobileServerReconciliationProvider already initialized");
     }
-    _instance = UTDProvider._();
+    _instance = MobileServerReconciliationProvider._();
     await _instance!._retryFailedTransactions();
     await _instance!._loadLastMessageIdFromStorage();
-    debugPrint("UTDProvider initialized");
+    debugPrint("MobileServerReconciliationProvider initialized");
   }
 
-  UTDProvider._();
+  MobileServerReconciliationProvider._();
 
-  static UTDProvider get instance {
+  static MobileServerReconciliationProvider get instance {
     if (_instance == null) {
       throw Exception("UTDProvider not initialized. Call UTDProvider.init()");
     }
     return _instance!;
   }
 
-  Future<MultipleTransactions> fetchTransactions() async {
+  Future<MultipleTransactions> fetchTransactionsFromLocalStorage() async {
     var messages = (await SMSProvider.instance
         .fetchRecentMessages(fromId: _lastUploadedMessageId ?? 0));
     var transactions = <Transaction>[];
@@ -66,8 +66,36 @@ class UTDProvider {
       debugPrint("UTDProvider is busy");
       return;
     }
-    var transactions = await fetchTransactions();
+    var transactions = await fetchTransactionsFromLocalStorage();
     await uploadTransactions(transactions);
+  }
+
+  Future<void> uploadTransactionsInSingleLoad(
+    List<Transaction> transactions,
+  ) async {
+    if (transactions.isEmpty) {
+      debugPrint("No transactions to upload");
+      return;
+    }
+
+    status = UTDStatus.busy;
+
+    transactions.sort((a, b) => a.messageId.compareTo(b.messageId));
+
+    var response = await _transactionUploadProvider
+        .uploadTransactionsInSinglePayload(transactions);
+
+    switch (response.status) {
+      case SingleUploadStatusType.success:
+        await _setLastUploadedMessageId(transactions.last.messageId);
+        break;
+      case SingleUploadStatusType.nothingToUpload:
+        debugPrint("We had nothing to upload");
+      default:
+        break;
+    }
+
+    status = UTDStatus.idle;
   }
 
   Future<void> uploadTransactions(List<Transaction> transactions,
@@ -84,7 +112,8 @@ class UTDProvider {
       (a, b) => a.messageId.compareTo(b.messageId),
     );
 
-    var res = await _transactionUploadProvider.uploadTransactions(transactions);
+    var res = await _transactionUploadProvider
+        .uploadTransactionsInSplitPayloads(transactions);
     debugPrint("UTDProvider uploadTransactions: $res");
 
     switch (res.status) {
@@ -92,7 +121,6 @@ class UTDProvider {
         if (!overrideLastMessageID) break;
         await _setLastUploadedMessageId(transactions.last.messageId);
         break;
-
       case BatchUploadStatusType.partial:
         // Some transactions have been uploaded successfully
         // Save the failed transactions and try again later
@@ -103,11 +131,9 @@ class UTDProvider {
         _scheduleFailedTransactionsUpload();
         await _setLastUploadedMessageId(transactions.last.messageId);
         break;
-
       case BatchUploadStatusType.fail:
         // Nothing we can do but try again later from the previous message ID
         break;
-
       case BatchUploadStatusType.nothingToUpload:
         await FailedTransactionsRepository.instance
             .saveFailedTransactions(res.failed);

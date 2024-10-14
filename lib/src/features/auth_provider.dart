@@ -14,10 +14,9 @@ enum UserLoginStatus {
   incorrectPassword(message: "Incorrect password"),
   userNotFound(message: "User not found"),
   internalServerError(message: "Internal server error"),
-  unknown(message: "An error occured while logging in");
+  unknown(message: "An error occurred while logging in");
 
   final String message;
-
   const UserLoginStatus({required this.message});
 }
 
@@ -25,12 +24,11 @@ class AuthProvider extends ChangeNotifier {
   static AuthProvider? _instance;
   User? _loggedInUser;
   String? _authToken;
-
   // Cannot use DioProvider here to avoid circular dependency
   late Dio _dio;
 
   static Future<void> init() async {
-    /// Called in the main function to initialize the provider and perform aync tasks
+    /// Called in the main function to initialize the provider and perform async tasks
     if (_instance != null) {
       throw Exception("AuthProvider already initialized");
     }
@@ -42,6 +40,7 @@ class AuthProvider extends ChangeNotifier {
 
   static Future<void> initSafe({required String overrideUrl}) async {
     /// A safe way of initializing the provider within an Isolate
+    /// We don't have access to dotenv within Isolates so we load url in advance
     if (_instance != null) {
       throw Exception("AuthProvider already initialized");
     }
@@ -104,7 +103,6 @@ class AuthProvider extends ChangeNotifier {
     } on DioException catch (e) {
       var response = e.response;
       debugPrint("[E: ${response?.statusCode}] : ${response?.data}");
-
       if (response?.statusCode == 400) {
         if (response?.data["message"] == "incorrect_password") {
           return (UserLoginStatus.incorrectPassword, null);
@@ -120,9 +118,9 @@ class AuthProvider extends ChangeNotifier {
       return (UserLoginStatus.unknown, null);
     }
 
+    debugPrint("Data from server ${response.data.toString()}");
     // if response code is 200 we no need  add checks
-
-    final user = User.fromApi(response.data);
+    final user = User.fromApi(response.data["user"]);
     _loggedInUser = user;
     _authToken = response.data["token"];
 

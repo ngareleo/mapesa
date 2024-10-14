@@ -10,12 +10,14 @@ enum SingleUploadStatusType {
 
 class SinglePayloadUploadResponse {
   SingleUploadStatusType status;
+  String? message;
   ListOfObjects oks;
   ListOfObjects failed;
   ListOfObjects duplicates;
 
   SinglePayloadUploadResponse(
       {this.status = SingleUploadStatusType.unknown,
+      this.message,
       this.oks = const [],
       this.failed = const [],
       this.duplicates = const []});

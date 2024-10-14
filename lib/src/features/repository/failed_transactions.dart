@@ -1,6 +1,6 @@
 import 'package:isar/isar.dart';
 import 'package:mapesa/src/features/model_mapper.dart';
-import 'package:mapesa/src/models/server_side_tmodel.dart';
+import 'package:mapesa/src/models/compact_transaction.dart';
 import 'package:mapesa/src/types.dart';
 
 class FailedTransactionsRepository {
@@ -28,27 +28,27 @@ class FailedTransactionsRepository {
     var failedTransactionsList = failedTransactions
         .map((failedTransaction) => failedTransactionsMapper
             .mapFromAToB(failedTransaction)!
-            .toServerSideTModel())
+            .toCompactTransaction())
         .toList();
-    const payload = <ServerSideTModel>[];
+    const payload = <CompactTransaction>[];
     for (var failedTransaction in failedTransactionsList) {
       if (failedTransaction != null) {
         payload.add(failedTransaction);
       }
     }
     await _isar.writeTxn(() async {
-      await _isar.serverSideTModels.putAll(payload);
+      await _isar.compactTransactions.putAll(payload);
     });
   }
 
-  Future<List<ServerSideTModel>> fetchFailedTransactions() async {
-    var failedTransactions = await _isar.serverSideTModels.where().findAll();
+  Future<List<CompactTransaction>> fetchFailedTransactions() async {
+    var failedTransactions = await _isar.compactTransactions.where().findAll();
     return failedTransactions;
   }
 
   Future<void> deleteAllFailedTransactions() async {
     await _isar.writeTxn(() async {
-      await _isar.serverSideTModels.filter().idGreaterThan(0).deleteAll();
+      await _isar.compactTransactions.filter().idGreaterThan(0).deleteAll();
     });
   }
 }

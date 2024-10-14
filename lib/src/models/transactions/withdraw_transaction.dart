@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:mapesa/src/common/cards/primary_item_card.dart';
-import 'package:mapesa/src/models/server_side_tmodel.dart';
+import 'package:mapesa/src/models/compact_transaction.dart';
 import 'package:mapesa/src/types.dart';
 
 import 'package:mapesa/src/utils/datetime.dart';
@@ -82,8 +82,8 @@ class WithdrawTransaction extends Transaction {
       };
 
   @override
-  ServerSideTModel? toServerSideTModel() {
-    return ServerSideTModel(
+  CompactTransaction? toCompactTransaction() {
+    return CompactTransaction(
         balance: balance,
         dateTime: dateTime,
         messageId: messageId,
