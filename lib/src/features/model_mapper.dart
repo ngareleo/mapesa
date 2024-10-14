@@ -117,10 +117,8 @@ class FailedTransactionsMapper extends DataMapper<ObjectMap, Transaction> {
   }
 }
 
-class ServerSideTModelMapper
+class CompactTransactionsMapper
     extends DataMapper<CompactTransaction, Transaction> {
-  // TODO: Write tests for this
-
   @override
   Transaction? mapFromAToB(CompactTransaction from) {
     var type = from.type;

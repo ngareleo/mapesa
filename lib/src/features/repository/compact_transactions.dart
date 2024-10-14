@@ -31,4 +31,8 @@ class CompactTransactionsRepository {
       await _isar.compactTransactions.putAll(compactTransactions);
     });
   }
+
+  Future<int?> getLatestId() async {
+    return (await _isar.compactTransactions.where().findFirst())?.messageId;
+  }
 }

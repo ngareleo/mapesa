@@ -24,11 +24,10 @@ class FailedTransactionsRepository {
   }
 
   Future<void> saveFailedTransactions(ListOfObjects failedTransactions) async {
-    var failedTransactionsMapper = FailedTransactionsMapper();
+    var mapper = FailedTransactionsMapper();
     var failedTransactionsList = failedTransactions
-        .map((failedTransaction) => failedTransactionsMapper
-            .mapFromAToB(failedTransaction)!
-            .toCompactTransaction())
+        .map((failedTransaction) =>
+            mapper.mapFromAToB(failedTransaction)!.toCompactTransaction())
         .toList();
     const payload = <CompactTransaction>[];
     for (var failedTransaction in failedTransactionsList) {

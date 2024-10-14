@@ -143,13 +143,16 @@ class MobileServerReconciliationProvider {
   }
 
   Future<void> _retryFailedTransactions() async {
-    var fromServerSideT =
+    final messages =
         await FailedTransactionsRepository.instance.fetchFailedTransactions();
-    ServerSideTModelMapper mapper = ServerSideTModelMapper();
-    var failedTransactions = fromServerSideT
-        .map((failedTransaction) => mapper.mapFromAToB(failedTransaction)!)
+    final mapper = CompactTransactionsMapper();
+    if (messages.isEmpty) {
+      return;
+    }
+    var failedTransactions = messages
+        .map((ft) => mapper.mapFromAToB(ft))
+        .whereType<Transaction>()
         .toList();
-    if (failedTransactions.isEmpty) return;
     await uploadTransactions(failedTransactions, overrideLastMessageID: false);
   }
 
