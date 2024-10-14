@@ -1,4 +1,5 @@
 import 'package:flagsmith/flagsmith.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Flags {
@@ -23,9 +24,9 @@ class FeatureFlagsProvider {
     _client = await FlagsmithClient.init(
       apiKey: dotenv.env["FLAGSMITH_API_KEY"] ?? "",
       config: const FlagsmithConfig(
-        connectTimeout: 200,
-        receiveTimeout: 500,
-        sendTimeout: 500,
+        connectTimeout: 2000,
+        receiveTimeout: 5000,
+        sendTimeout: 5000,
         caches: true,
       ),
       seeds: <Flag>[
@@ -33,11 +34,11 @@ class FeatureFlagsProvider {
       ],
     );
 
-    await _client?.initialize();
-
     try {
+      await _client?.initialize();
       await _client?.getFeatureFlags(reload: true);
     } catch (e) {
+      debugPrint("Error getting feature flags $e");
       //noop
       // temporary fix for this known issue https://github.com/Flagsmith/flagsmith-flutter-client/issues/45
     }

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mapesa/src/common/theme.dart';
-import 'package:mapesa/src/debug/debug_page.dart';
 import 'package:mapesa/src/features/auth_provider.dart';
 import 'package:mapesa/src/features/feature_flags_provider.dart';
-import 'package:mapesa/src/pages/auth_page.dart';
-import 'package:mapesa/src/pages/home_page.dart';
+import 'package:mapesa/src/pages/m1/auth_page.dart';
+import 'package:mapesa/src/pages/m2/home_page.dart';
 import 'package:provider/provider.dart';
 
 class MapesaApp extends StatelessWidget {
@@ -21,9 +20,9 @@ class MapesaApp extends StatelessWidget {
         title: 'Mapesa',
         theme: appTheme,
         home: mapesaM1Enabled
-            ? const DebugPage()
+            ? const HomePageV2()
             : authProvider.isLoggedIn()
-                ? const HomePage()
+                ? const HomePageV2()
                 : const AuthPage(),
       );
     });

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mapesa/src/features/auth_provider.dart';
-import 'package:mapesa/src/pages/signin_page.dart';
+import 'package:mapesa/src/pages/m1/signin_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
