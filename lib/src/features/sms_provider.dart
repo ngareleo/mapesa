@@ -28,17 +28,11 @@ class SMSProvider {
   ///
   ///Fetch Sms messages
   ///
-  Future<ManySms> fetchRecentMessages(
+  Future<ManySms> fetchMessages(
       {int? fromId = 0, int? max = maxMessages}) async {
     await _checkPermission();
     var messages = fromId == 0
-        ? await telephony.getInboxSms(
-            columns: [SmsColumn.ADDRESS, SmsColumn.BODY, SmsColumn.ID],
-            filter: SmsFilter.where(SmsColumn.ADDRESS)
-                .equals("MPESA")
-                .and(SmsColumn.ID)
-                .lessThan(max
-                    .toString())) // to avoid flooding excess messages and hanging
+        ? await firstFreshFetch()
         : await telephony.getInboxSms(
             columns: [SmsColumn.ADDRESS, SmsColumn.BODY, SmsColumn.ID],
             filter: SmsFilter.where(SmsColumn.ADDRESS)
