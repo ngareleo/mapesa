@@ -55,7 +55,7 @@ class CompactTransaction {
         "agentNumber": agentNumber.toString(),
         "balance": balance.toString(),
         "dateTime": dateTime.millisecondsSinceEpoch.toString(),
-        "interest": interest!.amount.toString(),
+        "interest": interest?.amount.toString() ?? "",
         "location": location.toString(),
         "messageId": messageId.toString(),
         "phoneNumber": phoneNumber.toString(),

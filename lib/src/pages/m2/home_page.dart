@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mapesa/src/debug/debug_page.dart';
 import 'package:mapesa/src/features/simple_local_repository.dart';
-import 'package:mapesa/src/pages/m1/search_page.dart';
 import 'package:mapesa/src/pages/m2/dashboard_page.dart';
+import 'package:mapesa/src/pages/m2/search_page.dart';
 
 class HomePageV2 extends StatefulWidget {
   const HomePageV2({super.key});
@@ -45,7 +45,7 @@ class _HomePageV2State extends State<HomePageV2> {
         ),
         body: [
           const DashboardPageV2(),
-          const SearchPage(),
+          const SearchPageV2(),
           const DebugPage()
         ][_currentPageIndex]);
   }

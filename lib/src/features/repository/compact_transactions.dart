@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:mapesa/src/models/compact_transaction.dart';
 import 'package:mapesa/src/models/transactions/transaction.dart';
@@ -11,6 +12,7 @@ class CompactTransactionsRepository {
       throw Exception("CompactTransactionsRepository already initialized");
     }
     _instance = CompactTransactionsRepository._(isar);
+    debugPrint("CompactTransactionsRepository initialized");
   }
 
   CompactTransactionsRepository._(this._isar);

@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:isar/isar.dart';
 import 'package:mapesa/src/features/feature_flags_provider.dart';
 import 'package:mapesa/src/features/repository/compact_transactions.dart';
+import 'package:mapesa/src/features/search_provider.dart';
 import 'package:mapesa/src/features/simple_local_repository.dart';
 import 'package:mapesa/src/mapesa_app.dart';
 import 'package:path_provider/path_provider.dart';
@@ -27,6 +28,8 @@ void main() async {
   FailedTransactionsRepository.init(isar);
   CompactTransactionsRepository.init(isar);
 
+  // Search Provider
+  SearchProvider.init(isar);
   // Initialize auth provider; for auth related
   await AuthProvider.init();
   // Initialize dio provider; our network manager
@@ -39,13 +42,11 @@ void main() async {
   ////////////////////////////////////////////////////
   //               Services                       //
   ///////////////////////////////////////////////////
-  // Initialize UTDProvider
   await MobileServerReconciliationProvider.init();
-
   ////////////////////////////////////////////////////
   //               Application                    //
   ///////////////////////////////////////////////////
-  // Start the app
+
   runApp(ChangeNotifierProvider(
       create: (context) => AuthProvider.instance, child: const MapesaApp()));
 }

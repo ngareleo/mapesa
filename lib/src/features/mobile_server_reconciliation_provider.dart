@@ -34,7 +34,8 @@ class MobileServerReconciliationProvider {
       throw Exception("MobileServerReconciliationProvider already initialized");
     }
     _instance = MobileServerReconciliationProvider._();
-    await _instance!._retryFailedTransactions();
+    // For future Leo
+    // await _instance!._retryFailedTransactions();
     await _instance!._loadLastMessageIdFromStorage();
     debugPrint("MobileServerReconciliationProvider initialized");
   }

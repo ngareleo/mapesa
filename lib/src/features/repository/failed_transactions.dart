@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:mapesa/src/features/model_mapper.dart';
 import 'package:mapesa/src/models/compact_transaction.dart';
@@ -12,6 +13,7 @@ class FailedTransactionsRepository {
       throw Exception("FailedTransactionsRepository already initialized");
     }
     _instance = FailedTransactionsRepository._(isar);
+    debugPrint("FailedTransactionsRepository initialized");
   }
 
   FailedTransactionsRepository._(this._isar);
