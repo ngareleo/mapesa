@@ -17,9 +17,9 @@ import 'package:mapesa/src/mapesa_app.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load();
-  //////////////////////////////////////////////////|
-  //               Storage                         /|
-  //////////////////////////////////////////////////|
+  /////////////////////////////////////////////////////|
+  //               Storage                            /|
+  /////////////////////////////////////////////////////|
   final dir = await getApplicationDocumentsDirectory();
   final isar = await Isar.open([CompactTransactionSchema], directory: dir.path);
   FailedTransactionsRepository.init(isar);
@@ -33,13 +33,13 @@ void main() async {
   await AuthProvider.init();
   await DioProvider.init();
   await FeatureFlagsProvider.init();
-  ///////////////////////////////////////////////////|
-  //               Long-running services            /|
-  ///////////////////////////////////////////////////|
+  /////////////////////////////////////////////////////|
+  //               Long-running services              /|
+  /////////////////////////////////////////////////////|
   await MobileServerReconciliationProvider.init();
-  //////////////////////////////////////////////////|
-  //               Application                     /|
-  //////////////////////////////////////////////////|
+  /////////////////////////////////////////////////////|
+  //               Application                        /|
+  /////////////////////////////////////////////////////|
   runApp(ChangeNotifierProvider(
       create: (context) {
         return AuthProvider.instance;

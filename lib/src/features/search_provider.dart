@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 
 import 'package:mapesa/src/features/model_mapper.dart';
@@ -24,7 +25,8 @@ class SearchProvider {
 
   SearchProvider._(this._isar);
 
-  Future<Set<Transaction>> suggest({required String seed, int n = 10}) async {
+  Future<Set<Transaction>> searchSuggestion(
+      {required String seed, int n = 10}) async {
     final mapper = CompactTransactionsMapper();
     final suggestions = (await _isar.compactTransactions
             .where()
@@ -39,5 +41,21 @@ class SearchProvider {
         .whereType<Transaction>();
 
     return Set.from(suggestions);
+  }
+
+  Future<List<Transaction>> suggestTransactions(
+      {required Transaction transaction, int count = 5}) async {
+    final mapper = CompactTransactionsMapper();
+    final otherTransactionsWithSubject = await _isar.compactTransactions
+        .where()
+        .filter()
+        .subjectEqualTo(transaction.subject)
+        .limit(count)
+        .findAll();
+    debugPrint("Suggestions $otherTransactionsWithSubject");
+    return otherTransactionsWithSubject
+        .map((t) => mapper.mapFromAToB(t))
+        .whereType<Transaction>()
+        .toList();
   }
 }

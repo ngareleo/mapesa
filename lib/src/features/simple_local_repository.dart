@@ -31,21 +31,6 @@ class SimpleLocalRepository {
     return _instance!;
   }
 
-  Future<List<Transaction>> suggestTransactions(
-      {required Transaction transaction, int count = 5}) async {
-    final mapper = CompactTransactionsMapper();
-    final otherTransactionsWithSubject = await _isar.compactTransactions
-        .where()
-        .filter()
-        .subjectEqualTo(transaction.subject)
-        .limit(count)
-        .findAll();
-    return otherTransactionsWithSubject
-        .map((t) => mapper.mapFromAToB(t))
-        .whereType<Transaction>()
-        .toList();
-  }
-
   Future<void> refresh() async {
     final mapper = TransactionsMapper();
     final messages = await _smsProvider.fetchRecentMessages(

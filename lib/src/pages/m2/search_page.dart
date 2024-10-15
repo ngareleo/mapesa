@@ -40,7 +40,8 @@ class _SearchPageV2State extends State<SearchPageV2> {
                       _suggestions = {};
                     });
                   } else {
-                    final suggestions = await _search.suggest(seed: value);
+                    final suggestions =
+                        await _search.searchSuggestion(seed: value);
                     setState(() {
                       _suggestions = suggestions;
                     });

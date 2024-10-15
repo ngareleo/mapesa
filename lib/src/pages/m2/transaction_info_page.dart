@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:mapesa/src/features/simple_local_repository.dart';
+import 'package:mapesa/src/features/search_provider.dart';
 import 'package:mapesa/src/models/transactions/transaction.dart';
 
 class TransactionInfoPageV2 extends StatefulWidget {
@@ -13,8 +12,15 @@ class TransactionInfoPageV2 extends StatefulWidget {
 }
 
 class _TransactionInfoPageV2State extends State<TransactionInfoPageV2> {
-  final _repository = SimpleLocalRepository.instance;
+  final _search = SearchProvider.instance;
+  final _buttonFocusNode = FocusNode(debugLabel: 'Menu Button');
   var _suggestions = <Transaction>[];
+
+  @override
+  void dispose() {
+    _buttonFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -27,6 +33,34 @@ class _TransactionInfoPageV2State extends State<TransactionInfoPageV2> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Transaction"),
+        actions: [
+          MenuAnchor(
+            menuChildren: [
+              MenuItemButton(
+                child: MenuItemButton(
+                  leadingIcon: const Icon(Icons.bug_report),
+                  onPressed: () async {
+                    await _showDebugDialog();
+                  },
+                  child: const Text('Debug'),
+                ),
+              )
+            ],
+            builder: (_, MenuController controller, Widget? child) {
+              return IconButton(
+                focusNode: _buttonFocusNode,
+                onPressed: () {
+                  if (controller.isOpen) {
+                    controller.close();
+                  } else {
+                    controller.open();
+                  }
+                },
+                icon: const Icon(Icons.more_vert),
+              );
+            },
+          )
+        ],
       ),
       body: SafeArea(
         child: Padding(
@@ -57,8 +91,9 @@ class _TransactionInfoPageV2State extends State<TransactionInfoPageV2> {
                   padding: const EdgeInsets.all(8),
                   child: widget.transaction.toRichComponent(context),
                 )),
-                Text(widget.transaction.toJson().toString()),
-                renderSuggestionsSection(context)
+                ..._suggestions.isEmpty
+                    ? []
+                    : [renderSuggestionsSection(context)]
               ],
             ),
           ),
@@ -75,7 +110,7 @@ class _TransactionInfoPageV2State extends State<TransactionInfoPageV2> {
         Text("Other transactions with $subject"),
         const SizedBox(height: 10),
         SingleChildScrollView(
-          child: Row(
+          child: Column(
             children: _suggestions
                 .map((s) => Padding(
                       padding: const EdgeInsets.all(5),
@@ -88,12 +123,21 @@ class _TransactionInfoPageV2State extends State<TransactionInfoPageV2> {
     );
   }
 
-  void fetchSuggestions() async {
+  Future<void> fetchSuggestions() async {
     final suggestions =
-        await _repository.suggestTransactions(transaction: widget.transaction);
-    debugPrint("Suggestions $suggestions");
+        await _search.suggestTransactions(transaction: widget.transaction);
     setState(() {
       _suggestions = suggestions;
     });
+  }
+
+  Future<void> _showDebugDialog() {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: const Text('AlertDialog Title'),
+              content: Text(widget.transaction.toJson().toString()));
+        });
   }
 }
