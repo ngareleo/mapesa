@@ -24,12 +24,8 @@ class _DebugPageState extends State<DebugPage> {
       appBar: AppBar(title: const Text("Debug")),
       body: SafeArea(
         child: SizedBox(
-          width: MediaQuery.of(context)
-              .size
-              .width, // sets width to full width of screen),
-          height: MediaQuery.of(context)
-              .size
-              .height, // sets height to full height of screen),
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
