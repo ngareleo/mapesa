@@ -18,35 +18,34 @@ import 'package:mapesa/src/models/compact_transaction.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load();
-
-  // Initialize isar: our local store
+  ////////////////////////////////////////////////////
+  //               Storage                       //
+  ///////////////////////////////////////////////////
   final dir = await getApplicationDocumentsDirectory();
-  // Initialize repositories: for fetching data
   final isar = await Isar.open([CompactTransactionSchema], directory: dir.path);
-
-  // Local repositories
   FailedTransactionsRepository.init(isar);
   CompactTransactionsRepository.init(isar);
 
-  // Search Provider
+  ///////////////////////////////////////////////////////
+  //               Boot dependencies                   //
+  //                                                   //
+  // Order matters. Check the dependency to know order //
+  ///////////////////////////////////////////////////////
   SearchProvider.init(isar);
-  // Initialize auth provider; for auth related
   await AuthProvider.init();
-  // Initialize dio provider; our network manager
-  // Needs AuthProvider to be initialized first
   await DioProvider.init();
-  // Feature flags
   await FeatureFlagsProvider.init();
-  // Local store
   await SimpleLocalRepository.init();
   ////////////////////////////////////////////////////
-  //               Services                       //
+  //               Long-running services            //
   ///////////////////////////////////////////////////
   await MobileServerReconciliationProvider.init();
   ////////////////////////////////////////////////////
   //               Application                    //
   ///////////////////////////////////////////////////
-
   runApp(ChangeNotifierProvider(
-      create: (context) => AuthProvider.instance, child: const MapesaApp()));
+      create: (context) {
+        AuthProvider.instance;
+      },
+      child: const MapesaApp()));
 }
