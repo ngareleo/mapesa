@@ -33,7 +33,7 @@ abstract class Transaction {
   });
 
   Map<String, String> toJson();
-  Widget toTransactionListItem();
+  Widget toTransactionListItem(BuildContext context);
   CompactTransaction? toCompactTransaction();
 }
 
@@ -56,7 +56,8 @@ class InvalidTransaction extends Transaction {
   String toString() => toJson().toString();
 
   @override
-  Widget toTransactionListItem() => throw UnimplementedError();
+  Widget toTransactionListItem(BuildContext context) =>
+      throw UnimplementedError();
 
   @override
   CompactTransaction? toCompactTransaction() => null;

@@ -52,7 +52,7 @@ class _DashboardPageV2State extends State<DashboardPageV2> {
           if (snapshot.hasData) {
             return Column(
               children: (snapshot.data ?? [])
-                  .map((d) => d.toTransactionListItem())
+                  .map((d) => d.toTransactionListItem(context))
                   .toList(),
             );
           }

@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 
 import 'package:mapesa/src/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/features/feature_flags_provider.dart';
 import 'package:mapesa/src/models/compact_transaction.dart';
 import 'package:mapesa/src/models/transactions/transaction.dart';
+import 'package:mapesa/src/pages/m1/transaction_info_page.dart';
+import 'package:mapesa/src/pages/m2/transaction_info_page.dart';
 import 'package:mapesa/src/types.dart';
 import 'package:mapesa/src/utils/datetime.dart';
 import 'package:mapesa/src/utils/money.dart';
@@ -86,7 +89,7 @@ class AirtimeForTransaction extends Transaction {
   String toString() => toJson().toString();
 
   @override
-  Widget toTransactionListItem() {
+  Widget toTransactionListItem(BuildContext context) {
     final amount = transactionAmount.amount.toString();
     return PrimaryItemCard(
         title: "Airtime",
@@ -95,6 +98,15 @@ class AirtimeForTransaction extends Transaction {
           child: Text("AF"),
         ),
         rightWidget: Text("KES $amount"),
-        onTap: () {});
+        onTap: () {
+          final mapesaM1Enabled = FeatureFlagsProvider.client
+              .hasCachedFeatureFlag(Flags.NEW_MAPESA_M1);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => mapesaM1Enabled
+                      ? TransactionInfoPageV2(this)
+                      : const TransactionInfoPage()));
+        });
   }
 }

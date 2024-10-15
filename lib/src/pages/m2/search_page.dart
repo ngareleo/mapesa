@@ -34,11 +34,16 @@ class _SearchPageV2State extends State<SearchPageV2> {
                     suffix: Icon(Icons.search)),
                 onSubmitted: (value) => {debugPrint("Search $value")},
                 onChanged: (value) async {
-                  final suggestions = await _search.suggest(seed: value);
-                  debugPrint("Suggestions $suggestions");
-                  setState(() {
-                    _suggestions = suggestions;
-                  });
+                  if (value.trim() == "") {
+                    setState(() {
+                      _suggestions = {};
+                    });
+                  } else {
+                    final suggestions = await _search.suggest(seed: value);
+                    setState(() {
+                      _suggestions = suggestions;
+                    });
+                  }
                 },
               ),
               const SizedBox(
@@ -57,7 +62,7 @@ class _SearchPageV2State extends State<SearchPageV2> {
                             )
                           ]
                         : _suggestions
-                            .map((s) => s.toTransactionListItem())
+                            .map((s) => s.toTransactionListItem(context))
                             .toList(),
                   ),
                 ),
