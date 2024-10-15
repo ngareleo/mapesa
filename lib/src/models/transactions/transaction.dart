@@ -35,6 +35,7 @@ abstract class Transaction {
   Map<String, String> toJson();
   Widget toTransactionListItem(BuildContext context);
   CompactTransaction? toCompactTransaction();
+  Widget toRichComponent(BuildContext context);
 }
 
 class InvalidTransaction extends Transaction {
@@ -61,6 +62,11 @@ class InvalidTransaction extends Transaction {
 
   @override
   CompactTransaction? toCompactTransaction() => null;
+
+  @override
+  Widget toRichComponent(BuildContext context) {
+    throw UnimplementedError();
+  }
 }
 
 typedef MultipleTransactions = List<Transaction>;

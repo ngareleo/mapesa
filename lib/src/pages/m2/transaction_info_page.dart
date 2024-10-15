@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mapesa/src/models/transactions/transaction.dart';
-import 'package:mapesa/src/pages/m2/components/transactions_rich_text_component.dart';
 
 class TransactionInfoPageV2 extends StatefulWidget {
   final Transaction transaction;
@@ -32,8 +31,10 @@ class _TransactionInfoPageV2State extends State<TransactionInfoPageV2> {
             child: Column(
               children: [
                 Card(
-                    child:
-                        mapTransactionToRichTextComponent(widget.transaction))
+                    child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: widget.transaction.toRichComponent(context),
+                ))
               ],
             ),
           ),

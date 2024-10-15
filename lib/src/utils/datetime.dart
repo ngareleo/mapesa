@@ -12,6 +12,20 @@ DateTime getDateTimeFromMessage(
       : DateTime(year, month, day, hour == 12 ? 12 : hour + 12, minutes);
 }
 
+(String, String, bool) getMessageDetailsFromDateTime(DateTime dateTime) {
+  String date =
+      "${dateTime.day.toString().padLeft(2, '0')}/${dateTime.month.toString().padLeft(2, '0')}/${(dateTime.year % 100).toString().padLeft(2, '0')}";
+  bool isAM = dateTime.hour < 12;
+  int hour = dateTime.hour % 12;
+  if (hour == 0) {
+    hour = 12;
+  }
+  final time =
+      "${hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
+
+  return (date, time, isAM);
+}
+
 String prettifyTimeDifference(DateTime dateTime) {
   var difference = DateTime.now().difference(dateTime);
   if (difference.inMinutes < 5) {

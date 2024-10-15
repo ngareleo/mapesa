@@ -52,3 +52,6 @@ final defaultCardTheme = CardTheme(
   elevation: 0,
   margin: EdgeInsets.zero,
 );
+
+const styledTransactionTextStyle =
+    TextStyle(color: _primaryColor, fontWeight: FontWeight.w700, fontSize: 20);
