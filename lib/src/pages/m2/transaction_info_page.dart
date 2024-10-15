@@ -34,7 +34,8 @@ class _TransactionInfoPageV2State extends State<TransactionInfoPageV2> {
                     child: Padding(
                   padding: const EdgeInsets.all(8),
                   child: widget.transaction.toRichComponent(context),
-                ))
+                )),
+                Text(widget.transaction.toJson().toString())
               ],
             ),
           ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 
 import 'package:mapesa/src/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/common/cards/rich_transaction_components.dart';
 import 'package:mapesa/src/common/theme.dart';
 import 'package:mapesa/src/features/feature_flags_provider.dart';
 import 'package:mapesa/src/models/compact_transaction.dart';
@@ -112,9 +113,14 @@ class AirtimeTransaction extends Transaction {
   Widget toRichComponent(BuildContext context) {
     return Text.rich(TextSpan(children: [
       TextSpan(text: transactionCode, style: styledTransactionTextStyle),
-      const TextSpan(text: " Confirmed.on "),
-      TextSpan(text: dateTime.toString(), style: styledTransactionTextStyle),
-      const TextSpan(text: ""),
+      const TextSpan(text: " confirmed. You bought "),
+      TextSpan(
+          text: "Ksh ${transactionAmount.amount.toString()}",
+          style: styledTransactionTextStyle),
+      const TextSpan(text: " of airtime"),
+      ...commonRichDateTimeComponents(dateTime),
+      ...commonRichBalanceComponent(balance),
+      ...commonTransactionCostComponent(transactionCost)
     ]));
   }
 }

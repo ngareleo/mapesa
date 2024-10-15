@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 
 import 'package:mapesa/src/common/cards/primary_item_card.dart';
+import 'package:mapesa/src/common/cards/rich_transaction_components.dart';
 import 'package:mapesa/src/common/theme.dart';
 import 'package:mapesa/src/features/feature_flags_provider.dart';
 import 'package:mapesa/src/models/compact_transaction.dart';
@@ -110,7 +111,6 @@ class LipaNaMpesaTransaction extends Transaction {
 
   @override
   Widget toRichComponent(BuildContext context) {
-    final (d, t, isAM) = getMessageDetailsFromDateTime(dateTime);
     return Text.rich(TextSpan(children: [
       TextSpan(text: transactionCode, style: styledTransactionTextStyle),
       const TextSpan(text: " Confirmed. "),
@@ -119,14 +119,9 @@ class LipaNaMpesaTransaction extends Transaction {
           style: styledTransactionTextStyle),
       const TextSpan(text: " paid to "),
       TextSpan(text: subject.toString(), style: styledTransactionTextStyle),
-      const TextSpan(text: " on "),
-      TextSpan(text: d, style: styledTransactionTextStyle),
-      const TextSpan(text: " at "),
-      TextSpan(
-          text: "$t ${isAM ? "AM" : "PM"}", style: styledTransactionTextStyle),
-      const TextSpan(text: ". New M-PESA balance is "),
-      TextSpan(
-          text: "Ksh $transactionCost.", style: styledTransactionTextStyle),
+      ...commonRichDateTimeComponents(dateTime),
+      ...commonRichBalanceComponent(balance),
+      ...commonTransactionCostComponent(transactionCost)
     ]));
   }
 }

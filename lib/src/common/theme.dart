@@ -54,4 +54,4 @@ final defaultCardTheme = CardTheme(
 );
 
 const styledTransactionTextStyle =
-    TextStyle(color: _primaryColor, fontWeight: FontWeight.w700, fontSize: 20);
+    TextStyle(color: _primaryColor, fontWeight: FontWeight.w700, fontSize: 18);

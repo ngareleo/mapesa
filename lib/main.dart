@@ -18,34 +18,34 @@ import 'package:mapesa/src/models/compact_transaction.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load();
-  ////////////////////////////////////////////////////
-  //               Storage                       //
-  ///////////////////////////////////////////////////
+  //////////////////////////////////////////////////|
+  //               Storage                         /|
+  //////////////////////////////////////////////////|
   final dir = await getApplicationDocumentsDirectory();
   final isar = await Isar.open([CompactTransactionSchema], directory: dir.path);
   FailedTransactionsRepository.init(isar);
   CompactTransactionsRepository.init(isar);
 
-  ///////////////////////////////////////////////////////
-  //               Boot dependencies                   //
-  //                                                   //
-  // Order matters. Check the dependency to know order //
-  ///////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////|
+  //               Boot dependencies                   /|
+  //                                                   /|
+  // Order matters. Check the dependency to know order /|
+  //////////////////////////////////////////////////////|
   SearchProvider.init(isar);
   await AuthProvider.init();
   await DioProvider.init();
   await FeatureFlagsProvider.init();
   await SimpleLocalRepository.init();
-  ////////////////////////////////////////////////////
-  //               Long-running services            //
-  ///////////////////////////////////////////////////
+  ///////////////////////////////////////////////////|
+  //               Long-running services            /|
+  ///////////////////////////////////////////////////|
   await MobileServerReconciliationProvider.init();
-  ////////////////////////////////////////////////////
-  //               Application                    //
-  ///////////////////////////////////////////////////
+  //////////////////////////////////////////////////|
+  //               Application                     /|
+  //////////////////////////////////////////////////|
   runApp(ChangeNotifierProvider(
       create: (context) {
-        AuthProvider.instance;
+        return AuthProvider.instance;
       },
       child: const MapesaApp()));
 }
