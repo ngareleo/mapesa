@@ -17,6 +17,14 @@ class Money {
 
   @override
   String toString() {
-    return amount.toString();
+    final amountStr = amount.abs().toString();
+    final buffer = StringBuffer();
+    for (int i = 0; i < amountStr.length; i++) {
+      if (i > 0 && (amountStr.length - i) % 3 == 0) {
+        buffer.write(',');
+      }
+      buffer.write(amountStr[i]);
+    }
+    return (isNegative ? '-' : '') + buffer.toString();
   }
 }

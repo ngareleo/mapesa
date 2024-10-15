@@ -89,14 +89,13 @@ class AirtimeTransaction extends Transaction {
 
   @override
   Widget toTransactionListItem(BuildContext context) {
-    final amount = transactionAmount.amount.toString();
     return PrimaryItemCard(
         title: "Airtime",
         subtitle: prettifyTimeDifference(dateTime),
         icon: const CircleAvatar(
           child: Text("A"),
         ),
-        rightWidget: Text("KES $amount"),
+        rightWidget: Text("KES $transactionAmount"),
         onTap: () {
           final mapesaM1Enabled = FeatureFlagsProvider.client
               .hasCachedFeatureFlag(Flags.NEW_MAPESA_M1);
@@ -114,9 +113,7 @@ class AirtimeTransaction extends Transaction {
     return Text.rich(TextSpan(children: [
       TextSpan(text: transactionCode, style: styledTransactionTextStyle),
       const TextSpan(text: " confirmed. You bought "),
-      TextSpan(
-          text: "Ksh ${transactionAmount.amount.toString()}",
-          style: styledTransactionTextStyle),
+      richAmount(transactionAmount),
       const TextSpan(text: " of airtime"),
       ...commonRichDateTimeComponents(dateTime),
       ...commonRichBalanceComponent(balance),

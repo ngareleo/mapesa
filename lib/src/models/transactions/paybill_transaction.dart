@@ -102,14 +102,13 @@ class PaybillTransaction extends Transaction {
 
   @override
   Widget toTransactionListItem(BuildContext context) {
-    final amount = transactionAmount.amount.toString();
     return PrimaryItemCard(
       icon: const CircleAvatar(
         child: Text("P"),
       ),
       title: "$subjectAccount - $subject",
       subtitle: prettifyTimeDifference(dateTime),
-      rightWidget: Text("KES $amount"),
+      rightWidget: Text("KES $transactionAmount"),
       onTap: () {
         final mapesaM1Enabled = FeatureFlagsProvider.client
             .hasCachedFeatureFlag(Flags.NEW_MAPESA_M1);
@@ -131,9 +130,7 @@ class PaybillTransaction extends Transaction {
     return Text.rich(TextSpan(children: [
       TextSpan(text: transactionCode, style: styledTransactionTextStyle),
       const TextSpan(text: "Confirmed. "),
-      TextSpan(
-          text: "Ksh ${transactionAmount.amount.toString()}",
-          style: styledTransactionTextStyle),
+      richAmount(transactionAmount),
       const TextSpan(text: " sent to "),
       TextSpan(text: subject, style: styledTransactionTextStyle),
       const TextSpan(text: " for account "),

@@ -85,14 +85,13 @@ class LipaNaMpesaTransaction extends Transaction {
 
   @override
   Widget toTransactionListItem(BuildContext context) {
-    final amount = transactionAmount.amount.toString();
     return PrimaryItemCard(
       title: subject,
       subtitle: prettifyTimeDifference(dateTime),
       icon: const CircleAvatar(
         child: Text("L"),
       ),
-      rightWidget: Text("KES $amount"),
+      rightWidget: Text("KES $transactionAmount"),
       onTap: () {
         final mapesaM1Enabled = FeatureFlagsProvider.client
             .hasCachedFeatureFlag(Flags.NEW_MAPESA_M1);
@@ -114,9 +113,7 @@ class LipaNaMpesaTransaction extends Transaction {
     return Text.rich(TextSpan(children: [
       TextSpan(text: transactionCode, style: styledTransactionTextStyle),
       const TextSpan(text: " Confirmed. "),
-      TextSpan(
-          text: "Ksh ${transactionAmount.toString()}",
-          style: styledTransactionTextStyle),
+      richAmount(transactionAmount),
       const TextSpan(text: " paid to "),
       TextSpan(text: subject.toString(), style: styledTransactionTextStyle),
       ...commonRichDateTimeComponents(dateTime),

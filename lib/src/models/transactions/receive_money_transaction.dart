@@ -100,14 +100,13 @@ class ReceiveMoneyTransaction extends Transaction {
 
   @override
   Widget toTransactionListItem(BuildContext context) {
-    final amount = transactionAmount.amount.toString();
     return PrimaryItemCard(
       icon: const CircleAvatar(
         child: Text("R"),
       ),
       title: subject,
       subtitle: prettifyTimeDifference(dateTime),
-      rightWidget: Text("KES $amount"),
+      rightWidget: Text("KES $transactionAmount"),
       onTap: () {
         final mapesaM1Enabled = FeatureFlagsProvider.client
             .hasCachedFeatureFlag(Flags.NEW_MAPESA_M1);
@@ -127,9 +126,7 @@ class ReceiveMoneyTransaction extends Transaction {
       const TextSpan(text: "Congratulations "),
       TextSpan(text: transactionCode, style: styledTransactionTextStyle),
       const TextSpan(text: " Confirmed. You have received"),
-      TextSpan(
-          text: " Ksh ${transactionAmount.amount.toString()}",
-          style: styledTransactionTextStyle),
+      richAmount(transactionAmount),
       const TextSpan(text: " from "),
       TextSpan(text: subject, style: styledTransactionTextStyle),
       ...commonRichDateTimeComponents(dateTime),

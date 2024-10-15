@@ -29,9 +29,6 @@ class FeatureFlagsProvider {
         sendTimeout: 5000,
         caches: true,
       ),
-      seeds: <Flag>[
-        Flag.seed('feature', enabled: true),
-      ],
     );
 
     try {

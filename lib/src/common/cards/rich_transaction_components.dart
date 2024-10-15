@@ -18,19 +18,13 @@ List<TextSpan> commonRichDateTimeComponents(DateTime dateTime) {
 }
 
 List<TextSpan> commonRichBalanceComponent(Money balance) {
-  return [
-    const TextSpan(text: " New M-PESA balance is "),
-    TextSpan(
-        text: "Ksh ${balance.amount.toString()}",
-        style: styledTransactionTextStyle)
-  ];
+  return [const TextSpan(text: " New M-PESA balance is "), richAmount(balance)];
 }
 
 List<TextSpan> commonTransactionCostComponent(Money cost) {
-  return [
-    const TextSpan(text: ". Transaction cost, "),
-    TextSpan(
-        text: "Ksh ${cost.amount.toString()}",
-        style: styledTransactionTextStyle)
-  ];
+  return [const TextSpan(text: ". Transaction cost, "), richAmount(cost)];
+}
+
+TextSpan richAmount(Money amount) {
+  return TextSpan(text: "Ksh $amount", style: styledTransactionTextStyle);
 }

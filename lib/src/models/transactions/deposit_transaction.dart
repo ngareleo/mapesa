@@ -95,14 +95,13 @@ class DepositTransaction extends Transaction {
 
   @override
   Widget toTransactionListItem(BuildContext context) {
-    final amount = transactionAmount.amount.toString();
     return PrimaryItemCard(
       title: "Deposit",
       subtitle: prettifyTimeDifference(dateTime),
       icon: const CircleAvatar(
         child: Text("D"),
       ),
-      rightWidget: Text("KES $amount"),
+      rightWidget: Text("KES $transactionAmount"),
       onTap: () {
         final mapesaM1Enabled = FeatureFlagsProvider.client
             .hasCachedFeatureFlag(Flags.NEW_MAPESA_M1);
@@ -126,9 +125,7 @@ class DepositTransaction extends Transaction {
       const TextSpan(text: "Confirmed. "),
       ...commonRichDateTimeComponents(dateTime),
       const TextSpan(text: " Give "),
-      TextSpan(
-          text: "Ksh ${transactionAmount.amount.toString()}",
-          style: styledTransactionTextStyle),
+      richAmount(transactionAmount),
       const TextSpan(text: " cash to "),
       TextSpan(text: location, style: styledTransactionTextStyle),
       ...commonRichBalanceComponent(balance)

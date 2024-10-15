@@ -20,7 +20,7 @@ class _TransactionInfoPageV2State extends State<TransactionInfoPageV2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Info"),
+        title: const Text("Transaction"),
       ),
       body: SafeArea(
         child: Padding(
@@ -30,6 +30,22 @@ class _TransactionInfoPageV2State extends State<TransactionInfoPageV2> {
             height: MediaQuery.of(context).size.height,
             child: Column(
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Mpesa Message"),
+                    Row(
+                      children: [
+                        IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.delete_outline_rounded)),
+                        IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.copy_rounded))
+                      ],
+                    )
+                  ],
+                ),
                 Card(
                     child: Padding(
                   padding: const EdgeInsets.all(8),
