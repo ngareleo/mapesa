@@ -2,7 +2,7 @@ import 'package:cron/cron.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:mapesa/src/features/repository/failed_transactions.dart';
+import 'package:mapesa/src/features/failed_transactions_repository.dart';
 import 'package:mapesa/src/features/model_mapper.dart';
 import 'package:mapesa/src/features/sms_provider.dart';
 import 'package:mapesa/src/features/upload/transaction_upload_provider.dart';

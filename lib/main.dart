@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:isar/isar.dart';
-import 'package:mapesa/src/features/feature_flags_provider.dart';
-import 'package:mapesa/src/features/repository/compact_transactions.dart';
-import 'package:mapesa/src/features/search_provider.dart';
-import 'package:mapesa/src/features/simple_local_repository.dart';
-import 'package:mapesa/src/mapesa_app.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
+import 'package:mapesa/src/features/feature_flags_provider.dart';
+import 'package:mapesa/src/features/search_provider.dart';
+import 'package:mapesa/src/features/simple_local_repository.dart';
 import 'package:mapesa/src/features/auth_provider.dart';
 import 'package:mapesa/src/features/dio_provider.dart';
-import 'package:mapesa/src/features/repository/failed_transactions.dart';
+import 'package:mapesa/src/features/failed_transactions_repository.dart';
 import 'package:mapesa/src/features/mobile_server_reconciliation_provider.dart';
 import 'package:mapesa/src/models/compact_transaction.dart';
+import 'package:mapesa/src/mapesa_app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,8 +23,7 @@ void main() async {
   final dir = await getApplicationDocumentsDirectory();
   final isar = await Isar.open([CompactTransactionSchema], directory: dir.path);
   FailedTransactionsRepository.init(isar);
-  CompactTransactionsRepository.init(isar);
-
+  await SimpleLocalRepository.init(isar);
   //////////////////////////////////////////////////////|
   //               Boot dependencies                   /|
   //                                                   /|
@@ -35,7 +33,6 @@ void main() async {
   await AuthProvider.init();
   await DioProvider.init();
   await FeatureFlagsProvider.init();
-  await SimpleLocalRepository.init();
   ///////////////////////////////////////////////////|
   //               Long-running services            /|
   ///////////////////////////////////////////////////|

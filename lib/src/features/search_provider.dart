@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+
 import 'package:mapesa/src/features/model_mapper.dart';
 import 'package:mapesa/src/models/compact_transaction.dart';
 import 'package:mapesa/src/models/transactions/transaction.dart';

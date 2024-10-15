@@ -1,5 +1,4 @@
 import 'dart:isolate';
-
 import 'package:permission_handler/permission_handler.dart';
 import 'package:telephony/telephony.dart';
 
