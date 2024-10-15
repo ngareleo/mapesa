@@ -56,7 +56,7 @@ class SMSProvider {
     var messages = <SmsMessage>[];
     var estimateQueryConstraint =
         max; // A query constraint to avoid accidentally flooding excess messages and hanging the UI
-
+    var missed = false;
     while (messages.length < max) {
       final batch = await telephony.getInboxSms(
           columns: [SmsColumn.ADDRESS, SmsColumn.BODY, SmsColumn.ID],
@@ -66,9 +66,23 @@ class SMSProvider {
               .lessThan(estimateQueryConstraint.toString()));
       messages.addAll(batch);
 
+      if (batch.isEmpty) {
+        if (missed) {
+          // if we do consecutive queries without results we quit
+          break;
+        }
+        missed = true;
+      } else {
+        if (missed) {
+          missed =
+              false; // false alarm, maybe there was a gap or something else
+        }
+      }
+
       if (messages.length < max) {
-        estimateQueryConstraint +=
-            1000; // keep raising the constraint until we hit the limit
+        estimateQueryConstraint += missed
+            ? 3000 // if we missed we raise to constraint to see if we can reach further
+            : 1000; // keep raising the constraint until we hit the limit
       }
     }
 

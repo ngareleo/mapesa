@@ -51,7 +51,7 @@ class MobileServerReconciliationProvider {
 
   Future<MultipleTransactions> fetchTransactionsFromLocalStorage() async {
     var messages = (await SMSProvider.instance
-        .fetchRecentMessages(fromId: _lastUploadedMessageId ?? 0));
+        .fetchMessages(fromId: _lastUploadedMessageId ?? 0));
     var transactions = <Transaction>[];
     for (var msg in messages) {
       var transaction = _mapper.mapFromAToB(msg);

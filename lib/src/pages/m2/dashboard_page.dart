@@ -39,7 +39,7 @@ class _DashboardPageV2State extends State<DashboardPageV2> {
   }
 
   ManyFutureTransactions getMessagesFromLast3Months() async {
-    var msgs = await SMSProvider.instance.fetchRecentMessages();
+    var msgs = await SMSProvider.instance.fetchMessages();
     return msgs
         .map((m) => smsMapper.mapFromAToB(m))
         .whereType<Transaction>()
