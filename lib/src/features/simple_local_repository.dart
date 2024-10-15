@@ -4,7 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mapesa/src/features/model_mapper.dart';
 import 'package:mapesa/src/features/sms_provider.dart';
 import 'package:mapesa/src/models/compact_transaction.dart';
-import 'package:mapesa/src/models/transactions/transaction.dart';
 
 // Makes sure all messages are persisted to local store
 class SimpleLocalRepository {
@@ -33,8 +32,11 @@ class SimpleLocalRepository {
 
   Future<void> refresh() async {
     final mapper = TransactionsMapper();
-    final messages = await _smsProvider.fetchRecentMessages(
-        fromId: _lastUploadedMessageId ?? 0);
+
+    final messages = _lastUploadedMessageId == 0
+        ? await _smsProvider.firstFreshFetch()
+        : await _smsProvider.fetchRecentMessages(
+            fromId: _lastUploadedMessageId);
 
     var compactTransactions = messages
         .map((m) => mapper.mapFromAToB(m)?.toCompactTransaction())
