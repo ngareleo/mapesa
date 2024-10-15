@@ -28,7 +28,11 @@ class SearchProvider {
     final suggestions = (await _isar.compactTransactions
             .where()
             .filter()
-            .subjectContains(seed)
+            .subjectContains(seed, caseSensitive: false)
+            .or()
+            .locationContains(seed, caseSensitive: false)
+            .or()
+            .transactionCodeContains(seed, caseSensitive: false)
             .findAll())
         .map((c) => mapper.mapFromAToB(c))
         .whereType<Transaction>();

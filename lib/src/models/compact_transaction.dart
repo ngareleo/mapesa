@@ -4,11 +4,13 @@ import 'package:mapesa/src/utils/money.dart';
 
 part 'compact_transaction.g.dart';
 
+// Compact representation of a transaction
 @Collection()
 class CompactTransaction {
-  // Compact representation of a transaction
   final Id id = Isar.autoIncrement;
   final Money balance;
+
+  @Index()
   final DateTime dateTime;
 
   @Name("message_id")
