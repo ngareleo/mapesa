@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mapesa/src/debug/debug_overlay_widget.dart';
 import 'package:provider/provider.dart';
 
 import 'package:mapesa/src/common/theme.dart';
@@ -18,15 +19,16 @@ class MapesaApp extends StatelessWidget {
 
     return Consumer(builder: (context, AuthProvider authProvider, child) {
       return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Mapesa',
-        theme: appTheme,
-        home: mapesaM1Enabled
-            ? const HomePageV2()
-            : authProvider.isLoggedIn()
-                ? const HomePage()
-                : const AuthPage(),
-      );
+          debugShowCheckedModeBanner: false,
+          title: 'Mapesa',
+          theme: appTheme,
+          home: DebugOverlayWidget(
+            child: mapesaM1Enabled
+                ? const HomePageV2()
+                : authProvider.isLoggedIn()
+                    ? const HomePage()
+                    : const AuthPage(),
+          ));
     });
   }
 }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:mapesa/src/features/model_mapper.dart';
-import 'package:mapesa/src/features/sms_provider.dart';
+import 'package:mapesa/src/features/simple_local_repository.dart';
+import 'package:mapesa/src/models/compact_transaction.dart';
 import 'package:mapesa/src/models/transactions/transaction.dart';
 
-typedef ManyFutureTransactions = Future<List<Transaction>>;
+typedef ManyFutureTransactions = Future<List<CompactTransaction>>;
 
 class DashboardPageV2 extends StatefulWidget {
   const DashboardPageV2({super.key});
@@ -14,13 +15,15 @@ class DashboardPageV2 extends StatefulWidget {
 }
 
 class _DashboardPageV2State extends State<DashboardPageV2> {
-  final smsMapper = TransactionsMapper();
-  late ManyFutureTransactions messages;
+  var _isFirstLoad = true;
+  final _repository = SimpleLocalRepository.instance;
+  final _mapper = CompactTransactionsMapper();
+  late ManyFutureTransactions _messages;
 
   @override
   void initState() {
     super.initState();
-    messages = getMessagesFromLast3Months();
+    checkIsFirstEverLoad().then((_) => getMessagesFromLast3Months());
   }
 
   @override
@@ -34,39 +37,57 @@ class _DashboardPageV2State extends State<DashboardPageV2> {
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 child: SingleChildScrollView(
-                  child: buildMessagesList(),
+                  child: _isFirstLoad
+                      ? renderLoadingIndicator(message: "Reading messages...")
+                      : buildMessagesList(),
                 ))));
-  }
-
-  ManyFutureTransactions getMessagesFromLast3Months() async {
-    var msgs = await SMSProvider.instance.fetchMessages();
-    return msgs
-        .map((m) => smsMapper.mapFromAToB(m))
-        .whereType<Transaction>()
-        .toList();
   }
 
   Widget buildMessagesList() {
     return FutureBuilder(
-        future: messages,
+        future: _messages,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Column(
               children: (snapshot.data ?? [])
-                  .map((d) => d.toTransactionListItem(context))
+                  .map((d) => _mapper.mapFromAToB(d))
+                  .whereType<Transaction>()
+                  .map((t) => t.toTransactionListItem(context))
                   .toList(),
             );
           }
-          return const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(bottom: 20),
-                child: CircularProgressIndicator(),
-              ),
-              Text("Reading messages")
-            ],
-          );
+
+          return renderLoadingIndicator(message: "Loading...");
         });
+  }
+
+  Widget renderLoadingIndicator({required String message}) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(bottom: 20),
+            child: CircularProgressIndicator(),
+          ),
+          Text(message)
+        ],
+      ),
+    );
+  }
+
+  void getMessagesFromLast3Months() {
+    final messages = (_repository.getMessagesFromLast3Months());
+    setState(() {
+      _messages = messages;
+    });
+  }
+
+  Future<void> checkIsFirstEverLoad() async {
+    final isFirstLoad = await _repository.isFirstLoad();
+    debugPrint("Is first load? $isFirstLoad");
+    setState(() {
+      _isFirstLoad = isFirstLoad;
+    });
   }
 }

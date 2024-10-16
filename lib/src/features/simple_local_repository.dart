@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+import 'package:mapesa/src/features/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mapesa/src/features/model_mapper.dart';
@@ -7,11 +8,13 @@ import 'package:mapesa/src/models/compact_transaction.dart';
 
 // Makes sure all messages are persisted to local store
 class SimpleLocalRepository {
-  static const _lastUploadedMessageKey = "simple_local_repo_last_message_id";
+  static final _lastUploadedMessageKey =
+      SharedPreferencesKeyStore.authProvider.value;
+
   final Isar _isar;
   final SMSProvider _smsProvider = SMSProvider.instance;
   static SimpleLocalRepository? _instance;
-  static late int? _lastUploadedMessageId;
+  static int? _lastUploadedMessageId;
 
   static Future<void> init(Isar isar) async {
     if (_instance != null) {
@@ -28,6 +31,21 @@ class SimpleLocalRepository {
       throw Exception("SimpleLocalRepository not initialized");
     }
     return _instance!;
+  }
+
+  Future<bool> isFirstLoad() async {
+    await _loadLastMessageIdFromStorage();
+    return _lastUploadedMessageId == 0;
+  }
+
+  Future<List<CompactTransaction>> getMessagesFromLast3Months(
+      {int limit = 10}) async {
+    final messages = await _isar.compactTransactions
+        .where()
+        .dateTimeLessThan(DateTime.now().subtract(const Duration(days: 90)))
+        .limit(limit)
+        .findAll();
+    return messages;
   }
 
   Future<void> refresh() async {
@@ -52,7 +70,8 @@ class SimpleLocalRepository {
 
   Future<void> _loadLastMessageIdFromStorage() async {
     var prefs = await SharedPreferences.getInstance();
-    _lastUploadedMessageId = prefs.getInt(_lastUploadedMessageKey);
+    var key = prefs.getInt(_lastUploadedMessageKey);
+    _lastUploadedMessageId = key ?? 0;
   }
 
   Future<void> _setLastUploadedMessageId(int id) async {

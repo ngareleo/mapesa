@@ -24,7 +24,7 @@ class FeatureFlagsProvider {
     _client = await FlagsmithClient.init(
       apiKey: dotenv.env["FLAGSMITH_API_KEY"] ?? "",
       config: const FlagsmithConfig(
-        connectTimeout: 2000,
+        connectTimeout: 5000,
         receiveTimeout: 5000,
         sendTimeout: 5000,
         caches: true,

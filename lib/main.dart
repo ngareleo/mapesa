@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:isar/isar.dart';
+import 'package:mapesa/src/debug/developer_provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +22,9 @@ void main() async {
   //               Storage                            /|
   /////////////////////////////////////////////////////|
   final dir = await getApplicationDocumentsDirectory();
-  final isar = await Isar.open([CompactTransactionSchema], directory: dir.path);
+  final isar = await Isar.open([
+    CompactTransactionSchema,
+  ], directory: dir.path);
   FailedTransactionsRepository.init(isar);
   await SimpleLocalRepository.init(isar);
   //////////////////////////////////////////////////////|
@@ -33,6 +36,7 @@ void main() async {
   await AuthProvider.init();
   await DioProvider.init();
   await FeatureFlagsProvider.init();
+  DeveloperProvider.init(isar);
   /////////////////////////////////////////////////////|
   //               Long-running services              /|
   /////////////////////////////////////////////////////|

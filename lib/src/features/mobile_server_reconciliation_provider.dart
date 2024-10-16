@@ -1,5 +1,6 @@
 import 'package:cron/cron.dart';
 import 'package:flutter/foundation.dart';
+import 'package:mapesa/src/features/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mapesa/src/features/failed_transactions_repository.dart';
@@ -17,7 +18,8 @@ class MobileServerReconciliationProvider {
   // Keeps transactions server side [u]p [t]o [d]ate.
 
   static MobileServerReconciliationProvider? _instance;
-  static const _lastUploadedMessageKey = "last_message_id";
+  static final _lastUploadedMessageKey =
+      SharedPreferencesKeyStore.mobileServerReconciliation.value;
   static final _after30Minutes = Schedule(minutes: 30);
 
   final _mapper = TransactionsMapper();
