@@ -20,7 +20,20 @@ class _DashboardPageV2State extends State<DashboardPageV2> {
   @override
   void initState() {
     super.initState();
-    _repository.refresh().then((_) => getMessagesFromLast3Months());
+    _repository.refresh().then((status) {
+      switch (status) {
+        case RefreshStatus.permissionDenied:
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content:
+                  Text('Couldn\'t read messages because permission was denied'),
+            ),
+          );
+        case RefreshStatus.success:
+          getMessagesFromLast3Months();
+      }
+    });
   }
 
   @override

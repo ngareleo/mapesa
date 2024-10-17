@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flagsmith/flagsmith.dart';
 import 'package:isar/isar.dart';

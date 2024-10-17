@@ -11,27 +11,34 @@ class SMSProvider {
 
   static SMSProvider? _instance;
   static const maxMessages = 1000;
+
   final telephony = Telephony.instance;
   static SMSProvider get instance => _instance ?? SMSProvider._();
+
+  static Future<void> init() async {}
 
   SMSProvider._() {
     _instance = this;
   }
 
-  Future<void> _checkPermission() async {
+  Future<PermissionStatus> _requestPermission() async {
     var permission = await Permission.sms.status;
-    if (!permission.isGranted) {
-      await Permission.sms.request();
-    }
+    return permission.isGranted
+        ? PermissionStatus.granted
+        : await Permission.sms.request();
   }
 
   ///
   ///Fetch Sms messages
   ///
-  Future<ManySms> fetchMessages(
-      {int? fromId = 0, int? max = maxMessages}) async {
-    await _checkPermission();
-    var messages = fromId == 0
+  Future<ManySms> fetchMessages({int? fromId, int? max = maxMessages}) async {
+    final permission = await _requestPermission();
+
+    if (permission == PermissionStatus.denied) {
+      throw Exception("Permission denied");
+    }
+
+    var messages = fromId == null
         ? await firstFreshFetch()
         : await telephony.getInboxSms(
             columns: [SmsColumn.ADDRESS, SmsColumn.BODY, SmsColumn.ID],
@@ -43,6 +50,7 @@ class SMSProvider {
     if (messages.length > maxMessages) {
       messages = messages.sublist(0, maxMessages);
     }
+
     return messages;
   }
 
@@ -52,7 +60,10 @@ class SMSProvider {
   Future<ManySms> firstFreshFetch({int max = maxMessages}) async {
     // A needed measure due to limitation of the API
     // works on the assumption that no two messages in the entire inbox have similar ids
-    await _checkPermission();
+    final permission = await _requestPermission();
+    if (permission == PermissionStatus.denied) {
+      return [];
+    }
     var messages = <SmsMessage>[];
     var estimateQueryConstraint =
         max; // A query constraint to avoid accidentally flooding excess messages and hanging the UI
@@ -98,7 +109,10 @@ class SMSProvider {
   /// Low Perf executed as little as possible
   ///
   Future<(int, int)> _findSmsRange() async {
-    await _checkPermission();
+    final permission = await _requestPermission();
+    if (permission == PermissionStatus.denied) {
+      return (0, 0);
+    }
     var messages = await Isolate.run(() => telephony.getInboxSms(
         columns: [
           SmsColumn.ID,

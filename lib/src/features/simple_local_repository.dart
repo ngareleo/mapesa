@@ -6,6 +6,9 @@ import 'package:mapesa/src/features/shared_preferences_keystore.dart';
 import 'package:mapesa/src/features/model_mapper.dart';
 import 'package:mapesa/src/features/sms_provider.dart';
 import 'package:mapesa/src/models/compact_transaction.dart';
+import 'package:telephony/telephony.dart';
+
+enum RefreshStatus { permissionDenied, success }
 
 // Makes sure all messages are persisted to local store
 class SimpleLocalRepository extends ChangeNotifier {
@@ -51,10 +54,17 @@ class SimpleLocalRepository extends ChangeNotifier {
     return messages;
   }
 
-  Future<void> refresh() async {
+  Future<RefreshStatus> refresh() async {
     final mapper = TransactionsMapper();
-    final messages =
-        await _smsProvider.fetchMessages(fromId: lastUploadedMessageId);
+    List<SmsMessage> messages = [];
+
+    try {
+      final m = await _smsProvider.fetchMessages(fromId: lastUploadedMessageId);
+      messages.addAll(m);
+    } catch (e) {
+      return RefreshStatus.permissionDenied;
+    }
+
     final compactTransactions = messages
         .map((m) => mapper.mapFromAToB(m)?.toCompactTransaction())
         .whereType<CompactTransaction>()
@@ -71,5 +81,6 @@ class SimpleLocalRepository extends ChangeNotifier {
     }
 
     notifyListeners();
+    return RefreshStatus.success;
   }
 }
