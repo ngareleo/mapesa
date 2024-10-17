@@ -11,7 +11,7 @@ import 'package:mapesa/src/features/simple_local_repository.dart';
 import 'package:mapesa/src/features/auth_provider.dart';
 import 'package:mapesa/src/features/dio_provider.dart';
 import 'package:mapesa/src/features/failed_transactions_repository.dart';
-import 'package:mapesa/src/features/mobile_server_reconciliation_provider.dart';
+import 'package:mapesa/src/features/remote_service_provider.dart';
 import 'package:mapesa/src/models/compact_transaction.dart';
 import 'package:mapesa/src/mapesa_app.dart';
 
@@ -40,7 +40,7 @@ void main() async {
   //////////////////////////////////////////////////////|
   //               Long-running services               /|
   //////////////////////////////////////////////////////|
-  await MobileServerReconciliationProvider.init();
+  await RemoteServiceProvider.init();
   //////////////////////////////////////////////////////|
   //               Application                         /|
   //////////////////////////////////////////////////////|

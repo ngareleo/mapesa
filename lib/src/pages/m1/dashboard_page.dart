@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mapesa/src/features/mobile_server_reconciliation_provider.dart';
+import 'package:mapesa/src/features/remote_service_provider.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -11,7 +11,7 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
-    MobileServerReconciliationProvider.instance.refresh();
+    RemoteServiceProvider.instance.refresh();
     super.initState();
   }
 

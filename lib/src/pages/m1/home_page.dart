@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mapesa/src/features/mobile_server_reconciliation_provider.dart';
+import 'package:mapesa/src/features/remote_service_provider.dart';
 import 'package:mapesa/src/pages/m1/budget_page.dart';
 import 'package:mapesa/src/pages/m1/dashboard_page.dart';
 import 'package:mapesa/src/debug/debug_page.dart';
@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    MobileServerReconciliationProvider.instance.refresh();
+    RemoteServiceProvider.instance.refresh();
     super.initState();
   }
 

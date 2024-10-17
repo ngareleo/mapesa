@@ -13,36 +13,34 @@ import 'upload/types.dart';
 
 enum UTDStatus { idle, busy }
 
-// Generally this is a service that runs in the background
-class MobileServerReconciliationProvider {
-  // Keeps transactions server side [u]p [t]o [d]ate.
-
-  static MobileServerReconciliationProvider? _instance;
+class RemoteServiceProvider extends ChangeNotifier {
+  // Keeps transactions server side up2 date
+  final SharedPreferences _prefs;
+  static RemoteServiceProvider? _instance;
   static final _lastUploadedMessageKey =
       SharedPreferencesKeyStore.mobileServerReconciliation.value;
   static final _after30Minutes = Schedule(minutes: 30);
-
   final _mapper = TransactionsMapper();
   final _transactionUploadProvider = TransactionsUploadProvider();
   final _cron = Cron();
 
-  int? _lastUploadedMessageId;
-  UTDStatus status = UTDStatus.idle;
+  int? get lastUploadedMessageId {
+    return _prefs.getInt(_lastUploadedMessageKey);
+  }
 
   static Future<void> init() async {
     /// Called in the main function to initialize the provider and perform async tasks
-
     if (_instance != null) {
       throw Exception("MobileServerReconciliationProvider already initialized");
     }
-    _instance = MobileServerReconciliationProvider._();
-    await _instance!._loadLastMessageIdFromStorage();
+    final prefs = await SharedPreferences.getInstance();
+    _instance = RemoteServiceProvider._(prefs);
     debugPrint("MobileServerReconciliationProvider initialized");
   }
 
-  MobileServerReconciliationProvider._();
+  RemoteServiceProvider._(this._prefs);
 
-  static MobileServerReconciliationProvider get instance {
+  static RemoteServiceProvider get instance {
     if (_instance == null) {
       throw Exception("UTDProvider not initialized. Call UTDProvider.init()");
     }
@@ -50,23 +48,15 @@ class MobileServerReconciliationProvider {
   }
 
   Future<MultipleTransactions> fetchTransactionsFromLocalStorage() async {
-    var messages = (await SMSProvider.instance
-        .fetchMessages(fromId: _lastUploadedMessageId ?? 0));
-    var transactions = <Transaction>[];
-    for (var msg in messages) {
-      var transaction = _mapper.mapFromAToB(msg);
-      if (transaction != null) {
-        transactions.add(transaction);
-      }
-    }
-    return transactions;
+    final messages = (await SMSProvider.instance
+        .fetchMessages(fromId: lastUploadedMessageId ?? 0));
+    return messages
+        .map((msg) => _mapper.mapFromAToB(msg))
+        .whereType<Transaction>()
+        .toList();
   }
 
   Future<void> refresh() async {
-    if (status == UTDStatus.busy) {
-      debugPrint("UTDProvider is busy");
-      return;
-    }
     var transactions = await fetchTransactionsFromLocalStorage();
     await uploadTransactions(transactions);
   }
@@ -78,14 +68,9 @@ class MobileServerReconciliationProvider {
       debugPrint("No transactions to upload");
       return;
     }
-
-    status = UTDStatus.busy;
-
     transactions.sort((a, b) => a.messageId.compareTo(b.messageId));
-
-    var response = await _transactionUploadProvider
+    final response = await _transactionUploadProvider
         .uploadTransactionsInSinglePayload(transactions);
-
     switch (response.status) {
       case SingleUploadStatusType.success:
         await _setLastUploadedMessageId(transactions.last.messageId);
@@ -95,25 +80,19 @@ class MobileServerReconciliationProvider {
       default:
         break;
     }
-
-    status = UTDStatus.idle;
   }
 
   Future<void> uploadTransactions(List<Transaction> transactions,
       {bool overrideLastMessageID = true}) async {
     // TODO: Add limit for failed transactions
-
     if (transactions.isEmpty) {
       debugPrint("No transactions to upload");
       return;
     }
-
-    status = UTDStatus.busy;
     transactions.sort(
       (a, b) => a.messageId.compareTo(b.messageId),
     );
-
-    var res = await _transactionUploadProvider
+    final res = await _transactionUploadProvider
         .uploadTransactionsInSplitPayloads(transactions);
     debugPrint("UTDProvider uploadTransactions: $res");
 
@@ -140,7 +119,6 @@ class MobileServerReconciliationProvider {
             .saveFailedTransactions(res.failed);
         break;
     }
-    status = UTDStatus.idle;
   }
 
   Future<void> _retryFailedTransactions() async {
@@ -157,15 +135,8 @@ class MobileServerReconciliationProvider {
     await uploadTransactions(failedTransactions, overrideLastMessageID: false);
   }
 
-  Future<void> _loadLastMessageIdFromStorage() async {
-    var prefs = await SharedPreferences.getInstance();
-    _lastUploadedMessageId = prefs.getInt(_lastUploadedMessageKey);
-  }
-
   Future<void> _setLastUploadedMessageId(int id) async {
-    var prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_lastUploadedMessageKey, id);
-    _lastUploadedMessageId = id;
+    await _prefs.setInt(_lastUploadedMessageKey, id);
   }
 
   void _scheduleFailedTransactionsUpload() {
