@@ -14,8 +14,8 @@ class MapesaApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final mapesaM1Enabled =
-    //     FeatureFlagsProvider.client.hasCachedFeatureFlag(Flags.NEW_MAPESA_M1);
+    final mapesaM1Enabled =
+        FeatureFlagsProvider.client.hasCachedFeatureFlag(Flags.NEW_MAPESA_M1);
 
     return Consumer(builder: (context, AuthProvider authProvider, child) {
       return MaterialApp(
@@ -23,7 +23,7 @@ class MapesaApp extends StatelessWidget {
           title: 'Mapesa',
           theme: appTheme,
           home: DebugOverlayWidget(
-            child: true
+            child: mapesaM1Enabled
                 ? const HomePageV2()
                 : authProvider.isLoggedIn()
                     ? const HomePage()

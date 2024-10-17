@@ -35,7 +35,7 @@ void main() async {
   SearchProvider.init(isar);
   await AuthProvider.init();
   await DioProvider.init();
-  // await FeatureFlagsProvider.init();
+  await FeatureFlagsProvider.init();
   DeveloperProvider.init(isar);
   //////////////////////////////////////////////////////|
   //               Long-running services               /|
