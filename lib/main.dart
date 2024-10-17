@@ -15,6 +15,15 @@ import 'package:mapesa/src/features/remote_service_provider.dart';
 import 'package:mapesa/src/models/compact_transaction.dart';
 import 'package:mapesa/src/mapesa_app.dart';
 
+// Source code for MAPESA APP
+//    _____
+//    /     \ _____  ______   ____   ___________
+//  /  \ /  \\__  \ \____ \_/ __ \ /  ___/\__  \
+// /    Y    \/ __ \|  |_> >  ___/ \___ \  / __ \_
+// \____|__  (____  /   __/ \___  >____  >(____  /
+//       \/     \/|__|        \/     \/      \/
+// I hope I finish you one day
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load();
