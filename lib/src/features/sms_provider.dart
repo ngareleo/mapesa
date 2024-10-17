@@ -65,6 +65,7 @@ class SMSProvider {
       return [];
     }
     var messages = <SmsMessage>[];
+    var leftMarker = 0;
     var estimateQueryConstraint =
         max; // A query constraint to avoid accidentally flooding excess messages and hanging the UI
     var missed = false;
@@ -73,6 +74,8 @@ class SMSProvider {
           columns: [SmsColumn.ADDRESS, SmsColumn.BODY, SmsColumn.ID],
           filter: SmsFilter.where(SmsColumn.ADDRESS)
               .equals("MPESA")
+              .and(SmsColumn.ID)
+              .greaterThan(leftMarker.toString())
               .and(SmsColumn.ID)
               .lessThan(estimateQueryConstraint.toString()));
       messages.addAll(batch);
@@ -91,6 +94,7 @@ class SMSProvider {
       }
 
       if (messages.length < max) {
+        leftMarker = estimateQueryConstraint; // sliding window kind of
         estimateQueryConstraint += missed
             ? 3000 // if we missed we raise to constraint to see if we can reach further
             : 1000; // keep raising the constraint until we hit the limit
