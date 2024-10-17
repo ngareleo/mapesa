@@ -60,7 +60,7 @@ class CompactTransaction {
         "interest": interest?.amount.toString() ?? "",
         "location": location.toString(),
         "messageId": messageId.toString(),
-        "phoneNumber": phoneNumber.toString(),
+        "subjectPhoneNumber": phoneNumber.toString(),
         "subject": subject,
         "subjectAccount": subjectAccount.toString(),
         "transactionAmount": transactionAmount.amount.toString(),

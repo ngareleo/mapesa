@@ -75,14 +75,14 @@ class WithdrawTransaction extends Transaction {
   @override
   Map<String, String> toJson() => {
         "agentNumber": agentNumber,
-        "balance": balance.amount.toString(),
+        "balance": balance.toString(),
         "dateTime": dateTime.millisecondsSinceEpoch.toString(),
         "location": location,
         "messageId": messageId.toString(),
         "subject": subject,
-        "transactionAmount": transactionAmount.amount.toString(),
+        "transactionAmount": transactionAmount.toString(),
         "transactionCode": transactionCode,
-        "transactionCost": transactionCost.amount.toString(),
+        "transactionCost": transactionCost.toString(),
         "type": type,
       };
 

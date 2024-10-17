@@ -17,11 +17,6 @@ const MoneySchema = Schema(
       id: 0,
       name: r'amount',
       type: IsarType.long,
-    ),
-    r'isNegative': PropertySchema(
-      id: 1,
-      name: r'isNegative',
-      type: IsarType.bool,
     )
   },
   estimateSize: _moneyEstimateSize,
@@ -46,7 +41,6 @@ void _moneySerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeLong(offsets[0], object.amount);
-  writer.writeBool(offsets[1], object.isNegative);
 }
 
 Money _moneyDeserialize(
@@ -57,7 +51,6 @@ Money _moneyDeserialize(
 ) {
   final object = Money(
     amount: reader.readLongOrNull(offsets[0]) ?? 0,
-    isNegative: reader.readBoolOrNull(offsets[1]) ?? false,
   );
   return object;
 }
@@ -71,8 +64,6 @@ P _moneyDeserializeProp<P>(
   switch (propertyId) {
     case 0:
       return (reader.readLongOrNull(offset) ?? 0) as P;
-    case 1:
-      return (reader.readBoolOrNull(offset) ?? false) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -127,16 +118,6 @@ extension MoneyQueryFilter on QueryBuilder<Money, Money, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<Money, Money, QAfterFilterCondition> isNegativeEqualTo(
-      bool value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isNegative',
-        value: value,
       ));
     });
   }

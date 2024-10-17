@@ -38,8 +38,8 @@ class ReceiveMoneyTransaction extends Transaction {
   factory ReceiveMoneyTransaction.fromMpesaMessage(
       {required int messageID, required RegExpMatch match}) {
     return ReceiveMoneyTransaction(
-      balance:
-          Money.fromString(message: match.namedGroup("balance").toString()),
+      balance: Money.fromString(
+          message: match.namedGroup("balance").toString().trim()),
       dateTime: getDateTimeFromMessage(
           date: match.namedGroup("date").toString().trim(),
           time: match.namedGroup("time").toString().trim(),
@@ -69,14 +69,14 @@ class ReceiveMoneyTransaction extends Transaction {
 
   @override
   Map<String, String> toJson() => {
-        "balance": balance.amount.toString(),
+        "balance": balance.toString(),
         "dateTime": dateTime.millisecondsSinceEpoch.toString(),
         "messageId": messageId.toString(),
         "subject": subject,
         "subjectPhoneNumber": phoneNumber,
-        "transactionAmount": transactionAmount.amount.toString(),
+        "transactionAmount": transactionAmount.toString(),
         "transactionCode": transactionCode,
-        "transactionCost": transactionCost.amount.toString(),
+        "transactionCost": transactionCost.toString(),
         "type": type,
       };
 

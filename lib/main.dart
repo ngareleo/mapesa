@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'package:mapesa/src/features/feature_flags_provider.dart';
 import 'package:mapesa/src/features/search_provider.dart';
-import 'package:mapesa/src/features/simple_local_repository.dart';
+import 'package:mapesa/src/features/local_repository.dart';
 import 'package:mapesa/src/features/auth_provider.dart';
 import 'package:mapesa/src/features/dio_provider.dart';
 import 'package:mapesa/src/features/failed_transactions_repository.dart';
@@ -26,7 +26,7 @@ void main() async {
     CompactTransactionSchema,
   ], directory: dir.path);
   FailedTransactionsRepository.init(isar);
-  await SimpleLocalRepository.init(isar);
+  await LocalRepository.init(isar);
   //////////////////////////////////////////////////////|
   //               Boot dependencies                   /|
   //                                                   /|
@@ -46,6 +46,6 @@ void main() async {
   //////////////////////////////////////////////////////|
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => AuthProvider.instance),
-    ChangeNotifierProvider(create: (context) => SimpleLocalRepository.instance)
+    ChangeNotifierProvider(create: (context) => LocalRepository.instance)
   ], child: const MapesaApp()));
 }

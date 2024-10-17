@@ -36,7 +36,8 @@ class FulizaTransaction extends Transaction {
       {required int messageID, required RegExpMatch match}) {
     return FulizaTransaction(
         balance: Money.fromString(
-            message: match.group(4).toString().trim(), isNegative: true),
+          message: match.group(4).toString().trim(),
+        ),
         dateTime: DateTime
             .now(), // TODO: Fix this by looking for subsequent message with date
         messageId: messageID,
@@ -61,14 +62,14 @@ class FulizaTransaction extends Transaction {
 
   @override
   Map<String, String> toJson() => {
-        "balance": balance.amount.toString(),
+        "balance": balance.toString(),
         "dateTime": dateTime.millisecondsSinceEpoch.toString(),
         "interest": interest.amount.toString(),
         "messageId": messageId.toString(),
         "subject": subject,
-        "transactionAmount": transactionAmount.amount.toString(),
+        "transactionAmount": transactionAmount.toString(),
         "transactionCode": transactionCode,
-        "transactionCost": transactionCost.amount.toString(),
+        "transactionCost": transactionCost.toString(),
         "type": type,
       };
 

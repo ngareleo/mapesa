@@ -11,25 +11,25 @@ import 'package:telephony/telephony.dart';
 enum RefreshStatus { permissionDenied, success }
 
 // Makes sure all messages are persisted to local store
-class SimpleLocalRepository extends ChangeNotifier {
+class LocalRepository extends ChangeNotifier {
   static final _lastUploadedMessageKey =
       SharedPreferencesKeyStore.authProvider.value;
   final SMSProvider _smsProvider = SMSProvider.instance;
   final Isar _isar;
   final SharedPreferences _prefs;
-  static SimpleLocalRepository? _instance;
+  static LocalRepository? _instance;
 
   static Future<void> init(Isar isar) async {
     if (_instance != null) {
       throw Exception("SimpleLocalRepository already exists");
     }
     final prefs = await SharedPreferences.getInstance();
-    _instance = SimpleLocalRepository._(isar, prefs);
+    _instance = LocalRepository._(isar, prefs);
   }
 
-  SimpleLocalRepository._(this._isar, this._prefs);
+  LocalRepository._(this._isar, this._prefs);
 
-  static SimpleLocalRepository get instance {
+  static LocalRepository get instance {
     if (_instance == null) {
       throw Exception("SimpleLocalRepository not initialized");
     }

@@ -3,21 +3,26 @@ part 'money.g.dart';
 
 @embedded
 class Money {
-  // change representation to cents
-  final int amount;
-  final bool isNegative;
+  final int amount; // representation in cents
 
-  Money({this.amount = 0, this.isNegative = false});
+  Money({
+    this.amount = 0,
+  });
 
-  factory Money.fromString({required String message, isNegative = false}) {
-    var msg = message.trim().replaceAll(",", "").replaceAll(".", "");
-    var amount = int.parse(msg);
-    return isNegative ? Money(amount: -amount) : Money(amount: amount);
+  factory Money.fromString({required String message}) {
+    final msg = message.trim().replaceAll(",", "").replaceAll(".", "");
+    final amount = int.parse(msg);
+    return Money(amount: amount);
   }
 
   @override
   String toString() {
-    final amountStr = amount.abs().toString();
+    return amount.toString();
+  }
+
+  String toCash() {
+    final cents = amount.abs() % 100;
+    final amountStr = (amount ~/ 100).abs().toString();
     final buffer = StringBuffer();
     for (int i = 0; i < amountStr.length; i++) {
       if (i > 0 && (amountStr.length - i) % 3 == 0) {
@@ -25,6 +30,6 @@ class Money {
       }
       buffer.write(amountStr[i]);
     }
-    return (isNegative ? '-' : '') + buffer.toString();
+    return "${buffer.toString()}.${cents.toString().padLeft(2, '0')}";
   }
 }

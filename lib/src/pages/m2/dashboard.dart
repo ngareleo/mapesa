@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:mapesa/src/features/model_mapper.dart';
-import 'package:mapesa/src/features/simple_local_repository.dart';
+import 'package:mapesa/src/features/local_repository.dart';
 import 'package:mapesa/src/models/transactions/transaction.dart';
 import 'package:provider/provider.dart';
 
@@ -13,7 +13,7 @@ class DashboardPageV2 extends StatefulWidget {
 }
 
 class _DashboardPageV2State extends State<DashboardPageV2> {
-  final _repository = SimpleLocalRepository.instance;
+  final _repository = LocalRepository.instance;
   final _mapper = CompactTransactionsMapper();
   List<Transaction>? _messages;
 
@@ -38,7 +38,7 @@ class _DashboardPageV2State extends State<DashboardPageV2> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SimpleLocalRepository>(
+    return Consumer<LocalRepository>(
       builder: (context, repo, child) => Scaffold(
           appBar: AppBar(
             title: const Text("Home"),
