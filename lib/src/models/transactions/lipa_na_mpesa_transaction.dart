@@ -91,7 +91,7 @@ class LipaNaMpesaTransaction extends Transaction {
       icon: const CircleAvatar(
         child: Text("L"),
       ),
-      rightWidget: Text("KES $transactionAmount"),
+      rightWidget: transactionAmount.toCash(),
       onTap: () {
         final mapesaM1Enabled = FeatureFlagsProvider.client
             .hasCachedFeatureFlag(Flags.NEW_MAPESA_M1);

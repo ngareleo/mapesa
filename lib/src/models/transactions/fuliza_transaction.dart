@@ -92,16 +92,13 @@ class FulizaTransaction extends Transaction {
 
   @override
   Widget toTransactionListItem(BuildContext context) {
-    final amount = transactionAmount.amount.toString();
     return PrimaryItemCard(
       title: "Fuliza",
       subtitle: prettifyTimeDifference(dateTime),
       icon: const CircleAvatar(
         child: Text("F"),
       ),
-      rightWidget: Text(
-        "Ksh. $amount",
-      ),
+      rightWidget: transactionAmount.toCash(),
       onTap: () {
         final mapesaM1Enabled = FeatureFlagsProvider.client
             .hasCachedFeatureFlag(Flags.NEW_MAPESA_M1);

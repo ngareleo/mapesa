@@ -95,7 +95,7 @@ class AirtimeTransaction extends Transaction {
         icon: const CircleAvatar(
           child: Text("A"),
         ),
-        rightWidget: Text("KES $transactionAmount"),
+        rightWidget: transactionAmount.toCash(),
         onTap: () {
           final mapesaM1Enabled = FeatureFlagsProvider.client
               .hasCachedFeatureFlag(Flags.NEW_MAPESA_M1);

@@ -91,14 +91,13 @@ class AirtimeForTransaction extends Transaction {
 
   @override
   Widget toTransactionListItem(BuildContext context) {
-    final amount = transactionAmount.amount.toString();
     return PrimaryItemCard(
         title: "Airtime",
         subtitle: prettifyTimeDifference(dateTime),
         icon: const CircleAvatar(
           child: Text("AF"),
         ),
-        rightWidget: Text("KES $amount"),
+        rightWidget: transactionAmount.toCash(),
         onTap: () {
           final mapesaM1Enabled = FeatureFlagsProvider.client
               .hasCachedFeatureFlag(Flags.NEW_MAPESA_M1);

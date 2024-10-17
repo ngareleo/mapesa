@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:isar/isar.dart';
 part 'money.g.dart';
 
@@ -20,7 +21,7 @@ class Money {
     return amount.toString();
   }
 
-  String toCash() {
+  Widget toCash() {
     final cents = amount.abs() % 100;
     final amountStr = (amount ~/ 100).abs().toString();
     final buffer = StringBuffer();
@@ -30,6 +31,6 @@ class Money {
       }
       buffer.write(amountStr[i]);
     }
-    return "${buffer.toString()}.${cents.toString().padLeft(2, '0')}";
+    return Text("Ksh ${buffer.toString()}.${cents.toString().padLeft(2, '0')}");
   }
 }

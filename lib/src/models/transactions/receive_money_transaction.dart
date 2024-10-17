@@ -106,7 +106,7 @@ class ReceiveMoneyTransaction extends Transaction {
       ),
       title: subject,
       subtitle: prettifyTimeDifference(dateTime),
-      rightWidget: Text("KES $transactionAmount"),
+      rightWidget: transactionAmount.toCash(),
       onTap: () {
         final mapesaM1Enabled = FeatureFlagsProvider.client
             .hasCachedFeatureFlag(Flags.NEW_MAPESA_M1);
