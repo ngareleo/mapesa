@@ -44,9 +44,8 @@ void main() async {
   //////////////////////////////////////////////////////|
   //               Application                         /|
   //////////////////////////////////////////////////////|
-  runApp(ChangeNotifierProvider(
-      create: (context) {
-        return AuthProvider.instance;
-      },
-      child: const MapesaApp()));
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (context) => AuthProvider.instance),
+    ChangeNotifierProvider(create: (context) => SimpleLocalRepository.instance)
+  ], child: const MapesaApp()));
 }

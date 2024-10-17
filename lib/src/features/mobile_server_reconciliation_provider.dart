@@ -1,6 +1,6 @@
 import 'package:cron/cron.dart';
 import 'package:flutter/foundation.dart';
-import 'package:mapesa/src/features/shared_preferences.dart';
+import 'package:mapesa/src/features/shared_preferences_keystore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mapesa/src/features/failed_transactions_repository.dart';
@@ -30,14 +30,12 @@ class MobileServerReconciliationProvider {
   UTDStatus status = UTDStatus.idle;
 
   static Future<void> init() async {
-    /// Called in the main function to initialize the provider and perform aync tasks
+    /// Called in the main function to initialize the provider and perform async tasks
 
     if (_instance != null) {
       throw Exception("MobileServerReconciliationProvider already initialized");
     }
     _instance = MobileServerReconciliationProvider._();
-    // For future Leo
-    // await _instance!._retryFailedTransactions();
     await _instance!._loadLastMessageIdFromStorage();
     debugPrint("MobileServerReconciliationProvider initialized");
   }

@@ -4,7 +4,7 @@ import 'package:flagsmith/flagsmith.dart';
 import 'package:isar/isar.dart';
 
 import 'package:mapesa/src/features/feature_flags_provider.dart';
-import 'package:mapesa/src/features/shared_preferences.dart';
+import 'package:mapesa/src/features/shared_preferences_keystore.dart';
 import 'package:mapesa/src/models/compact_transaction.dart';
 
 class DeveloperProvider {

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:mapesa/src/debug/debug_page.dart';
-import 'package:mapesa/src/features/simple_local_repository.dart';
-import 'package:mapesa/src/pages/m2/dashboard_page.dart';
-import 'package:mapesa/src/pages/m2/search_page.dart';
+import 'package:mapesa/src/pages/m2/dashboard.dart';
+import 'package:mapesa/src/pages/m2/search.dart';
 
 class HomePageV2 extends StatefulWidget {
   const HomePageV2({super.key});
@@ -14,12 +13,10 @@ class HomePageV2 extends StatefulWidget {
 
 class _HomePageV2State extends State<HomePageV2> {
   var _currentPageIndex = 0;
-  final _localRepository = SimpleLocalRepository.instance;
 
   @override
   void initState() {
     super.initState();
-    _localRepository.refresh();
   }
 
   @override

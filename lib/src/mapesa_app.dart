@@ -7,7 +7,7 @@ import 'package:mapesa/src/features/auth_provider.dart';
 import 'package:mapesa/src/features/feature_flags_provider.dart';
 import 'package:mapesa/src/pages/m1/auth_page.dart';
 import 'package:mapesa/src/pages/m1/home_page.dart';
-import 'package:mapesa/src/pages/m2/home_page.dart';
+import 'package:mapesa/src/pages/m2/home.dart';
 
 class MapesaApp extends StatelessWidget {
   const MapesaApp({super.key});
