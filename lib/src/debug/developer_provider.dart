@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flagsmith/flagsmith.dart';
 import 'package:isar/isar.dart';
@@ -32,8 +33,7 @@ class DeveloperProvider {
   Future<void> resetApp() async {
     // reset shared preferences
     final prefs = await SharedPreferences.getInstance();
-    final keys =
-        SharedPreferencesKeyStore.values.map((k) => k.key.toString()).toList();
+    final keys = SharedPreferencesKeyStore.values.map((k) => k.value).toList();
     for (final key in keys) {
       await prefs.remove(key);
     }

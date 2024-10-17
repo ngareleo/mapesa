@@ -12,4 +12,15 @@ enum SharedPreferencesKeyStore {
   const SharedPreferencesKeyStore({required this.key, required this.value});
 }
 
-enum StoreKeys { authProvider, mobileServerReconciliation }
+enum StoreKeys {
+  authProvider(value: "authProvider"),
+  mobileServerReconciliation(value: "mobileServerReconciliation");
+
+  final String value;
+  const StoreKeys({required this.value});
+
+  @override
+  String toString() {
+    return value;
+  }
+}

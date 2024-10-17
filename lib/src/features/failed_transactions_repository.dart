@@ -50,7 +50,7 @@ class FailedTransactionsRepository {
 
   Future<void> deleteAllFailedTransactions() async {
     await _isar.writeTxn(() async {
-      await _isar.compactTransactions.filter().idGreaterThan(0).deleteAll();
+      await _isar.compactTransactions.where().deleteAll();
     });
   }
 }
