@@ -88,8 +88,8 @@ class SMSProvider {
         missed = true;
       } else {
         if (missed) {
-          missed =
-              false; // false alarm, maybe there was a gap or something else
+          // false alarm, maybe there was a gap or something else
+          missed = false;
         }
       }
 

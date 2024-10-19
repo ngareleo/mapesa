@@ -3,7 +3,7 @@ description: 'Track MPESA transactions'
 version: 1.0.0+1
 
 environment:
-    sdk: '>=3.2.0 <4.0.0'
+    sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
     cupertino_icons: ^1.0.2
@@ -20,13 +20,16 @@ dependencies:
     provider: ^6.0.5
     telephony: ^0.2.0
     shared_preferences: ^2.0.16
+    widgetbook: ^3.9.0
+    widgetbook_annotation: ^3.2.0
 
 dev_dependencies:
-    build_runner: ^2.4.8
+    build_runner: ^2.4.9
     flutter_test:
         sdk: flutter
     flutter_lints: ^3.0.1
     isar_generator: ^3.1.0+1
+    widgetbook_generator: ^3.8.0
 
 flutter:
     uses-material-design: true
