@@ -4,7 +4,7 @@ We use widgetbook for testing widgets.
 
 ## Adding a story
 
-Follow the project structure and create a story.  
+Follow the project structure and create a story.
 
 ### Sample
 
@@ -30,7 +30,7 @@ Widget buildCoolButtonUseCase(BuildContext context) {
 
 ```
 
-After creating the story, execute
+After creating the story, execute at the root of `/widgetbook`
 
 ```bash
 dart run build_runner build -d
@@ -38,6 +38,6 @@ dart run build_runner build -d
 
 ## Executing the storybooks
 
-Execute `main.dart` on web/mobile
+Execute `main.dart`. The widgetbooks are restricted to run on `web` only.
 
 You're set to take off solider!

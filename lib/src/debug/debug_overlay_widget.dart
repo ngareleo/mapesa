@@ -79,7 +79,7 @@ class _DebugOverlayWidgetState extends State<DebugOverlayWidget> {
                 ),
                 style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.green)),
+                        WidgetStateProperty.all<Color>(Colors.green)),
               )
             ],
           ),

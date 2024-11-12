@@ -69,6 +69,5 @@ class PageStoryWrapper extends StatelessWidget {
             child: story.widget),
       ),
     );
-    ;
   }
 }

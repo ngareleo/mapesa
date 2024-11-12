@@ -9,7 +9,6 @@ final appTheme = ThemeData(
         primary: _primaryColor,
         secondary: Color(0xFFDB5A98),
         tertiary: Color(0xFF2F2E41),
-        background: Color(0xFFF0F0F0),
         surface: Color(0xFFEDEDFC)),
     useMaterial3: true,
     appBarTheme: const AppBarTheme(
@@ -18,7 +17,7 @@ final appTheme = ThemeData(
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: const Color(0xFFFCFCFC),
       indicatorColor: _primaryColor,
-      iconTheme: MaterialStateProperty.resolveWith(getBottomNavigationColor),
+      iconTheme: WidgetStateProperty.resolveWith(getBottomNavigationColor),
     ),
     textTheme: const TextTheme(
       bodyLarge: TextStyle(
@@ -35,9 +34,9 @@ final appTheme = ThemeData(
           fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
     ));
 
-IconThemeData getBottomNavigationColor(Set<MaterialState> states) {
-  const Set<MaterialState> interactiveStates = <MaterialState>{
-    MaterialState.selected,
+IconThemeData getBottomNavigationColor(Set<WidgetState> states) {
+  const Set<WidgetState> interactiveStates = <WidgetState>{
+    WidgetState.selected,
   };
   if (states.any(interactiveStates.contains)) {
     return const IconThemeData(color: Colors.white);

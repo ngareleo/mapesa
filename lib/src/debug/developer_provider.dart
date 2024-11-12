@@ -1,4 +1,5 @@
-import 'package:permission_handler/permission_handler.dart';
+import 'dart:isolate';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flagsmith/flagsmith.dart';
 import 'package:isar/isar.dart';
@@ -42,5 +43,8 @@ class DeveloperProvider {
     await _isar.writeTxn(() async {
       await _isar.compactTransactions.where().deleteAll();
     });
+
+    // kill running process
+    Isolate.current.kill();
   }
 }
