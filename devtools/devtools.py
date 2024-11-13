@@ -1,6 +1,6 @@
 import click 
 from telnetlib import Telnet
-from random import choice
+from random import choice, randrange
 from enum import Enum
 from os import path
 
@@ -42,6 +42,7 @@ class MessageType(Enum):
     
     
 class MessageGenerator:
+    # Todo: Add running balance
     def __init__(self):
         self.fs = FsHandler()
         
@@ -58,35 +59,74 @@ class MessageGenerator:
             MessageType.WITHDRAW: self._generate_withdraw
         }
         return (templates[m])()
-        
-    def _generate_transaction_id(self):
-        pass
+    
+    def _generate_random_date(self):
+        return f"{randrange(0, 29)}/{randrange(0, 12)}/{randrange(20, 25)}"
+    
+    def _generate_random_time(self):
+        return f"{randrange(0, 12)}:{randrange(0, 59)} {choice(["AM", "PM"])}"
+    
+    def _generate_amount(self):
+        return f"Ksh{randrange(0, 8_000_000, 10) / 100:,}"
+    
+    def _generate_transaction_cost(self):
+        # Todo: Generate amount and cost side by side to ensure sensible messages
+        return f"Ksh{randrange(0, 500, 10) / 100:,}"
         
     def _generate_airtime(self):
         code = self.fs.increment()
-        return f"{code} confirmed.You bought Ksh50.00 of airtime on 2/11/23 at 6:04 PM.New M-PESA balance is Ksh1,820.48. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,770.00. Dial *234*0# to Opt in to FULIZA and check your limit."
+        cost = self._generate_transaction_cost()
+        amount = self._generate_amount()
+        balance = self._generate_amount()
+        date = self._generate_random_date()
+        time = self._generate_random_time()
+        return f"{code} confirmed.You bought {amount} of airtime on {date} at {time}.New M-PESA balance is {balance}. Transaction cost, {cost}. Amount you can transact within the day is 499,770.00. Dial *234*0# to Opt in to FULIZA and check your limit."
 
     def _generate_airtime_for(self): 
-        return {}
+        return ""
 
     def _generate_deposit(self):
         return {}
 
     def _generate_fuliza(self):
-        return {}
+        code = self.fs.increment()
+        amount = self._generate_amount()
+        interest = self._generate_transaction_cost()
+        total_outstanding = self._generate_amount()
+        due_date = self._generate_random_date()
+        return f"{code} Confirmed. Fuliza M-PESA amount is {amount}. Interest charged {interest}. Total Fuliza M-PESA outstanding amount is {total_outstanding} due on {due_date}. To check daily charges, Dial *234*0#OK Select Query Charges"
 
     def _generate_lipa(self):
-        return {}
+        code = self.fs.increment()
+        amount = self._generate_amount()
+        balance = self._generate_amount()
+        date = self._generate_random_date()
+        time = self._generate_random_time()
+        return f"{code} Confirmed. {amount} paid to CLEANSHELF KAHAWA-WENDANI. on {date} at {time}. New M-PESA balance is {balance}. Transaction cost, Ksh0.00. Amount you can transact within the day is 497,796.00. To move money from bank to M-PESA, dial *334#>Withdraw>From bank to MPESA"
 
     def _generate_paybill(self):
-        return {}
+        code = self.fs.increment()
+        amount = self._generate_amount()
+        date = self._generate_random_date()
+        time = self._generate_random_time()
+        return f"{code} Confirmed. {amount} sent to DTB Account for account 170731 on {date} at {time} New M-PESA balance is Ksh0.00"
 
     def _generate_receive(self):
-        return {}
+        code = self.fs.increment()
+        amount = self._generate_amount()
+        date = self._generate_random_date()
+        time = self._generate_random_time()
+        balance = self._generate_amount()
+        return f"{code} Confirmed. You have received {amount} from KCB 1 501901 on {date} at {time} New M-PESA balance is {balance}. Separate personal and business funds through Pochi la Biashara on *334#"
 
     def _generate_send(self):
-        return {}
-
+        code = self.fs.increment()
+        amount = self._generate_amount()
+        date = self._generate_random_date()
+        time = self._generate_random_time()
+        balance = self._generate_amount()
+        cost = self._generate_transaction_cost()
+        return f"{code} Confirmed. {amount} sent to JEDRINE MANYAKI on {date} at {time}. New M-PESA balance is {balance}. Transaction cost, {cost}. Amount you can transact within the day is 499,880.00. To receive Money on POCHI today dial *334# & opt in."
 
     def _generate_withdraw(self):
         return {}
