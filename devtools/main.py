@@ -57,7 +57,7 @@ def generate_mpesa_message(mtype: MessageType):
         MessageType.WITHDRAW: ("Confirmed. Ksh{} withdrawn from your account.", generate_withdraw)
     }
     template, d = templates[mtype]
-    return template.format(d)
+    return template.format(d())
 
 
 @click.group()
