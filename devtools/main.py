@@ -1,9 +1,10 @@
 import click 
 from telnetlib import Telnet
+from random import choice
 from enum import Enum
-import os
+from os import path
 
-samples_fn = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sample_sms")
+samples_fn = path.join(path.dirname(path.abspath(__file__)), "sample_sms")
 mpesa_messages = open(samples_fn, "r").readlines()
 
 class MessageType(Enum):
@@ -44,20 +45,20 @@ def generate_send():
 def generate_withdraw():
     return {}
 
-def generate_mpesa_message(mtype: MessageType): 
+def generate_mpesa_message(m: MessageType): 
     templates = {
-        MessageType.AIRTIME: ("", generate_airtime),
-        MessageType.AIRTIME_FOR: ("Confirmed. Ksh{} sent to {} for airtime.", generate_airtime_for),
-        MessageType.DEPOSIT: ("Confirmed. Ksh{} deposited to your account.", generate_deposit),
-        MessageType.FULIZA: ("Confirmed. Ksh{} Fuliza loan taken.", generate_fuliza),
-        MessageType.LIPA: ("Confirmed. Ksh{} paid via Lipa na M-PESA.", generate_lipa),
-        MessageType.PAYBILL: ("Confirmed. Ksh{} paid to {} via Paybill.", generate_paybill),
-        MessageType.RECEIVE: ("Confirmed. Ksh{} received from {}.", generate_receive),
-        MessageType.SEND: ("Confirmed. Ksh{} sent to {}.", generate_send),
-        MessageType.WITHDRAW: ("Confirmed. Ksh{} withdrawn from your account.", generate_withdraw)
+        MessageType.AIRTIME: generate_airtime,
+        MessageType.AIRTIME_FOR: generate_airtime_for,
+        MessageType.DEPOSIT: generate_deposit,
+        MessageType.FULIZA: generate_fuliza,
+        MessageType.LIPA: generate_lipa,
+        MessageType.PAYBILL: generate_paybill,
+        MessageType.RECEIVE: generate_receive,
+        MessageType.SEND: generate_send,
+        MessageType.WITHDRAW: generate_withdraw
     }
-    template, d = templates[mtype]
-    return template.format(d())
+    
+    return (templates[m])()
 
 
 @click.group()
@@ -70,11 +71,14 @@ def send():
     """
     Should send a randomly chosen generated MPESA message to the online VM
     """
-    example = "RJP5FWG77X Confirmed. Ksh100.00 paid to PETER MWANGI. on 25/10/23 at 8:37 AM.New M-PESA balance is Ksh0.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,800.00. To move money from bank to M-PESA, dial *334#>Withdraw>From bank to MPESA"
+    message = generate_mpesa_message(choice(list(MessageType)))
     
     with Telnet("localhost", 5554) as telnet_connection:
+        
+        # spit back to stdout
         connect_msg = telnet_connection.read_until(b"OK").decode("utf-8")
         click.echo(connect_msg)
+        
         auth_file_fs = connect_msg.split("\n")[3].strip()[1:-1]
         with open(auth_file_fs, "r") as f:
             # auth into the vm
@@ -82,7 +86,7 @@ def send():
             telnet_connection.write(b"auth " + auth_code.encode("utf-8") + b"\n")            
             
             # send message
-            telnet_connection.write(b"sms send MPESA " + example.encode("utf-8"))
+            telnet_connection.write(b"sms send MPESA " + message.encode("utf-8"))
     
             # write back into stdout 
             click.echo(telnet_connection.read_until(b"OK").decode("utf-8"))
@@ -99,8 +103,10 @@ def init():
     Flood VM with MPESA messages
     """
     with Telnet("localhost", 5554) as telnet_connection:
+        # spit back to stdout
         connect_msg = telnet_connection.read_until(b"OK").decode("utf-8")
         click.echo(connect_msg)
+        
         auth_file_fs = connect_msg.split("\n")[3].strip()[1:-1]
         with open(auth_file_fs, "r") as f:
             # auth into the vm
