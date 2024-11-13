@@ -4,8 +4,30 @@ from random import choice
 from enum import Enum
 from os import path
 
-samples_fn = path.join(path.dirname(path.abspath(__file__)), "sample_sms")
-mpesa_messages = open(samples_fn, "r").readlines()
+CODES_CACHE=path.join(path.dirname(path.abspath(__file__)), ".cache", "codes")
+MPESA_MSGS_FILE=path.join(path.dirname(path.abspath(__file__)), "sample_sms")
+
+codes_cache_file = open(CODES_CACHE, "rw")
+mpesa_messages = open(MPESA_MSGS_FILE, "r").readlines()
+
+   
+class FsHandler:
+    def __init__(self):
+        self.latest_code = int(codes_cache_file.read()[:-10])
+    
+    @classmethod
+    def close_files(cls, func):
+        def close_after_execute():
+            func()
+            codes_cache_file.close()
+        return close_after_execute
+
+    def increment(self):
+        after = int(self.latest_code, 16) + 1
+        after0 = format(after, 'x')
+        self.latest_code = after0
+        codes_cache_file.write(after0.encode())    
+    
 
 class MessageType(Enum):
     AIRTIME_FOR = 0
@@ -18,51 +40,64 @@ class MessageType(Enum):
     SEND=7
     WITHDRAW=8
     
-def generate_airtime():
-    return {}
-
-def generate_airtime_for(): 
-    return {}
-
-def generate_deposit():
-    return {}
-
-def generate_fuliza():
-    return {}
-
-def generate_lipa():
-    return {}
-
-def generate_paybill():
-    return {}
-
-def generate_receive():
-    return {}
-
-def generate_send():
-    return {}
-
-def generate_withdraw():
-    return {}
-
-def generate_mpesa_message(m: MessageType): 
-    templates = {
-        MessageType.AIRTIME: generate_airtime,
-        MessageType.AIRTIME_FOR: generate_airtime_for,
-        MessageType.DEPOSIT: generate_deposit,
-        MessageType.FULIZA: generate_fuliza,
-        MessageType.LIPA: generate_lipa,
-        MessageType.PAYBILL: generate_paybill,
-        MessageType.RECEIVE: generate_receive,
-        MessageType.SEND: generate_send,
-        MessageType.WITHDRAW: generate_withdraw
-    }
     
-    return (templates[m])()
+class MessageGenerator:
+    def __init__(self):
+        self.fs = FsHandler()
+        
+    def new(self, m: MessageType) -> str: 
+        templates = {
+            MessageType.AIRTIME: self._generate_airtime,
+            MessageType.AIRTIME_FOR: self._generate_airtime_for,
+            MessageType.DEPOSIT: self._generate_deposit,
+            MessageType.FULIZA:self._generate_fuliza,
+            MessageType.LIPA: self._generate_lipa,
+            MessageType.PAYBILL: self._generate_paybill,
+            MessageType.RECEIVE: self._generate_receive,
+            MessageType.SEND: self._generate_send,
+            MessageType.WITHDRAW: self._generate_withdraw
+        }
+        return (templates[m])()
+        
+    def _generate_transaction_id(self):
+        pass
+        
+    def _generate_airtime(self):
+        code = self.fs.increment()
+        return f"{code} confirmed.You bought Ksh50.00 of airtime on 2/11/23 at 6:04 PM.New M-PESA balance is Ksh1,820.48. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,770.00. Dial *234*0# to Opt in to FULIZA and check your limit."
+
+    def _generate_airtime_for(self): 
+        return {}
+
+    def _generate_deposit(self):
+        return {}
+
+    def _generate_fuliza(self):
+        return {}
+
+    def _generate_lipa(self):
+        return {}
+
+    def _generate_paybill(self):
+        return {}
+
+    def _generate_receive(self):
+        return {}
+
+    def _generate_send(self):
+        return {}
 
 
+    def _generate_withdraw(self):
+        return {}
+
+
+@FsHandler.close_files
 @click.group()
 def devtools():
+    """
+    Application entry point
+    """
     pass
 
 
@@ -74,7 +109,8 @@ def send():
     Usage: Can be used to simulate incoming
     MPESA notification
     """
-    message = generate_mpesa_message(choice(list(MessageType)))
+    gen = MessageGenerator()
+    message = gen.new()
     
     with Telnet("localhost", 5554) as telnet_connection:
         

@@ -2,6 +2,8 @@ import 'package:flagsmith/flagsmith.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+const thirtySeconds = 30 * 1000;
+
 class Flags {
   static const NEW_MAPESA_M1 = "new_mapesa_m1";
 }
@@ -24,9 +26,9 @@ class FeatureFlagsProvider {
     _client = await FlagsmithClient.init(
       apiKey: dotenv.env["FLAGSMITH_API_KEY"] ?? "",
       config: const FlagsmithConfig(
-          connectTimeout: 30 * 1000,
-          receiveTimeout: 30 * 1000,
-          sendTimeout: 30 * 1000,
+          connectTimeout: thirtySeconds,
+          receiveTimeout: thirtySeconds,
+          sendTimeout: thirtySeconds,
           caches: true,
           storageType: StorageType.inMemory),
     );
