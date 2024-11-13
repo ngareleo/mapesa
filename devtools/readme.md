@@ -4,7 +4,25 @@ This is where our developer tools live. For now, we have scripts to interact wit
 
 ## Devtools
 
-As is, the project should be build so you can go ahead and use the tooling. Use `devtools` to access VM capabilities.
+Follow the setup steps then use `devtools` to access VM capabilities.
+
+## Quick Start
+
+To setup devtools you require `python` version 3 and `pip`. After installing python, create a [**virtual environment**](https://realpython.com/python-virtual-environments-a-primer/), activate it, install [**build**](https://build.pypa.io/en/stable/) into your virtualenv and run build to setup scripts. The command below does all the 4 steps. 
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate && pip install --upgrade build && python3 -m build
+```
+
+After `build` has finished setting up, we need to build the scripts to be able to run `devtools` in the CLI.
+
+```bash
+pip3 install --editable .
+```
+
+After the build completes, you should be set 🚀
+
+## Using devtools
 
 ### Sending notifications to the VM
 
