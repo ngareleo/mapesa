@@ -69,7 +69,10 @@ def devtools():
 @devtools.command()
 def send():
     """
-    Should send a randomly chosen generated MPESA message to the online VM
+    Should send a randomly chosen generated MPESA message to the online VM. 
+    
+    Usage: Can be used to simulate incoming
+    MPESA notification
     """
     message = generate_mpesa_message(choice(list(MessageType)))
     
@@ -100,7 +103,9 @@ def send():
 @devtools.command()
 def init():
     """
-    Flood VM with MPESA messages
+    Flood VM with MPESA messages. 
+    
+    Usage: To onboard messages onto a VM
     """
     with Telnet("localhost", 5554) as telnet_connection:
         # spit back to stdout
