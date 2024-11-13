@@ -3,10 +3,8 @@ from telnetlib import Telnet
 from enum import Enum
 import os
 
-mpesa_messages = open(
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), "sample_sms.txt"),
-    "r",
-).readlines()
+samples_fn = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sample_sms")
+mpesa_messages = open(samples_fn, "r").readlines()
 
 class MessageType(Enum):
     AIRTIME_FOR = 0
