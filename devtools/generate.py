@@ -12,17 +12,10 @@ class FsHandler:
     def close(self):
         self.codes_cache_file.close()
         self.codes_cache_file.write(self.latest_code + '\n')  
-    
-    @classmethod
-    def close_files(cls, func):
-        def close_after_execute():
-            return func
-        return close_after_execute
 
     def increment(self):
         after = int(self.latest_code, 16) + 1
-        after0 = format(after, 'x')
-        self.latest_code = after0
+        self.latest_code = format(after, 'x')
         
 class MessageType(Enum):
     AIRTIME_FOR = 0
