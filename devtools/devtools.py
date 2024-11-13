@@ -94,10 +94,24 @@ class MessageGenerator:
         return f"{code} confirmed.You bought {amount} of airtime on {date} at {time}.New M-PESA balance is {balance}. Transaction cost, {cost}. Amount you can transact within the day is 499,770.00. Dial *234*0# to Opt in to FULIZA and check your limit."
 
     def _generate_airtime_for(self): 
-        return ""
+        # Todo: Replace with actual template
+        code = self.fs.increment()
+        cost = self._generate_transaction_cost()
+        amount = self._generate_amount()
+        balance = self._generate_amount()
+        date = self._generate_random_date()
+        time = self._generate_random_time()
+        return f"{code} confirmed.You bought {amount} of airtime on {date} at {time}.New M-PESA balance is {balance}. Transaction cost, {cost}. Amount you can transact within the day is 499,770.00. Dial *234*0# to Opt in to FULIZA and check your limit."
 
     def _generate_deposit(self):
-        return {}
+        # Todo: Replace with actual template
+        code = self.fs.increment()
+        cost = self._generate_transaction_cost()
+        amount = self._generate_amount()
+        balance = self._generate_amount()
+        date = self._generate_random_date()
+        time = self._generate_random_time()
+        return f"{code} confirmed.You bought {amount} of airtime on {date} at {time}.New M-PESA balance is {balance}. Transaction cost, {cost}. Amount you can transact within the day is 499,770.00. Dial *234*0# to Opt in to FULIZA and check your limit."
 
     def _generate_fuliza(self):
         code = self.fs.increment()
@@ -148,7 +162,14 @@ class MessageGenerator:
         return f"{code} Confirmed. {amount} sent to {name} on {date} at {time}. New M-PESA balance is {balance}. Transaction cost, {cost}. Amount you can transact within the day is 499,880.00. To receive Money on POCHI today dial *334# & opt in."
 
     def _generate_withdraw(self):
-        return {}
+        # Todo: Replace with actual template
+        code = self.fs.increment()
+        cost = self._generate_transaction_cost()
+        amount = self._generate_amount()
+        balance = self._generate_amount()
+        date = self._generate_random_date()
+        time = self._generate_random_time()
+        return f"{code} confirmed.You bought {amount} of airtime on {date} at {time}.New M-PESA balance is {balance}. Transaction cost, {cost}. Amount you can transact within the day is 499,770.00. Dial *234*0# to Opt in to FULIZA and check your limit."
 
 
 @FsHandler.close_files
