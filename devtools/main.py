@@ -1,16 +1,12 @@
 import click 
+from telnetlib import Telnet
+import os
 
-# Should generate a new MPESA message
-def generate_message():
-    return "RKT6NKF44A Confirmed. Ksh100.00 paid to DESORA MINIMART. on 29/11/23 at 8:35 AM.New M-PESA balance is Ksh0.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,900.00. To move money from bank to M-PESA, dial *334#>Withdraw>From bank to MPESA"
+mpesa_messages = open(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "sample_sms.txt"),
+    "r",
+).readlines()
 
-
-class DeveloperTool: 
-    
-    def __init__(self):
-        pass
-    
-    
 @click.group()
 def devtools():
     pass
@@ -28,7 +24,28 @@ def init():
     """
     Flood VM with MPESA messages
     """
-    click.echo("❤️ Welcome to the team dev! ❤️")
+    with Telnet("localhost", 5554) as telnet_connection:
+        connect_msg = telnet_connection.read_until(b"OK").decode("utf-8")
+        click.echo(connect_msg)
+        auth_file_fs = connect_msg.split("\n")[3].strip()[1:-1]
+        with open(auth_file_fs, "r") as f:
+            auth_code = f.read()
+
+            telnet_connection.write(b"auth " + auth_code.encode("utf-8") + b"\n")
+            auth_msg = telnet_connection.read_until(b"OK")
+
+            for i, message in enumerate(mpesa_messages):
+                click.echo("[i] : Sending message {} of {}".format(i + 1, len(mpesa_messages)))
+                telnet_connection.write(b"sms send MPESA " + message.encode("utf-8"))
+                click.echo(telnet_connection.read_until(b"OK").decode("utf-8"))
+                click.echo("Send success!")
+
+            telnet_connection.write(b"exit\r\n")
+            telnet_connection.write(b"q\r\n")
+
+        telnet_connection.close()
+    
+    click.echo("\n\n❤️ Welcome to the team dev! ❤️")
     
     
 if __name__ == "__main__":
