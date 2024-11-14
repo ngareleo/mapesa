@@ -1,7 +1,7 @@
 import unittest
 from generate import FsHandler
 
-class TestTCodeFactory(unittest.TestCase):
+class TestMessageFactory(unittest.TestCase):
 
     # with every increment should provide a unique value
     def test_produces_unique_values(self):
