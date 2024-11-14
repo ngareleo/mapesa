@@ -30,7 +30,7 @@ def send():
     click.echo(connect_msg)
     
     auth_file_fs = connect_msg.split("\n")[3].strip()[1:-1]
-    with MessageGenerator as gen, open(auth_file_fs, "r") as f:
+    with MessageGenerator() as gen, open(auth_file_fs, "r") as f:
         message = gen.new(choice(list(MessageType)))
         
         # auth into the vm
