@@ -24,7 +24,6 @@ class FsHandler:
         return self
     
     def __init__(self):
-        
         if not exists(FsHandler.CACHE):
             print("🪺 Seeding Code Cache")
             with open(FsHandler.CACHE, "w") as f:
@@ -33,8 +32,6 @@ class FsHandler:
         if not exists(FsHandler.SMS):
             raise RuntimeError("Cannot find sms messages. Ask contributors for sample messages")
         
-        with open(FsHandler.SMS, "r") as f:
-            self._messages = f.readlines()
         self._current = self.load()
     
     def __exit__(self, a, b, c):
@@ -46,7 +43,10 @@ class FsHandler:
     
     @property
     def messages(self) -> list:
-        return self._messages
+        mgs = None
+        with open(FsHandler.SMS, "r") as f:
+            mgs = f.readlines()
+        return mgs
         
     def close(self):
         self.write()
