@@ -7,7 +7,7 @@ class TestMessageFactory(unittest.TestCase):
     def test_produces_unique_values(self):
         with FsHandler() as fs: 
             # 10,000 is reasonable limit for the number of times we can generate transactions
-            values = [fs.generate() for _ in range(10_000)]
+            values = [fs.generate_mpesa_code() for _ in range(10_000)]
             set_values = set(values)
             self.assertEqual(len(values), len(set_values))
         

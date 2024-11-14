@@ -32,14 +32,10 @@ class FsHandler:
         if not exists(FsHandler.SMS):
             raise RuntimeError("Cannot find sms messages. Ask contributors for sample messages")
         
-        self._current = self._load()
+        self.current = self._load()
     
     def __exit__(self, a, b, c):
         self.close()
-        
-    @property
-    def current(self) -> str:
-        return self._current
     
     @property
     def messages(self) -> list:
@@ -53,17 +49,12 @@ class FsHandler:
         
     def _load(self):
         with open(FsHandler.CACHE, 'r') as file:
-            self._current = file.read(10)
-        return self._current
+            self.current = file.read(10)
+        return self.current
         
     def _write(self):
         with open(FsHandler.CACHE, 'w') as file:
-            file.write(f"{self._current}")
-        
-    def generate(self) -> str:
-        next = self.value(self._current) + 1
-        self._current = format(next, 'X')
-        return self._current
+            file.write(f"{self.current}")
         
         
 class MessageGenerator:
@@ -89,6 +80,11 @@ class MessageGenerator:
             MessageType.WITHDRAW: self._generate_withdraw
         }
         return (templates[m])()
+    
+    def generate_mpesa_code(self) -> str:
+        next = int(self.fs.current, 16) + 1
+        self.fs.current = format(next, 'X')
+        return self.fs.current
 
     @staticmethod
     def _generate_random_date():
@@ -122,7 +118,7 @@ class MessageGenerator:
         return f"{randrange(100_000, 999_999)}"
         
     def _generate_airtime(self):
-        code = self.fs.generate()
+        code = self.generate_mpesa_code()
         cost = self._generate_transaction_cost()
         amount = self._generate_amount()
         balance = self._generate_amount()
@@ -132,7 +128,7 @@ class MessageGenerator:
 
     def _generate_airtime_for(self): 
         # Todo: Replace with actual template
-        code = self.fs.generate()
+        code = self.generate_mpesa_code()
         cost = self._generate_transaction_cost()
         amount = self._generate_amount()
         balance = self._generate_amount()
@@ -142,7 +138,7 @@ class MessageGenerator:
 
     def _generate_deposit(self):
         # Todo: Replace with actual template
-        code = self.fs.generate()
+        code = self.generate_mpesa_code()
         cost = self._generate_transaction_cost()
         amount = self._generate_amount()
         balance = self._generate_amount()
@@ -151,7 +147,7 @@ class MessageGenerator:
         return f"{code} confirmed.You bought {amount} of airtime on {date} at {time}.New M-PESA balance is {balance}. Transaction cost, {cost}. Amount you can transact within the day is 499,770.00. Dial *234*0# to Opt in to FULIZA and check your limit."
 
     def _generate_fuliza(self):
-        code = self.fs.generate()
+        code = self.generate_mpesa_code()
         amount = self._generate_amount()
         interest = self._generate_transaction_cost()
         outstanding = self._generate_amount()
@@ -159,7 +155,7 @@ class MessageGenerator:
         return f"{code} Confirmed. Fuliza M-PESA amount is {amount}. Interest charged {interest}. Total Fuliza M-PESA outstanding amount is {outstanding} due on {due_date}. To check daily charges, Dial *234*0#OK Select Query Charges"
 
     def _generate_lipa(self):
-        code = self.fs.generate()
+        code = self.generate_mpesa_code()
         amount = self._generate_amount()
         balance = self._generate_amount()
         date = self._generate_random_date()
@@ -169,7 +165,7 @@ class MessageGenerator:
         return f"{code} Confirmed. {amount} paid to {subject}. on {date} at {time}. New M-PESA balance is {balance}. Transaction cost, {cost}. Amount you can transact within the day is 497,796.00. To move money from bank to M-PESA, dial *334#>Withdraw>From bank to MPESA"
 
     def _generate_paybill(self):
-        code = self.fs.generate()
+        code = self.generate_mpesa_code()
         amount = self._generate_amount()
         date = self._generate_random_date()
         time = self._generate_random_time()
@@ -179,7 +175,7 @@ class MessageGenerator:
         return f"{code} Confirmed. {amount} sent to {subject} for account {account} on {date} at {time} New M-PESA balance is {balance}"
 
     def _generate_receive(self):
-        code = self.fs.generate()
+        code = self.generate_mpesa_code()
         amount = self._generate_amount()
         date = self._generate_random_date()
         time = self._generate_random_time()
@@ -189,7 +185,7 @@ class MessageGenerator:
         return f"{code} Confirmed. You have received {amount} from {subject} {account} on {date} at {time} New M-PESA balance is {balance}. Separate personal and business funds through Pochi la Biashara on *334#"
 
     def _generate_send(self):
-        code = self.fs.generate()
+        code = self.generate_mpesa_code()
         amount = self._generate_amount()
         date = self._generate_random_date()
         time = self._generate_random_time()
@@ -200,7 +196,7 @@ class MessageGenerator:
 
     def _generate_withdraw(self):
         # Todo: Replace with actual template
-        code = self.fs.generate()
+        code = self.generate_mpesa_code()
         cost = self._generate_transaction_cost()
         amount = self._generate_amount()
         balance = self._generate_amount()
