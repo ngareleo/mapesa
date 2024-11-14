@@ -62,7 +62,7 @@ class CodeFactory:
         
     def generate(self) -> str:
         next = self.value(self._current) + 1
-        self._current = format(next, 'x')
+        self._current = format(next, 'X')
         return self._current
         
         
@@ -100,12 +100,12 @@ class MessageGenerator:
 
     @staticmethod
     def _generate_amount():
-        return f"Ksh{randrange(0, 8_000_000, 10) / 100:,}"
+        return f"Ksh{randrange(0, 8_000_000, 10) / 100:,.2f}"
 
     @staticmethod
     def _generate_transaction_cost():
         # Todo: Generate amount and cost side by side to ensure sensible messages
-        return f"Ksh{randrange(0, 500, 10) / 100:,}"
+        return f"Ksh{randrange(0, 500, 10) / 100:,.2f}"
 
     @staticmethod
     def _generate_random_name():
