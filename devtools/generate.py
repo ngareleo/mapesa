@@ -1,22 +1,8 @@
 from enum import Enum
 from random import choice, randrange
-from os import path
+from os import mkdir
+from os.path import join, exists, dirname
 
-class FsHandler:
-    CODES_CACHE=path.join(path.dirname(path.abspath(__file__)), ".cache", "codes")
-    
-    def __init__(self):
-        self.codes_cache_file = open(FsHandler.CODES_CACHE, 'a')
-        self.latest_code = int(self.codes_cache_file.read()[:-10])
-    
-    def close(self):
-        self.codes_cache_file.close()
-        self.codes_cache_file.write(self.latest_code + '\n')  
-
-    def increment(self):
-        after = int(self.latest_code, 16) + 1
-        self.latest_code = format(after, 'x')
-        
 class MessageType(Enum):
     AIRTIME_FOR = 0
     AIRTIME=1
@@ -27,15 +13,61 @@ class MessageType(Enum):
     RECEIVE=6
     SEND=7
     WITHDRAW=8
+
+class CodeFactory:
+        
+    DIR = join(dirname(__file__), ".cache")
+    CACHE = join(DIR, "code")
+    SEED = "AAAAAAAAAA"
     
-    
-class MessageGenerator:
     def __enter__(self):
-        self.fs = FsHandler()
         return self
     
-    def __exit__(self):
-        self.fs.close()
+    def __init__(self):
+        if not exists(CodeFactory.DIR):
+            print("🌬️ creating cache")
+            mkdir(CodeFactory.DIR)
+        
+        if not exists(CodeFactory.CACHE):
+            print("🪺 seeding cache")
+            with open(CodeFactory.CACHE, "w") as f:
+                f.write(CodeFactory.SEED)
+                
+        self._current = self.load()
+    
+    def __exit__(self, a, b, c):
+        self.write()
+        
+    def load(self):
+        with open(CodeFactory.CACHE, 'r') as file:
+            a = file.read(10)
+            print("a is ", a)
+            self._current = a
+        return self._current
+        
+    def write(self):
+        with open(CodeFactory.CACHE, 'w') as file:
+            file.write(f"{self._current}")
+        
+    def value(self, v: str) -> int:
+        """
+        Should return unique decimal repr of the code.
+        """
+        return int(v, 16)
+    
+    @property
+    def current(self) -> str:
+        return self._current
+        
+    def increment(self) -> str:
+        next = self.value(self._current) + 1
+        self._current = format(next, 'x')
+        return self._current
+        
+        
+class MessageGenerator:
+    def __init__(self):
+        self.fs = CodeFactory()
         
     def new(self, m: MessageType) -> str: 
         templates = {
@@ -50,29 +82,36 @@ class MessageGenerator:
             MessageType.WITHDRAW: self._generate_withdraw
         }
         return (templates[m])()
-    
-    def _generate_random_date(self):
+
+    @staticmethod
+    def _generate_random_date():
         return f"{randrange(0, 29)}/{randrange(0, 12)}/{randrange(20, 25)}"
-    
-    def _generate_random_time(self):
+
+    @staticmethod
+    def _generate_random_time():
         return f"{randrange(0, 12)}:{randrange(0, 59)} {choice(["AM", "PM"])}"
-    
-    def _generate_amount(self):
+
+    @staticmethod
+    def _generate_amount():
         return f"Ksh{randrange(0, 8_000_000, 10) / 100:,}"
-    
-    def _generate_transaction_cost(self):
+
+    @staticmethod
+    def _generate_transaction_cost():
         # Todo: Generate amount and cost side by side to ensure sensible messages
         return f"Ksh{randrange(0, 500, 10) / 100:,}"
-    
-    def _generate_random_name(self):
+
+    @staticmethod
+    def _generate_random_name():
         firstname = choice(["JANE", "TIFANNY", "ALEX", "ANDREW", "HILDA", "MAUREEN"])
         lastname = choice(["MURAGE", "MWENI", "ODONGO", "SIMIUYU", "CHACHA", "KALONZO", "CHEPTOO"])
         return f"{firstname} {lastname}"
-    
-    def _generate_random_subject(self):
+
+    @staticmethod
+    def _generate_random_subject():
         return choice(["KFC Garden City", "Omari Sport Goods", "Carrefour TWO RIVERS"])
-    
-    def _generate_random_account(self):
+
+    @staticmethod
+    def _generate_random_account():
         return f"{randrange(100_000, 999_999)}"
         
     def _generate_airtime(self):
