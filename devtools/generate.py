@@ -1,6 +1,5 @@
 from enum import Enum
 from random import choice, randrange
-from os import mkdir
 from os.path import join, exists, dirname
 
 class MessageType(Enum):
@@ -14,40 +13,51 @@ class MessageType(Enum):
     SEND=7
     WITHDRAW=8
 
-class CodeFactory:
+class FsHandler:
         
-    DIR = join(dirname(__file__), ".cache")
+    DIR = join(dirname(__file__), ".store")
     CACHE = join(DIR, "code")
+    SMS = join(DIR, "sms")
     SEED = "AAAAAAAAAA"
     
     def __enter__(self):
         return self
     
     def __init__(self):
-        if not exists(CodeFactory.DIR):
-            print("🌬️ creating cache")
-            mkdir(CodeFactory.DIR)
         
-        if not exists(CodeFactory.CACHE):
-            print("🪺 seeding cache")
-            with open(CodeFactory.CACHE, "w") as f:
-                f.write(CodeFactory.SEED)
+        if not exists(FsHandler.CACHE):
+            print("🪺 Seeding Code Cache")
+            with open(FsHandler.CACHE, "w") as f:
+                f.write(FsHandler.SEED)
                 
+        if not exists(FsHandler.SMS):
+            raise RuntimeError("Cannot find sms messages. Ask contributors for sample messages")
+        
+        with open(FsHandler.SMS, "r") as f:
+            self._messages = f.readlines()
         self._current = self.load()
     
     def __exit__(self, a, b, c):
         self.close()
         
+    @property
+    def current(self) -> str:
+        return self._current
+    
+    @property
+    def messages(self) -> list:
+        return self._messages
+        
     def close(self):
         self.write()
         
     def load(self):
-        with open(CodeFactory.CACHE, 'r') as file:
+        with open(FsHandler.CACHE, 'r') as file:
             self._current = file.read(10)
         return self._current
         
     def write(self):
-        with open(CodeFactory.CACHE, 'w') as file:
+        with open(FsHandler.CACHE, 'w') as file:
             file.write(f"{self._current}")
         
     def value(self, v: str) -> int:
@@ -56,9 +66,7 @@ class CodeFactory:
         """
         return int(v, 16)
     
-    @property
-    def current(self) -> str:
-        return self._current
+
         
     def generate(self) -> str:
         next = self.value(self._current) + 1
@@ -67,8 +75,8 @@ class CodeFactory:
         
         
 class MessageGenerator:
-    def __init__(self):
-        self.fs = CodeFactory()
+    def __init__(self, fs: FsHandler):
+        self.fs = fs
         
     def __enter__(self):
         return self
