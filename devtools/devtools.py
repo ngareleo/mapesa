@@ -24,15 +24,15 @@ def send():
     """
     
     telnet = Telnet("localhost", 5554)
-    gen = MessageGenerator()
-    message = gen.new(choice(list(MessageType)))
     
     # spit back to stdout
     connect_msg = telnet.read_until(b"OK").decode("utf-8")
     click.echo(connect_msg)
     
     auth_file_fs = connect_msg.split("\n")[3].strip()[1:-1]
-    with open(auth_file_fs, "r") as f:
+    with MessageGenerator as gen, open(auth_file_fs, "r") as f:
+        message = gen.new(choice(list(MessageType)))
+        
         # auth into the vm
         auth_code = f.read()
         telnet.write(b"auth " + auth_code.encode("utf-8") + b"\n")            

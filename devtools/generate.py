@@ -36,6 +36,9 @@ class CodeFactory:
         self._current = self.load()
     
     def __exit__(self, a, b, c):
+        self.close()
+        
+    def close(self):
         self.write()
         
     def load(self):
@@ -57,7 +60,7 @@ class CodeFactory:
     def current(self) -> str:
         return self._current
         
-    def increment(self) -> str:
+    def generate(self) -> str:
         next = self.value(self._current) + 1
         self._current = format(next, 'x')
         return self._current
@@ -66,6 +69,12 @@ class CodeFactory:
 class MessageGenerator:
     def __init__(self):
         self.fs = CodeFactory()
+        
+    def __enter__(self):
+        return self
+    
+    def __exit__(self, a, b, c):
+        self.fs.close()
         
     def new(self, m: MessageType) -> str: 
         templates = {
@@ -113,7 +122,7 @@ class MessageGenerator:
         return f"{randrange(100_000, 999_999)}"
         
     def _generate_airtime(self):
-        code = self.fs.increment()
+        code = self.fs.generate()
         cost = self._generate_transaction_cost()
         amount = self._generate_amount()
         balance = self._generate_amount()
@@ -123,7 +132,7 @@ class MessageGenerator:
 
     def _generate_airtime_for(self): 
         # Todo: Replace with actual template
-        code = self.fs.increment()
+        code = self.fs.generate()
         cost = self._generate_transaction_cost()
         amount = self._generate_amount()
         balance = self._generate_amount()
@@ -133,7 +142,7 @@ class MessageGenerator:
 
     def _generate_deposit(self):
         # Todo: Replace with actual template
-        code = self.fs.increment()
+        code = self.fs.generate()
         cost = self._generate_transaction_cost()
         amount = self._generate_amount()
         balance = self._generate_amount()
@@ -142,7 +151,7 @@ class MessageGenerator:
         return f"{code} confirmed.You bought {amount} of airtime on {date} at {time}.New M-PESA balance is {balance}. Transaction cost, {cost}. Amount you can transact within the day is 499,770.00. Dial *234*0# to Opt in to FULIZA and check your limit."
 
     def _generate_fuliza(self):
-        code = self.fs.increment()
+        code = self.fs.generate()
         amount = self._generate_amount()
         interest = self._generate_transaction_cost()
         outstanding = self._generate_amount()
@@ -150,7 +159,7 @@ class MessageGenerator:
         return f"{code} Confirmed. Fuliza M-PESA amount is {amount}. Interest charged {interest}. Total Fuliza M-PESA outstanding amount is {outstanding} due on {due_date}. To check daily charges, Dial *234*0#OK Select Query Charges"
 
     def _generate_lipa(self):
-        code = self.fs.increment()
+        code = self.fs.generate()
         amount = self._generate_amount()
         balance = self._generate_amount()
         date = self._generate_random_date()
@@ -160,7 +169,7 @@ class MessageGenerator:
         return f"{code} Confirmed. {amount} paid to {subject}. on {date} at {time}. New M-PESA balance is {balance}. Transaction cost, {cost}. Amount you can transact within the day is 497,796.00. To move money from bank to M-PESA, dial *334#>Withdraw>From bank to MPESA"
 
     def _generate_paybill(self):
-        code = self.fs.increment()
+        code = self.fs.generate()
         amount = self._generate_amount()
         date = self._generate_random_date()
         time = self._generate_random_time()
@@ -170,7 +179,7 @@ class MessageGenerator:
         return f"{code} Confirmed. {amount} sent to {subject} for account {account} on {date} at {time} New M-PESA balance is {balance}"
 
     def _generate_receive(self):
-        code = self.fs.increment()
+        code = self.fs.generate()
         amount = self._generate_amount()
         date = self._generate_random_date()
         time = self._generate_random_time()
@@ -180,7 +189,7 @@ class MessageGenerator:
         return f"{code} Confirmed. You have received {amount} from {subject} {account} on {date} at {time} New M-PESA balance is {balance}. Separate personal and business funds through Pochi la Biashara on *334#"
 
     def _generate_send(self):
-        code = self.fs.increment()
+        code = self.fs.generate()
         amount = self._generate_amount()
         date = self._generate_random_date()
         time = self._generate_random_time()
@@ -191,7 +200,7 @@ class MessageGenerator:
 
     def _generate_withdraw(self):
         # Todo: Replace with actual template
-        code = self.fs.increment()
+        code = self.fs.generate()
         cost = self._generate_transaction_cost()
         amount = self._generate_amount()
         balance = self._generate_amount()
