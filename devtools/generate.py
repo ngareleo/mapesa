@@ -1,63 +1,21 @@
 from enum import Enum
 from random import choice, randrange
-from os.path import join, exists, dirname
+from fs import FsHandler
 
-class MessageType(Enum):
-    AIRTIME_FOR = 0
-    AIRTIME=1
-    DEPOSIT=2
-    FULIZA=3
-    LIPA=4
-    PAYBILL=5
-    RECEIVE=6
-    SEND=7
-    WITHDRAW=8
 
-class FsHandler:
-        
-    DIR = join(dirname(__file__), ".store")
-    CACHE = join(DIR, "code")
-    SMS = join(DIR, "sms")
-    SEED = "AAAAAAAAAA"
-    
-    def __enter__(self):
-        return self
-    
-    def __init__(self):
-        if not exists(FsHandler.CACHE):
-            print("🪺 Seeding Code Cache")
-            with open(FsHandler.CACHE, "w") as f:
-                f.write(FsHandler.SEED)
-                
-        if not exists(FsHandler.SMS):
-            raise RuntimeError("Cannot find sms messages. Ask contributors for sample messages")
-        
-        self.current = self._load()
-    
-    def __exit__(self, a, b, c):
-        self.close()
-    
-    @property
-    def messages(self) -> list:
-        mgs = None
-        with open(FsHandler.SMS, "r") as f:
-            mgs = f.readlines()
-        return mgs
-        
-    def close(self):
-        self._write()
-        
-    def _load(self):
-        with open(FsHandler.CACHE, 'r') as file:
-            self.current = file.read(10)
-        return self.current
-        
-    def _write(self):
-        with open(FsHandler.CACHE, 'w') as file:
-            file.write(f"{self.current}")
-        
-        
 class MessageGenerator:
+    
+    class MessageType(Enum):
+        AIRTIME_FOR = 0
+        AIRTIME=1
+        DEPOSIT=2
+        FULIZA=3
+        LIPA=4
+        PAYBILL=5
+        RECEIVE=6
+        SEND=7
+        WITHDRAW=8
+
     def __init__(self, fs: FsHandler):
         self.fs = fs
         
@@ -67,19 +25,23 @@ class MessageGenerator:
     def __exit__(self, a, b, c):
         self.fs.close()
         
-    def new(self, m: MessageType) -> str: 
+    def new(self) -> str: 
+        cls = MessageGenerator.MessageType
+        
         templates = {
-            MessageType.AIRTIME: self._generate_airtime,
-            MessageType.AIRTIME_FOR: self._generate_airtime_for,
-            MessageType.DEPOSIT: self._generate_deposit,
-            MessageType.FULIZA:self._generate_fuliza,
-            MessageType.LIPA: self._generate_lipa,
-            MessageType.PAYBILL: self._generate_paybill,
-            MessageType.RECEIVE: self._generate_receive,
-            MessageType.SEND: self._generate_send,
-            MessageType.WITHDRAW: self._generate_withdraw
+            cls.AIRTIME: self._generate_airtime,
+            cls.AIRTIME_FOR: self._generate_airtime_for,
+            cls.DEPOSIT: self._generate_deposit,
+            cls.FULIZA:self._generate_fuliza,
+            cls.LIPA: self._generate_lipa,
+            cls.PAYBILL: self._generate_paybill,
+            cls.RECEIVE: self._generate_receive,
+            cls.SEND: self._generate_send,
+            cls.WITHDRAW: self._generate_withdraw
         }
-        return (templates[m])()
+        
+        mtype = choice(list(MessageGenerator.MessageType))
+        return (templates[mtype])()
     
     def generate_mpesa_code(self) -> str:
         next = int(self.fs.current, 16) + 1

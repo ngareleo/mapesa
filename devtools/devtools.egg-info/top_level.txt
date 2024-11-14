@@ -1,3 +1,4 @@
 devtools
+fs
 generate
 telnetlib

@@ -1,7 +1,7 @@
 import click 
 from telnetlib import Telnet
-from generate import MessageGenerator, FsHandler, MessageType
-from random import choice
+from fs import FsHandler
+from generate import MessageGenerator
 
 @click.group()
 def devtools():
@@ -29,7 +29,7 @@ def send():
     
     auth_file_fs = connect_msg.split("\n")[3].strip()[1:-1]
     with FsHandler() as fs, MessageGenerator(fs=fs) as gen, open(auth_file_fs, "r") as f:
-        message = gen.new(choice(list(MessageType)))
+        message = gen.new()
         
         # auth into the vm
         auth_code = f.read()
