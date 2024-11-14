@@ -40,9 +40,7 @@ class CodeFactory:
         
     def load(self):
         with open(CodeFactory.CACHE, 'r') as file:
-            a = file.read(10)
-            print("a is ", a)
-            self._current = a
+            self._current = file.read(10)
         return self._current
         
     def write(self):
