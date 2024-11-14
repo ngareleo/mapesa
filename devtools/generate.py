@@ -32,7 +32,7 @@ class FsHandler:
         if not exists(FsHandler.SMS):
             raise RuntimeError("Cannot find sms messages. Ask contributors for sample messages")
         
-        self._current = self.load()
+        self._current = self._load()
     
     def __exit__(self, a, b, c):
         self.close()
@@ -49,24 +49,16 @@ class FsHandler:
         return mgs
         
     def close(self):
-        self.write()
+        self._write()
         
-    def load(self):
+    def _load(self):
         with open(FsHandler.CACHE, 'r') as file:
             self._current = file.read(10)
         return self._current
         
-    def write(self):
+    def _write(self):
         with open(FsHandler.CACHE, 'w') as file:
             file.write(f"{self._current}")
-        
-    def value(self, v: str) -> int:
-        """
-        Should return unique decimal repr of the code.
-        """
-        return int(v, 16)
-    
-
         
     def generate(self) -> str:
         next = self.value(self._current) + 1
